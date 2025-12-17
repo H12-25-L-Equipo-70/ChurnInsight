@@ -6,42 +6,7 @@ A diferencia de la empresa de telecomunicaciones (donde el foco es la duración 
 
 Aquí tienes la estructura jerárquica diseñada para un caso de uso de Crédito Digital / Neobanco:
 
-Fintech_Lending_DB/           <-- Colección Principal
-│
-├── User_Profile/             <-- Documento por Cliente
-│   │
-│   ├── user_id               <-- [String] UUID único
-│   ├── created_at            <-- [Timestamp] Fecha de registro
-│   │
-│   ├── identity_kyc/         <-- (Know Your Customer) Vital para regulación
-│   │   ├── full_name         <-- [String]
-│   │   ├── tax_id            <-- [String] (RFC, DNI, SSN) - Encriptado
-│   │   ├── dob               <-- [Date] Fecha nacimiento (para calcular edad exacta)
-│   │   ├── status            <-- [Enum] "Verified", "Pending", "Rejected"
-│   │   └── biometric_check   <-- [Boolean] ¿Pasó la prueba de vida?
-│   │
-│   ├── financial_health/     <-- Variables para Modelo de Riesgo (Credit Scoring)
-│   │   ├── reported_income   <-- [Float] Ingreso declarado
-│   │   ├── external_score    <-- [Int] Buró de crédito (ej. 650, 720)
-│   │   ├── debt_to_income    <-- [Float] Capacidad de pago (Deuda/Ingreso)
-│   │   └── active_loans      <-- [Int] Número de créditos abiertos en otros lados
-│   │
-│   ├── app_behavior/         <-- Datos conductuales (Huella digital)
-│   │   ├── device_os         <-- [String] "iOS", "Android" (Relevante para poder adquisitivo)
-│   │   ├── geoloc_home       <-- [GeoJSON] Coordenadas frecuentes
-│   │   ├── avg_session_time  <-- [Float] Segundos promedio en la app
-│   │   └── device_id         <-- [String] Huella única del celular (Anti-fraude)
-│   │
-│   ├── wallet/               <-- Estado actual de la cuenta
-│   │   ├── current_balance   <-- [Float] Dinero disponible
-│   │   ├── currency          <-- [String] "MXN", "USD", "COP"
-│   │   └── is_blocked        <-- [Boolean] Por seguridad o falta de pago
-│   │
-│   └── transaction_stats/    <-- Agregados (Resumen transaccional)
-│       ├── last_30d_inflow   <-- [Float] Cuánto dinero ingresó
-│       ├── last_30d_outflow  <-- [Float] Cuánto gastó
-│       ├── top_category      <-- [String] "Food", "Travel", "Gambling" (Riesgo alto)
-│       └── velocity_check    <-- [Int] Nro de transacciones en la última hora (Alerta fraude)
+<img width="630" height="476" alt="Screen Shot 2025-12-17 at 12 53 26 AM" src="https://github.com/user-attachments/assets/cd5c7d47-04d7-4ff7-88a1-df6ff06b6303" />
 
 ### Análisis de las Variables Propuestas
 
