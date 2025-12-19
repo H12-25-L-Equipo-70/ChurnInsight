@@ -35,5 +35,7 @@ Si usaras este schematic, tus notebooks tendrían tareas diferentes al de teleco
 01_analisis_fraude.ipynb: Buscar anomalías en transaction_stats y device_id.
 02_scoring_crediticio.ipynb: Usar Regresión Logística o XGBoost para predecir la probabilidad de impago usando financial_health.
 
+Nuevo Schematics propuesto por Agustin...
 
+<img width="604" height="737" alt="Screen Shot 2025-12-18 at 11 20 57 PM" src="https://github.com/user-attachments/assets/4f28f8c1-cbe9-4bbe-882a-67fe232444a2" />
 
