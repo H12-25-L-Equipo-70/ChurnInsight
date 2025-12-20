@@ -43,6 +43,7 @@ Esta data tiene una particularidad muy importante: es una Serie Temporal (Time S
 A diferencia de los ejemplos anteriores donde cada bloque JSON era una empresa distinta, aquí estás viendo la historia de una misma empresa (Godoy Tech) a lo largo del tiempo (2022-Q1, Q2, Q3, etc.) hasta que finalmente hace Churn (abandona) en el 2023-Q1.
 Para diseñar este Schematic, debemos separar los Datos Estáticos (lo que no cambia) de los Datos Dinámicos (lo que cambia cada trimestre).
 Aquí tienes el diseño optimizado para un análisis de evolución temporal:
+
 <img width="512" height="788" alt="Screen Shot 2025-12-20 at 1 27 26 AM" src="https://github.com/user-attachments/assets/c28805f9-6f0b-4ce6-bd7b-9f8639408588" />
 
 Análisis del Diseño (Por qué estructurarlo así)
