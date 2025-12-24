@@ -1,0 +1,532 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 sm:p-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">ChurnInsight</h1>
+      <p class="text-slate-600">Predicción de Riesgo de Abandono - Empresas Pyme</p>
+    </div>
+
+    <!-- Contenedor Principal -->
+    <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+      <!-- Progress Bar -->
+      <div class="h-2 bg-slate-200">
+        <div 
+          class="h-full bg-gradient-to-r from-slate-900 to-slate-700 transition-all duration-300"
+          [style.width.%]="progressPercentage()">
+        </div>
+      </div>
+
+      <!-- Contenido del Formulario -->
+      <div class="p-6 sm:p-10">
+        <!-- Indicador de Sección -->
+        <div class="mb-8 flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-bold text-slate-900">
+              <span class="text-slate-400">Paso {{ currentSection() }}</span> de 3
+            </h2>
+            <p class="text-slate-600 mt-1">
+              {{ currentSection() === 1 ? 'Perfil de Empresa' : currentSection() === 2 ? 'Salud Financiera' : 'Comportamiento en App' }}
+            </p>
+          </div>
+          <div class="hidden sm:flex items-center gap-2">
+            <div 
+              *ngFor="let i of [1, 2, 3]"
+              [class.bg-slate-900]="i <= currentSection()"
+              [class.bg-slate-300]="i > currentSection()"
+              class="w-10 h-10 rounded-full flex items-center justify-center font-semibold text-white">
+              {{ i }}
+            </div>
+          </div>
+        </div>
+
+        <form [formGroup]="companyForm" class="space-y-6">
+          <!-- ========================================
+               SECCIÓN 1: PERFIL DE EMPRESA
+               ======================================== -->
+          <div *ngIf="isSection(1)" class="space-y-6 animate-fadeIn">
+            <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+              <h3 class="text-lg font-semibold text-slate-900 mb-4">Información Básica</h3>
+              
+              <!-- CUIT -->
+              <div class="mb-5">
+                <label class="block text-sm font-medium text-slate-700 mb-2">
+                  CUIT <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  formControlName="cuit"
+                  placeholder="11 dígitos (ej: 20123456789)"
+                  class="w-full px-4 py-2 border rounded-lg font-mono text-lg tracking-widest"
+                  [class.border-red-500]="hasFieldError('cuit')"
+                  [class.border-slate-300]="!hasFieldError('cuit')">
+                <p *ngIf="getFieldError('cuit')" class="text-red-600 text-sm mt-1">
+                  {{ getFieldError('cuit') }}
+                </p>
+              </div>
+
+              <!-- Nombre de Empresa -->
+              <div class="mb-5">
+                <label class="block text-sm font-medium text-slate-700 mb-2">
+                  Nombre de Empresa <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  formControlName="nombre_empresa"
+                  placeholder="Ej: Tech Solutions S.A."
+                  class="w-full px-4 py-2 border rounded-lg"
+                  [class.border-red-500]="hasFieldError('nombre_empresa')"
+                  [class.border-slate-300]="!hasFieldError('nombre_empresa')">
+                <p *ngIf="getFieldError('nombre_empresa')" class="text-red-600 text-sm mt-1">
+                  {{ getFieldError('nombre_empresa') }}
+                </p>
+              </div>
+
+              <!-- Grid: Sector y Provincia -->
+              <div class="grid sm:grid-cols-2 gap-4">
+                <!-- Sector -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Sector <span class="text-red-500">*</span>
+                  </label>
+                  <select
+                    formControlName="sector"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('sector')"
+                    [class.border-slate-300]="!hasFieldError('sector')">
+                    <option value="">Selecciona un sector</option>
+                    <option value="Tecnología">Tecnología</option>
+                    <option value="Retail">Retail</option>
+                    <option value="Servicios">Servicios</option>
+                    <option value="Manufactura">Manufactura</option>
+                    <option value="Alimentación">Alimentación</option>
+                    <option value="Construcción">Construcción</option>
+                    <option value="Otros">Otros</option>
+                  </select>
+                  <p *ngIf="getFieldError('sector')" class="text-red-600 text-sm mt-1">
+                    {{ getFieldError('sector') }}
+                  </p>
+                </div>
+
+                <!-- Provincia -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Provincia <span class="text-red-500">*</span>
+                  </label>
+                  <select
+                    formControlName="provincia"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('provincia')"
+                    [class.border-slate-300]="!hasFieldError('provincia')">
+                    <option value="">Selecciona una provincia</option>
+                    <option value="Buenos Aires">Buenos Aires</option>
+                    <option value="CABA">CABA</option>
+                    <option value="Córdoba">Córdoba</option>
+                    <option value="Mendoza">Mendoza</option>
+                    <option value="Río Negro">Río Negro</option>
+                    <option value="Otras">Otras</option>
+                  </select>
+                  <p *ngIf="getFieldError('provincia')" class="text-red-600 text-sm mt-1">
+                    {{ getFieldError('provincia') }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========================================
+               SECCIÓN 2: SALUD FINANCIERA
+               ======================================== -->
+          <div *ngIf="isSection(2)" class="space-y-6 animate-fadeIn">
+            <!-- Subsección: Financials -->
+            <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+              <h3 class="text-lg font-semibold text-slate-900 mb-4">Datos Financieros</h3>
+              
+              <div class="grid sm:grid-cols-2 gap-4 mb-6">
+                <!-- Ingresos -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Ingresos (ARS) <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="ingresos"
+                    placeholder="0"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('ingresos')"
+                    [class.border-slate-300]="!hasFieldError('ingresos')">
+                  <p *ngIf="getFieldError('ingresos')" class="text-red-600 text-sm mt-1">
+                    {{ getFieldError('ingresos') }}
+                  </p>
+                </div>
+
+                <!-- Gastos -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Gastos (ARS) <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="gastos"
+                    placeholder="0"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('gastos')"
+                    [class.border-slate-300]="!hasFieldError('gastos')">
+                  <p *ngIf="getFieldError('gastos')" class="text-red-600 text-sm mt-1">
+                    {{ getFieldError('gastos') }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Margen Calculado (Lectura) -->
+              <div class="bg-white p-4 rounded-lg border-l-4 border-emerald-500 mb-6">
+                <p class="text-sm text-slate-600 mb-1">Margen de Ganancia</p>
+                <p class="text-2xl font-bold text-emerald-600">
+                  $ {{ calculatedMargin().toLocaleString('es-AR', { maximumFractionDigits: 0 }) }}
+                </p>
+                <p class="text-xs text-slate-500 mt-1">Calculado: Ingresos - Gastos</p>
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-4">
+                <!-- Deuda -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Deuda (ARS) <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="deuda"
+                    placeholder="0"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('deuda')"
+                    [class.border-slate-300]="!hasFieldError('deuda')">
+                </div>
+
+                <!-- Activos -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Activos (ARS) <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="activos"
+                    placeholder="0"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('activos')"
+                    [class.border-slate-300]="!hasFieldError('activos')">
+                </div>
+              </div>
+            </div>
+
+            <!-- Subsección: Comportamiento de Crédito -->
+            <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+              <h3 class="text-lg font-semibold text-slate-900 mb-4">Comportamiento de Crédito</h3>
+              
+              <div class="grid sm:grid-cols-2 gap-4 mb-6">
+                <!-- Préstamos Solicitados -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Préstamos Solicitados <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="prestamos_solicitados"
+                    placeholder="0"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('prestamos_solicitados')"
+                    [class.border-slate-300]="!hasFieldError('prestamos_solicitados')">
+                </div>
+
+                <!-- Préstamos Aprobados -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Préstamos Aprobados <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="prestamos_aprobados"
+                    placeholder="0"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('prestamos_aprobados')"
+                    [class.border-slate-300]="!hasFieldError('prestamos_aprobados')">
+                </div>
+
+                <!-- Préstamos Vigentes -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Préstamos Vigentes <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="prestamos_vigentes"
+                    placeholder="0"
+                    class="w-full px-4 py-2 border rounded-lg">
+                </div>
+
+                <!-- Ratio de Aprobación -->
+                <div class="bg-white p-4 rounded-lg border-l-4 border-blue-500">
+                  <p class="text-sm text-slate-600 mb-1">Ratio de Aprobación</p>
+                  <p class="text-2xl font-bold text-blue-600">
+                    {{ creditApprovalRatio().toFixed(1) }}%
+                  </p>
+                </div>
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-4">
+                <!-- Monto Solicitado -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Monto Solicitado (ARS) <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="monto_solicitado"
+                    placeholder="0"
+                    class="w-full px-4 py-2 border rounded-lg">
+                </div>
+
+                <!-- Monto Aprobado -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Monto Aprobado (ARS) <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="monto_aprobado"
+                    placeholder="0"
+                    class="w-full px-4 py-2 border rounded-lg">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========================================
+               SECCIÓN 3: COMPORTAMIENTO EN APP
+               ======================================== -->
+          <div *ngIf="isSection(3)" class="space-y-6 animate-fadeIn">
+            <!-- Subsección: Engagement -->
+            <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+              <h3 class="text-lg font-semibold text-slate-900 mb-4">Actividad en Plataforma</h3>
+              
+              <div class="grid sm:grid-cols-2 gap-4 mb-6">
+                <!-- Días Activos -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Días Activos en el Trimestre (0-90) <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="trimestre_dias_actividad"
+                    placeholder="0"
+                    min="0"
+                    max="90"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('trimestre_dias_actividad')"
+                    [class.border-slate-300]="!hasFieldError('trimestre_dias_actividad')">
+                  <p *ngIf="getFieldError('trimestre_dias_actividad')" class="text-red-600 text-sm mt-1">
+                    {{ getFieldError('trimestre_dias_actividad') }}
+                  </p>
+                </div>
+
+                <!-- Días Inactivos -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Días Inactivos en el Trimestre (0-90) <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="trimestre_dias_inactividad"
+                    placeholder="0"
+                    min="0"
+                    max="90"
+                    class="w-full px-4 py-2 border rounded-lg">
+                </div>
+              </div>
+
+              <!-- Indicador de Actividad Visual -->
+              <div class="bg-white p-6 rounded-lg border-l-4 mb-6" [ngClass]="'border-' + activityIndicatorColor().split('-')[1] + '-500'">
+                <p class="text-sm text-slate-600 mb-2">Ratio de Actividad</p>
+                <div class="flex items-end gap-4">
+                  <div>
+                    <p class="text-3xl font-bold" [ngClass]="activityIndicatorColor()">
+                      {{ activityRatio().toFixed(1) }}%
+                    </p>
+                  </div>
+                  <div class="flex-1 h-8 bg-slate-200 rounded-full overflow-hidden">
+                    <div 
+                      class="h-full transition-all duration-300"
+                      [ngClass]="activityIndicatorColor()"
+                      [style.width.%]="activityRatio()">
+                    </div>
+                  </div>
+                </div>
+                <p class="text-xs text-slate-500 mt-2">
+                  {{ activityRatio() > 70 ? 'Actividad Alta' : activityRatio() > 40 ? 'Actividad Moderada' : 'Actividad Baja' }}
+                </p>
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-4">
+                <!-- Promedio de Logins -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Promedio de Logins por Día <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="promedio_login_dia"
+                    placeholder="0"
+                    step="0.1"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('promedio_login_dia')"
+                    [class.border-slate-300]="!hasFieldError('promedio_login_dia')">
+                  <p *ngIf="getFieldError('promedio_login_dia')" class="text-red-600 text-sm mt-1">
+                    {{ getFieldError('promedio_login_dia') }}
+                  </p>
+                </div>
+
+                <!-- Total de Logins -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Total de Logins en el Trimestre <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="total_login_dia"
+                    placeholder="0"
+                    class="w-full px-4 py-2 border rounded-lg">
+                </div>
+              </div>
+            </div>
+
+            <!-- Subsección: Servicios -->
+            <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+              <h3 class="text-lg font-semibold text-slate-900 mb-4">Servicios Utilizados</h3>
+              
+              <div class="space-y-3 mb-6">
+                <!-- Transferencias -->
+                <label class="flex items-center p-3 bg-white rounded-lg cursor-pointer hover:bg-slate-50 border border-slate-200">
+                  <input
+                    type="checkbox"
+                    formControlName="transferencias"
+                    class="w-5 h-5 text-slate-900 rounded">
+                  <span class="ml-3 font-medium text-slate-700">Transferencias</span>
+                </label>
+
+                <!-- Pagos -->
+                <label class="flex items-center p-3 bg-white rounded-lg cursor-pointer hover:bg-slate-50 border border-slate-200">
+                  <input
+                    type="checkbox"
+                    formControlName="pagos"
+                    class="w-5 h-5 text-slate-900 rounded">
+                  <span class="ml-3 font-medium text-slate-700">Pagos</span>
+                </label>
+
+                <!-- Créditos -->
+                <label class="flex items-center p-3 bg-white rounded-lg cursor-pointer hover:bg-slate-50 border border-slate-200">
+                  <input
+                    type="checkbox"
+                    formControlName="creditos"
+                    class="w-5 h-5 text-slate-900 rounded">
+                  <span class="ml-3 font-medium text-slate-700">Créditos</span>
+                </label>
+
+                <!-- Inversiones -->
+                <label class="flex items-center p-3 bg-white rounded-lg cursor-pointer hover:bg-slate-50 border border-slate-200">
+                  <input
+                    type="checkbox"
+                    formControlName="inversiones"
+                    class="w-5 h-5 text-slate-900 rounded">
+                  <span class="ml-3 font-medium text-slate-700">Inversiones</span>
+                </label>
+              </div>
+
+              <!-- Contador de Servicios -->
+              <div class="bg-white p-4 rounded-lg border-l-4 border-indigo-500">
+                <p class="text-sm text-slate-600 mb-1">Servicios Activos</p>
+                <p class="text-2xl font-bold text-indigo-600">
+                  {{ servicesCount() }} / 4
+                </p>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- ========================================
+             RESULTADOS DE PREDICCIÓN
+             ======================================== -->
+        <div *ngIf="showResults()" class="mt-8">
+          <app-results-panel 
+            [predictionResult]="predictionResult()"
+            [profile]="currentProfile()"
+            [metrics]="currentMetrics()"
+            (newPrediction)="resetForm()">
+          </app-results-panel>
+        </div>
+
+        <!-- ========================================
+             BOTONES DE NAVEGACIÓN
+             ======================================== -->
+        <div class="mt-8 flex gap-4 justify-between">
+          <button
+            *ngIf="currentSection() > 1"
+            (click)="prevSection()"
+            type="button"
+            class="px-6 py-2 border border-slate-300 rounded-lg font-medium text-slate-700 hover:bg-slate-50 transition">
+            ← Atrás
+          </button>
+
+          <div class="flex gap-4 ml-auto">
+            <!-- Botón Nueva Predicción (si hay resultados) -->
+            <button
+              *ngIf="showResults()"
+              (click)="resetForm()"
+              type="button"
+              class="px-6 py-2 border border-slate-300 rounded-lg font-medium text-slate-700 hover:bg-slate-50 transition">
+              Nueva Predicción
+            </button>
+
+            <!-- Botón Siguiente / Predecir -->
+            <button
+              *ngIf="!showResults()"
+              (click)="currentSection() < 3 ? nextSection() : submitPrediction()"
+              [disabled]="isLoading()"
+              type="button"
+              class="px-6 py-2 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+              <span *ngIf="!isLoading()">
+                {{ currentSection() < 3 ? 'Siguiente →' : 'Predecir' }}
+              </span>
+              <span *ngIf="isLoading()" class="flex items-center gap-2">
+                <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Procesando...
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-8 text-center text-slate-600 text-sm">
+      <p>ChurnInsight v1.0 | Powered by Pymer</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+  }
+</style>
