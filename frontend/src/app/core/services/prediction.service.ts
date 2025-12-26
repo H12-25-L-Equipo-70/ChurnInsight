@@ -39,20 +39,31 @@ export class PredictionService {
    * }
    */
   predict(data: QuarterlyMetrics): Observable<PredictionResponse> {
-    // Validación básica
-    if (!data || !data.financials || !data.app_engagement) {
-      return this._handleError('Datos de entrada incompletos');
+    // Validación básica exhaustiva
+    if (!data || !data.financials || !data.app_engagement || !data.credit_behavior || !data.services_flags) {
+      return this._handleError('Datos de entrada incompletos o inválidos');
+    }
+
+    // Validaciones de rangos para evitar NaN o infinito en cálculos
+    if (data.financials.Ingresos < 0 || data.financials.Gastos < 0 || 
+        data.financials.Deuda < 0 || data.financials.Activos < 0) {
+      return this._handleError('Valores financieros no pueden ser negativos');
+    }
+
+    if (data.app_engagement.Trimestre_Dias_Actividad < 0 || 
+        data.app_engagement.Trimestre_Dias_Actividad > 90) {
+      return this._handleError('Días activos debe estar entre 0-90');
     }
 
     // Aquí iría la llamada real al backend:
     // return this.http.post<PredictionResponse>('/api/predict', request);
 
-    // Por ahora: Mock con delay de 1.5s y lógica aleatoria
+    // Por ahora: Mock con delay de 1.5s y lógica mejorada
     return this._mockPrediction(data).pipe(
       delay(this.PREDICTION_DELAY_MS),
       map(response => ({
         ...response,
-        confidence: Math.random() * 0.4 + 0.6 // 60-100% confianza
+        confidence: Math.round((Math.random() * 0.4 + 0.6) * 100) / 100 // 60-100% confianza (2 decimales)
       }))
     );
   }
@@ -90,37 +101,40 @@ export class PredictionService {
   /**
    * Calcula score de riesgo (0-1) basado en métricas
    * Mayor score = Mayor riesgo de churn
+   * Evita NaN y Infinity con validaciones exhaustivas
    */
   private _calculateRiskScore(data: QuarterlyMetrics): number {
     let score = 0;
 
     // Factor 1: Engagement bajo (inactividad alta)
-    const activityRatio = data.app_engagement.Trimestre_Dias_Actividad / 90;
+    const activityRatio = Math.max(0, Math.min(1, data.app_engagement.Trimestre_Dias_Actividad / 90 || 0));
     if (activityRatio < 0.3) score += 0.3;
     else if (activityRatio < 0.6) score += 0.15;
 
-    // Factor 2: Margen negativo o bajo
-    if (data.financials.Margen < 0) score += 0.3;
-    else if (data.financials.Margen < data.financials.Ingresos * 0.1) score += 0.15;
+    // Factor 2: Margen negativo o bajo (validar que Ingresos no sea 0)
+    const margen = Math.max(0, data.financials.Ingresos - data.financials.Gastos);
+    if (margen < 0) score += 0.3;
+    else if (data.financials.Ingresos > 0 && margen < data.financials.Ingresos * 0.1) score += 0.15;
 
-    // Factor 3: Deuda alta respecto a activos
+    // Factor 3: Deuda alta respecto a activos (evitar división por 0)
     if (data.financials.Deuda > 0 && data.financials.Activos > 0) {
       const debtRatio = data.financials.Deuda / data.financials.Activos;
       if (debtRatio > 0.5) score += 0.2;
     }
 
-    // Factor 4: Pocas solicitudes o bajas aprobaciones
+    // Factor 4: Pocas solicitudes o bajas aprobaciones (evitar división por 0)
     if (data.credit_behavior.Prestamos_Solicitados === 0) score += 0.15;
     else {
-      const approvalRate = data.credit_behavior.Prestamos_Aprobados / 
-                          data.credit_behavior.Prestamos_Solicitados;
+      const approvalRate = Math.max(0, Math.min(1, 
+        data.credit_behavior.Prestamos_Aprobados / data.credit_behavior.Prestamos_Solicitados || 0
+      ));
       if (approvalRate < 0.3) score += 0.15;
     }
 
     // Factor 5: Pocos servicios utilizados
-    if (data.services_flags.Servicios_Utilizados < 2) score += 0.1;
+    if ((data.services_flags.Servicios_Utilizados || 0) < 2) score += 0.1;
 
-    return Math.min(score, 1); // Máximo 1
+    return Math.min(Math.max(score, 0), 1); // Asegurar rango [0, 1]
   }
 
   /**

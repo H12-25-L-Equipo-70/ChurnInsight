@@ -17,6 +17,7 @@ export class ExportService {
   
   /**
    * Exporta los datos de predicción a CSV
+   * Maneja valores nulos y formatea seguramente
    */
   exportToCSV(
     profile: Partial<StaticProfile>,
@@ -26,50 +27,56 @@ export class ExportService {
   ): void {
     const timestamp = new Date().toISOString();
     
+    const safeFormat = (value: any, fallback = 'N/A'): string => {
+      if (value === null || value === undefined) return fallback;
+      if (typeof value === 'number') return value.toLocaleString('es-AR', { maximumFractionDigits: 0 });
+      return String(value);
+    };
+    
     const csvContent = `
 ChurnInsight - Reporte de Predicción
 Generado: ${timestamp}
 
 PERFIL DE EMPRESA
-CUIT,${profile.CUIT || 'N/A'}
-Nombre,${profile.Nombre_Empresa || 'N/A'}
-Sector,${profile.Sector || 'N/A'}
-Provincia,${profile.Provincia || 'N/A'}
+CUIT,${profile?.CUIT || 'N/A'}
+Nombre,${profile?.Nombre_Empresa || 'N/A'}
+Sector,${profile?.Sector || 'N/A'}
+Provincia,${profile?.Provincia || 'N/A'}
 
 DATOS FINANCIEROS (ARS)
-Ingresos,"${metrics.financials.Ingresos.toLocaleString('es-AR')}"
-Gastos,"${metrics.financials.Gastos.toLocaleString('es-AR')}"
-Margen,"${metrics.financials.Margen.toLocaleString('es-AR')}"
-Deuda,"${metrics.financials.Deuda.toLocaleString('es-AR')}"
-Activos,"${metrics.financials.Activos.toLocaleString('es-AR')}"
+Ingresos,"${safeFormat(metrics?.financials?.Ingresos)}"
+Gastos,"${safeFormat(metrics?.financials?.Gastos)}"
+Margen,"${safeFormat(metrics?.financials?.Margen)}"
+Deuda,"${safeFormat(metrics?.financials?.Deuda)}"
+Activos,"${safeFormat(metrics?.financials?.Activos)}"
 
 COMPORTAMIENTO DE CRÉDITO
-Préstamos Solicitados,${metrics.credit_behavior.Prestamos_Solicitados}
-Préstamos Aprobados,${metrics.credit_behavior.Prestamos_Aprobados}
-Préstamos Vigentes,${metrics.credit_behavior.Prestamos_Vigentes}
-Monto Solicitado,"${metrics.credit_behavior.Monto_Solicitado.toLocaleString('es-AR')}"
-Monto Aprobado,"${metrics.credit_behavior.Monto_Aprobado.toLocaleString('es-AR')}"
+Préstamos Solicitados,${metrics?.credit_behavior?.Prestamos_Solicitados || 0}
+Préstamos Aprobados,${metrics?.credit_behavior?.Prestamos_Aprobados || 0}
+Préstamos Vigentes,${metrics?.credit_behavior?.Prestamos_Vigentes || 0}
+Monto Solicitado,"${safeFormat(metrics?.credit_behavior?.Monto_Solicitado)}"
+Monto Aprobado,"${safeFormat(metrics?.credit_behavior?.Monto_Aprobado)}"
 
 ENGAGEMENT EN PLATAFORMA
-Días Activos,${metrics.app_engagement.Trimestre_Dias_Actividad}
-Días Inactivos,${metrics.app_engagement.Trimestre_Dias_Inactividad}
-Promedio de Logins/Día,${metrics.app_engagement.Promedio_Login_Dia}
-Total de Logins,${metrics.app_engagement.Total_Login_Dia}
+Días Activos,${metrics?.app_engagement?.Trimestre_Dias_Actividad || 0}
+Días Inactivos,${metrics?.app_engagement?.Trimestre_Dias_Inactividad || 0}
+Promedio de Logins/Día,${metrics?.app_engagement?.Promedio_Login_Dia || 0}
+Total de Logins,${metrics?.app_engagement?.Total_Login_Dia || 0}
 
 SERVICIOS UTILIZADOS
-Transferencias,${metrics.services_flags.Transferencias ? 'Sí' : 'No'}
-Pagos,${metrics.services_flags.Pagos ? 'Sí' : 'No'}
-Créditos,${metrics.services_flags.Creditos ? 'Sí' : 'No'}
-Inversiones,${metrics.services_flags.Inversiones ? 'Sí' : 'No'}
-Total Servicios,${metrics.services_flags.Servicios_Utilizados}/4
+Transferencias,${metrics?.services_flags?.Transferencias ? 'Sí' : 'No'}
+Pagos,${metrics?.services_flags?.Pagos ? 'Sí' : 'No'}
+Créditos,${metrics?.services_flags?.Creditos ? 'Sí' : 'No'}
+Inversiones,${metrics?.services_flags?.Inversiones ? 'Sí' : 'No'}
+Total Servicios,${metrics?.services_flags?.Servicios_Utilizados || 0}/4
 
 RESULTADO DE PREDICCIÓN
-Nivel de Riesgo,${result.prevision.toUpperCase()}
-Probabilidad de Churn,${(result.probabilidad * 100).toFixed(2)}%
-Confianza del Modelo,${((result.confidence || 0) * 100).toFixed(0)}%
+Nivel de Riesgo,${result?.prevision?.toUpperCase() || 'N/A'}
+Probabilidad de Churn,${((result?.probabilidad || 0) * 100).toFixed(2)}%
+Confianza del Modelo,${((result?.confidence || 0) * 100).toFixed(0)}%
 
 RECOMENDACIONES
-${result.recomendaciones?.map((rec, idx) => `${idx + 1}. ${rec}`).join('\n') || 'Continuar monitoreo regular'}
+${(result?.recomendaciones || []).map((rec, idx) => `${idx + 1}. ${rec}`).join('\n') || 'Continuar monitoreo regular'}
 
 `;
 
@@ -102,6 +109,7 @@ ${result.recomendaciones?.map((rec, idx) => `${idx + 1}. ${rec}`).join('\n') || 
 
   /**
    * Copia datos al portapapeles (útil para compartir)
+   * Maneja valores nulos de manera segura
    */
   async copyToClipboard(
     profile: Partial<StaticProfile>,
@@ -109,15 +117,15 @@ ${result.recomendaciones?.map((rec, idx) => `${idx + 1}. ${rec}`).join('\n') || 
   ): Promise<boolean> {
     const text = `
 ChurnInsight - Resultado de Predicción
-Empresa: ${profile.Nombre_Empresa}
-CUIT: ${profile.CUIT}
+Empresa: ${profile?.Nombre_Empresa || 'N/A'}
+CUIT: ${profile?.CUIT || 'N/A'}
 
-Nivel de Riesgo: ${result.prevision.toUpperCase()}
-Probabilidad de Churn: ${(result.probabilidad * 100).toFixed(1)}%
-Confianza: ${((result.confidence || 0) * 100).toFixed(0)}%
+Nivel de Riesgo: ${result?.prevision?.toUpperCase() || 'N/A'}
+Probabilidad de Churn: ${((result?.probabilidad || 0) * 100).toFixed(1)}%
+Confianza: ${((result?.confidence || 0) * 100).toFixed(0)}%
 
 Recomendaciones:
-${result.recomendaciones?.map((rec) => `• ${rec}`).join('\n')}
+${(result?.recomendaciones || []).map((rec) => `• ${rec}`).join('\n') || 'Sin recomendaciones adicionales'}
 `;
 
     try {

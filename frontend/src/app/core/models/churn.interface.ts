@@ -9,15 +9,15 @@
  * Datos fijos que no cambian entre trimestres
  */
 export interface StaticProfile {
-  CUIT: number; // 11 dígitos: validación crítica
+  CUIT: string | number; // 11 dígitos: guardar como string para preservar formato
   Nombre_Empresa: string;
-  Tipo_Sociedad: string; // Ej: S.A., S.R.L., etc.
+  Tipo_Sociedad?: string; // Ej: S.A., S.R.L., etc.
   Sector: string; // Ej: Tecnología, Retail, Servicios, etc.
   Provincia: string;
-  Año_Fundación: number;
-  Empleados: number;
-  Telefono: number;
-  Direccion: string;
+  Año_Fundación?: number;
+  Empleados?: number;
+  Telefono?: number;
+  Direccion?: string;
 }
 
 /**
@@ -113,7 +113,8 @@ export interface CompanyRecord extends StaticProfile, ChurnStatus {
  * Cada registro representa un trimestre de una empresa
  * (Mapea directamente con el JSON tal como está estructurado)
  */
-export interface FlatCompanyRecord extends StaticProfile {
+export interface FlatCompanyRecord extends Omit<StaticProfile, 'CUIT'> {
+  CUIT: string | number;
   // Datos del trimestre
   Periodo_Fiscal: string;
   

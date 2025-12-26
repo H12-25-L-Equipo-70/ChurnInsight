@@ -1,12 +1,10 @@
-<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 sm:p-8">
-  <div class="max-w-4xl mx-auto">
-    <!-- Header -->
-    <div class="mb-8">
-      <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">ChurnInsight</h1>
-      <p class="text-slate-600">Predicción de Riesgo de Abandono - Empresas Pyme</p>
-    </div>
-
-    <!-- Contenedor Principal -->
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 sm:p-8" role="main" aria-label="Aplicación de predicción de churn">
+    <div class="max-w-4xl mx-auto">
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">ChurnInsight</h1>
+        <p class="text-slate-600">Predicción de Riesgo de Abandono - Empresas Pyme Fintech</p>
+      </div>    <!-- Contenedor Principal -->
     <div class="bg-white rounded-lg shadow-xl overflow-hidden">
       <!-- Progress Bar -->
       <div class="h-2 bg-slate-200">
@@ -19,12 +17,12 @@
       <!-- Contenido del Formulario -->
       <div class="p-6 sm:p-10">
         <!-- Indicador de Sección -->
-        <div class="mb-8 flex items-center justify-between">
+        <div class="mb-8 flex items-center justify-between" aria-label="Progreso del formulario">
           <div>
             <h2 class="text-2xl font-bold text-slate-900">
-              <span class="text-slate-400">Paso {{ currentSection() }}</span> de 3
+              <span class="text-slate-400" aria-live="polite">Paso {{ currentSection() }}</span> de 3
             </h2>
-            <p class="text-slate-600 mt-1">
+            <p class="text-slate-600 mt-1" aria-label="Sección actual">
               {{ currentSection() === 1 ? 'Perfil de Empresa' : currentSection() === 2 ? 'Salud Financiera' : 'Comportamiento en App' }}
             </p>
           </div>
@@ -49,34 +47,40 @@
               
               <!-- CUIT -->
               <div class="mb-5">
-                <label class="block text-sm font-medium text-slate-700 mb-2">
-                  CUIT <span class="text-red-500">*</span>
+                <label for="cuit" class="block text-sm font-medium text-slate-700 mb-2">
+                  CUIT <span class="text-red-500" aria-label="requerido">*</span>
                 </label>
                 <input
+                  id="cuit"
                   type="text"
                   formControlName="cuit"
                   placeholder="11 dígitos (ej: 20123456789)"
+                  aria-label="CUIT de la empresa (11 dígitos)"
+                  aria-describedby="cuit-error"
                   class="w-full px-4 py-2 border rounded-lg font-mono text-lg tracking-widest"
                   [class.border-red-500]="hasFieldError('cuit')"
                   [class.border-slate-300]="!hasFieldError('cuit')">
-                <p *ngIf="getFieldError('cuit')" class="text-red-600 text-sm mt-1">
+                <p *ngIf="getFieldError('cuit')" id="cuit-error" class="text-red-600 text-sm mt-1" role="alert">
                   {{ getFieldError('cuit') }}
                 </p>
               </div>
 
               <!-- Nombre de Empresa -->
               <div class="mb-5">
-                <label class="block text-sm font-medium text-slate-700 mb-2">
-                  Nombre de Empresa <span class="text-red-500">*</span>
+                <label for="nombre_empresa" class="block text-sm font-medium text-slate-700 mb-2">
+                  Nombre de Empresa <span class="text-red-500" aria-label="requerido">*</span>
                 </label>
                 <input
+                  id="nombre_empresa"
                   type="text"
                   formControlName="nombre_empresa"
                   placeholder="Ej: Tech Solutions S.A."
+                  aria-label="Nombre de la empresa"
+                  aria-describedby="nombre_empresa-error"
                   class="w-full px-4 py-2 border rounded-lg"
                   [class.border-red-500]="hasFieldError('nombre_empresa')"
                   [class.border-slate-300]="!hasFieldError('nombre_empresa')">
-                <p *ngIf="getFieldError('nombre_empresa')" class="text-red-600 text-sm mt-1">
+                <p *ngIf="getFieldError('nombre_empresa')" id="nombre_empresa-error" class="text-red-600 text-sm mt-1" role="alert">
                   {{ getFieldError('nombre_empresa') }}
                 </p>
               </div>
@@ -85,11 +89,14 @@
               <div class="grid sm:grid-cols-2 gap-4">
                 <!-- Sector -->
                 <div>
-                  <label class="block text-sm font-medium text-slate-700 mb-2">
-                    Sector <span class="text-red-500">*</span>
+                  <label for="sector" class="block text-sm font-medium text-slate-700 mb-2">
+                    Sector <span class="text-red-500" aria-label="requerido">*</span>
                   </label>
                   <select
+                    id="sector"
                     formControlName="sector"
+                    aria-label="Selecciona el sector económico de la empresa"
+                    aria-describedby="sector-error"
                     class="w-full px-4 py-2 border rounded-lg"
                     [class.border-red-500]="hasFieldError('sector')"
                     [class.border-slate-300]="!hasFieldError('sector')">
@@ -102,18 +109,21 @@
                     <option value="Construcción">Construcción</option>
                     <option value="Otros">Otros</option>
                   </select>
-                  <p *ngIf="getFieldError('sector')" class="text-red-600 text-sm mt-1">
+                  <p *ngIf="getFieldError('sector')" id="sector-error" class="text-red-600 text-sm mt-1" role="alert">
                     {{ getFieldError('sector') }}
                   </p>
                 </div>
 
                 <!-- Provincia -->
                 <div>
-                  <label class="block text-sm font-medium text-slate-700 mb-2">
-                    Provincia <span class="text-red-500">*</span>
+                  <label for="provincia" class="block text-sm font-medium text-slate-700 mb-2">
+                    Provincia <span class="text-red-500" aria-label="requerido">*</span>
                   </label>
                   <select
+                    id="provincia"
                     formControlName="provincia"
+                    aria-label="Selecciona la provincia donde opera la empresa"
+                    aria-describedby="provincia-error"
                     class="w-full px-4 py-2 border rounded-lg"
                     [class.border-red-500]="hasFieldError('provincia')"
                     [class.border-slate-300]="!hasFieldError('provincia')">
@@ -125,7 +135,7 @@
                     <option value="Río Negro">Río Negro</option>
                     <option value="Otras">Otras</option>
                   </select>
-                  <p *ngIf="getFieldError('provincia')" class="text-red-600 text-sm mt-1">
+                  <p *ngIf="getFieldError('provincia')" id="provincia-error" class="text-red-600 text-sm mt-1" role="alert">
                     {{ getFieldError('provincia') }}
                   </p>
                 </div>
@@ -150,7 +160,7 @@
                   <input
                     type="number"
                     formControlName="ingresos"
-                    placeholder="0"
+                    placeholder="Ej: 5000000"
                     class="w-full px-4 py-2 border rounded-lg"
                     [class.border-red-500]="hasFieldError('ingresos')"
                     [class.border-slate-300]="!hasFieldError('ingresos')">
@@ -167,7 +177,7 @@
                   <input
                     type="number"
                     formControlName="gastos"
-                    placeholder="0"
+                    placeholder="Ej: 2000000"
                     class="w-full px-4 py-2 border rounded-lg"
                     [class.border-red-500]="hasFieldError('gastos')"
                     [class.border-slate-300]="!hasFieldError('gastos')">
@@ -195,7 +205,7 @@
                   <input
                     type="number"
                     formControlName="deuda"
-                    placeholder="0"
+                    placeholder="Ej: 800000"
                     class="w-full px-4 py-2 border rounded-lg"
                     [class.border-red-500]="hasFieldError('deuda')"
                     [class.border-slate-300]="!hasFieldError('deuda')">
@@ -209,7 +219,7 @@
                   <input
                     type="number"
                     formControlName="activos"
-                    placeholder="0"
+                    placeholder="Ej: 7000000"
                     class="w-full px-4 py-2 border rounded-lg"
                     [class.border-red-500]="hasFieldError('activos')"
                     [class.border-slate-300]="!hasFieldError('activos')">
@@ -230,7 +240,7 @@
                   <input
                     type="number"
                     formControlName="prestamos_solicitados"
-                    placeholder="0"
+                    placeholder="Ej: 5"
                     class="w-full px-4 py-2 border rounded-lg"
                     [class.border-red-500]="hasFieldError('prestamos_solicitados')"
                     [class.border-slate-300]="!hasFieldError('prestamos_solicitados')">
@@ -244,7 +254,7 @@
                   <input
                     type="number"
                     formControlName="prestamos_aprobados"
-                    placeholder="0"
+                    placeholder="Ej: 5"
                     class="w-full px-4 py-2 border rounded-lg"
                     [class.border-red-500]="hasFieldError('prestamos_aprobados')"
                     [class.border-slate-300]="!hasFieldError('prestamos_aprobados')">
@@ -258,7 +268,7 @@
                   <input
                     type="number"
                     formControlName="prestamos_vigentes"
-                    placeholder="0"
+                    placeholder="Ej: 3"
                     class="w-full px-4 py-2 border rounded-lg">
                 </div>
 
@@ -280,7 +290,7 @@
                   <input
                     type="number"
                     formControlName="monto_solicitado"
-                    placeholder="0"
+                    placeholder="Ej: 7000000"
                     class="w-full px-4 py-2 border rounded-lg">
                 </div>
 
@@ -292,7 +302,7 @@
                   <input
                     type="number"
                     formControlName="monto_aprobado"
-                    placeholder="0"
+                    placeholder="Ej: 7000000"
                     class="w-full px-4 py-2 border rounded-lg">
                 </div>
               </div>
@@ -316,7 +326,7 @@
                   <input
                     type="number"
                     formControlName="trimestre_dias_actividad"
-                    placeholder="0"
+                    placeholder="Ej: 75"
                     min="0"
                     max="90"
                     class="w-full px-4 py-2 border rounded-lg"
@@ -373,7 +383,7 @@
                   <input
                     type="number"
                     formControlName="promedio_login_dia"
-                    placeholder="0"
+                    placeholder="Ej: 2.5"
                     step="0.1"
                     class="w-full px-4 py-2 border rounded-lg"
                     [class.border-red-500]="hasFieldError('promedio_login_dia')"
@@ -391,7 +401,7 @@
                   <input
                     type="number"
                     formControlName="total_login_dia"
-                    placeholder="0"
+                    placeholder="Ej: 120"
                     class="w-full px-4 py-2 border rounded-lg">
                 </div>
               </div>
@@ -465,11 +475,12 @@
         <!-- ========================================
              BOTONES DE NAVEGACIÓN
              ======================================== -->
-        <div class="mt-8 flex gap-4 justify-between">
+        <div class="mt-8 flex gap-4 justify-between" role="region" aria-label="Controles de navegación del formulario">
           <button
             *ngIf="currentSection() > 1"
             (click)="prevSection()"
             type="button"
+            aria-label="Ir al paso anterior"
             class="px-6 py-2 border border-slate-300 rounded-lg font-medium text-slate-700 hover:bg-slate-50 transition">
             ← Atrás
           </button>
@@ -480,6 +491,7 @@
               *ngIf="showResults()"
               (click)="resetForm()"
               type="button"
+              aria-label="Iniciar una nueva predicción"
               class="px-6 py-2 border border-slate-300 rounded-lg font-medium text-slate-700 hover:bg-slate-50 transition">
               Nueva Predicción
             </button>
@@ -490,11 +502,13 @@
               (click)="currentSection() < 3 ? nextSection() : submitPrediction()"
               [disabled]="isLoading()"
               type="button"
+              [attr.aria-label]="currentSection() < 3 ? 'Ir al siguiente paso' : 'Enviar predicción'"
+              [attr.aria-busy]="isLoading()"
               class="px-6 py-2 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
               <span *ngIf="!isLoading()">
                 {{ currentSection() < 3 ? 'Siguiente →' : 'Predecir' }}
               </span>
-              <span *ngIf="isLoading()" class="flex items-center gap-2">
+              <span *ngIf="isLoading()" class="flex items-center gap-2" aria-label="Procesando predicción">
                 <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>

@@ -1,7 +1,7 @@
-<div *ngIf="predictionResult" class="space-y-6">
+<div *ngIf="predictionResult" class="space-y-6" role="region" aria-label="Resultados de la predicción de churn">
   <!-- Header de Resultados -->
   <div [ngClass]="getRiskBgColor(predictionResult.prevision)" 
-       class="border-l-4 rounded-lg p-6">
+       class="border-l-4 rounded-lg p-6" role="status" aria-live="polite" aria-atomic="true">
     <div class="flex items-center justify-between mb-4">
       <div>
         <h3 class="text-sm text-slate-600 font-medium mb-1">Resultado de Predicción</h3>
@@ -11,7 +11,7 @@
       </div>
       <div class="text-right">
         <p class="text-sm text-slate-600 mb-1">Probabilidad de Churn</p>
-        <p class="text-4xl font-bold text-slate-900">
+        <p class="text-4xl font-bold text-slate-900" [attr.aria-label]="'Probabilidad de churn: ' + (predictionResult.probabilidad * 100).toFixed(1) + ' por ciento'">
           {{ (predictionResult.probabilidad * 100).toFixed(1) }}%
         </p>
       </div>
