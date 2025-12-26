@@ -4,11 +4,12 @@ import { StatisticsService } from '../../core/services/statistics.service';
 import { FlatCompanyRecord } from '../../core/models/churn.interface';
 import { KpiCardComponent } from '../../shared/kpi-card/kpi-card.component';
 import { ChurnDistributionChartComponent } from '../../shared/charts/churn-distribution-chart/churn-distribution-chart.component';
+import { CompanyListComponent } from './company-list/company-list.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, KpiCardComponent, ChurnDistributionChartComponent],
+  imports: [CommonModule, KpiCardComponent, ChurnDistributionChartComponent, CompanyListComponent],
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
