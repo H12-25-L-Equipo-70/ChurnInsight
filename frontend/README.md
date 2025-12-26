@@ -6,6 +6,7 @@ Aplicación web para predecir el riesgo de abandono (churn) de clientes Pyme en 
 
 ---
 
+
 ## 🚀 Inicio Rápido
 
 ### Opción 1: Docker (Recomendado)
