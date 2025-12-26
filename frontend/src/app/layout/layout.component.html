@@ -1,0 +1,13 @@
+<div class="grid h-screen grid-cols-[280px_1fr] bg-gray-100">
+  <!-- Sidebar -->
+  <aside class="col-span-1">
+    <app-navigation></app-navigation>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="col-span-1 overflow-y-auto">
+    <div class="p-8">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
