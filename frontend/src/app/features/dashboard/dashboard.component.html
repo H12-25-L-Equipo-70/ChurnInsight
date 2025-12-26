@@ -23,12 +23,9 @@
   </div>
 
   <div class="mt-8">
-    <!-- Charts and other visualizations will go here -->
     <div class="bg-white p-6 rounded-lg shadow-md">
-      <h2 class="text-xl font-semibold text-gray-700">Churn Risk Distribution</h2>
-      <div class="h-64 flex items-center justify-center text-gray-400">
-        Chart will be implemented here
-      </div>
+      <h2 class="text-xl font-semibold text-gray-700 mb-4">Churn Risk Distribution</h2>
+      <app-churn-distribution-chart [data]="companies()"></app-churn-distribution-chart>
     </div>
   </div>
 </div>

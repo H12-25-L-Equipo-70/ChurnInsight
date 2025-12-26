@@ -1,0 +1,14 @@
+<div *ngIf="isBrowser; else ssrPlaceholder">
+  <div class="chart-container">
+    <canvas baseChart
+            [data]="doughnutChartData"
+            type="doughnut"
+            [options]="doughnutChartOptions">
+    </canvas>
+  </div>
+</div>
+<ng-template #ssrPlaceholder>
+  <div class="h-64 flex items-center justify-center text-gray-400">
+    Chart is not available during server-side rendering.
+  </div>
+</ng-template>
