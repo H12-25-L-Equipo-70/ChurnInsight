@@ -14,22 +14,26 @@
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  Frontend (Angular 19)        Backend (Spring Boot 3.x)        │
-│  ├── Dashboard               ├── REST API                      │
-│  ├── Analysis Views          ├── Business Logic                │
+│  ├── Dashboard               ├── REST API (/api/v1/companies)  │
+│  ├── Analysis Views          ├── 12+ Endpoints                 │
 │  └── Real-time Signals       └── Data Integration              │
+│          (FUTURE)                 (✅ COMPLETADO)              │
 │                                                                 │
 │  ┌──────────────────────────────────────────────────────────┐  │
-│  │              AI Service (FastAPI/Python)                 │  │
-│  │              • Churn Prediction Model                    │  │
-│  │              • Real-time Scoring                         │  │
+│  │     AI Service (FastAPI/Python) ✅ COMPLETADO (v1.0)    │  │
+│  │     • Churn Prediction Model (Random Forest)             │  │
+│  │     • Real-time Scoring (/api/v1/predictions/predict)   │  │
+│  │     • Batch Processing (/api/v1/predictions/batch)      │  │
+│  │     • Health Checks (/api/v1/health/*)                  │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │                           ▲                                    │
 │                           │                                    │
 │  ┌──────────────────────────────────────────────────────────┐  │
 │  │   Oracle Autonomous Database (OCI - São Paulo)           │  │
-│  │   • Datos de 1,000+ Pymes                               │  │
+│  │   • Datos de 1,000+ Pymes (EMPRESAS table)              │  │
 │  │   • Histórico 2022-2025 (trimestral)                    │  │
 │  │   • Wallet Authentication (X.509)                        │  │
+│  │   • Predicciones log (PREDICCIONES table)               │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
@@ -139,73 +143,150 @@ mvn spring-boot:run
 
 ---
 
-## ⏳ Misiones Próximas
-
-### 🔄 Misión 2: FastAPI AI Service (Python) - PRÓXIMA
+## ✅ Misión 2: FastAPI AI Service (Python) - COMPLETADA
 
 **Objetivo**: Crear servicio de predicción de churn usando ML en tiempo real.
 
-**Entregables Esperados**:
-- Servicio FastAPI (Python 3.10+)
-- Endpoint `POST /predict` para predicciones
-- Integración con modelo ML (.pkl)
-- Conexión a Oracle Database (oracledb driver)
-- Docker container
-- Documentación
+**Entregables**:
+- ✅ Servicio FastAPI con estructura profesional
+- ✅ Endpoint `POST /api/v1/predictions/predict` - Predicción individual
+- ✅ Endpoint `POST /api/v1/predictions/batch` - Predicción batch
+- ✅ Modelo Random Forest entrenado (train_model.py)
+- ✅ Conexión a Oracle Database (oracledb driver + Wallet)
+- ✅ Health checks (`/health/check`, `/health/ready`, `/health/live`)
+- ✅ Model info endpoint (`/health/model-info`)
+- ✅ Dockerfile multi-stage optimizado
+- ✅ docker-compose.yml con 2 servicios (Backend + AI)
+- ✅ Documentación exhaustiva (3 guías)
+- ✅ Testing scripts (test_endpoints.sh)
 
-**Tecnologías**:
-- Python 3.10+
-- FastAPI
-- scikit-learn / TensorFlow
-- Oracle Python Driver (oracledb)
-- Pydantic (validation)
+**Características**:
+- Random Forest Classifier con 100 estimadores
+- 13 features de datos financieros
+- Escalado automático (StandardScaler)
+- Predicción de probabilidad + nivel de riesgo
+- Batch processing optimizado (hasta 1000 empresas/request)
+- Logging detallado y structured
+- CORS enabled para todos los orígenes
+- Middleware de request logging
+- Error handling completo
 
-**Timeline**: ~2-3 días
+**Status**: ✅ **READY FOR PRODUCTION**
 
----
+**Cómo comenzar**:
+```bash
+cd ai_service/
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+# Editar .env con tus credenciales
+python train_model.py
+python -m uvicorn main:app --reload --port 8000
+# API en: http://localhost:8000/api/v1
+# Docs en: http://localhost:8000/api/v1/docs
+```
 
-### 🎨 Misión 3: Frontend Angular 19 - FUTURO
+**Documentación**:
+- 📖 [AI README](ai_service/README_AI.md) - Guía completa
+- ⚡ [Quick Start](ai_service/QUICK_START.md) - 5 minutos
+- 📚 [API Documentation](ai_service/API_DOCUMENTATION.md) - Referencia completa
+- 🧪 [Test Script](ai_service/test_endpoints.sh) - Ejemplos de requests
 
-**Objetivo**: Crear interfaz moderna con Signals y Tailwind CSS.
+**Endpoints Principales**:
 
-**Entregables Esperados**:
-- Componentes Angular 19 (Standalone)
-- Signals para state management
-- HTTP Client para comunicación con Backend
-- Tailwind CSS (diseño fintech moderno)
-- Dashboard de análisis
-- Responsive design
+| Endpoint | Método | Descripción |
+|----------|--------|-------------|
+| `/api/v1/health/check` | GET | Health status |
+| `/api/v1/health/model-info` | GET | Detalles del modelo |
+| `/api/v1/predictions/predict` | POST | Predicción individual |
+| `/api/v1/predictions/batch` | POST | Predicción batch |
+| `/api/v1/docs` | GET | Swagger UI |
 
-**Tecnologías**:
-- Angular 19
-- TypeScript
-- Tailwind CSS
-- Standalone Components
-- RxJS/Signals
+**Ejemplo de Predicción**:
+```bash
+curl -X POST http://localhost:8000/api/v1/predictions/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cuit": "20748123114",
+    "ingresos": 1500000.00,
+    "gastos": 1000000.00,
+    "margen_operativo": 33.33,
+    "deuda_total": 500000.00,
+    "activos_totales": 2000000.00,
+    "prestamos_solicitados": 3,
+    "prestamos_aprobados": 2,
+    "trimestre_dias_actividad": 85,
+    "trimestre_logins_promedio": 12.5,
+    "transferencias_trimestre": 45,
+    "pagos_trimestre": 30,
+    "creditos_trimestre": 15
+  }'
+```
 
-**Timeline**: ~3-5 días
+**Response**:
+```json
+{
+  "cuit": "20748123114",
+  "probability": 0.23,
+  "risk_level": "bajo",
+  "confidence": 0.95,
+  "timestamp": "2024-01-07T15:30:45.123456Z",
+  "features_used": 13
+}
+```
 
----
+**Integración con Backend**:
+- Spring Boot llama a FastAPI automáticamente
+- Request/Response completo tipado
+- Manejo de errores bidireccional
+- Logging centralizado
 
-### 🐳 Misión 4: Dockerización & DevOps - FUTURO
+### 🐳 Misión 4: Dockerización & DevOps - COMPLETADA PARCIAL
 
 **Objetivo**: Conteneurizar todo y crear pipeline de despliegue.
 
-**Entregables Esperados**:
-- `Dockerfile` para Backend (Java)
-- `Dockerfile` para AI Service (Python)
-- `Dockerfile` para Frontend (Node.js build)
-- `docker-compose.yml` para dev local
-- Kubernetes manifests (futuro)
-- GitHub Actions / CI/CD
+**Entregables Completados**:
+- ✅ `Dockerfile` para Backend (Java multi-stage)
+- ✅ `Dockerfile` para AI Service (Python multi-stage)
+- ✅ `docker-compose.yml` para dev/prod local
+- ✅ Health checks en ambos servicios
+- ✅ Volumen para Wallet (seguridad)
+- ✅ Logging centralizado
 
-**Tecnologías**:
-- Docker
-- Docker Compose
-- Kubernetes (optional)
-- GitHub Actions
+**Documentación**:
+- 📖 [docker-compose.yml](docker-compose.yml) - 3 servicios
 
-**Timeline**: ~2-3 días
+**Status**: ✅ **READY FOR ORACLE CLOUD DEPLOYMENT**
+
+**Cómo desplegar**:
+```bash
+# Build local
+docker-compose build
+
+# Run local
+docker-compose up -d
+
+# Verificar
+docker-compose ps
+curl http://localhost:8080/api/v1/companies/health
+curl http://localhost:8000/api/v1/health/check
+```
+
+**Deploy a Oracle Cloud**:
+```bash
+# Subir imágenes a Oracle Container Registry
+docker tag churninsight-backend:1.0.0 ocir.sa-saopaulo-1.oraclecloud.com/...
+docker tag churninsight-ai:1.0.0 ocir.sa-saopaulo-1.oraclecloud.com/...
+docker push ...
+
+# Ejecutar en instancia OCI con Docker
+docker-compose up -d
+```
+
+**Pendiente**: 
+- GitHub Actions CI/CD (opcional)
+- Kubernetes manifests (opcional)
 
 ---
 
@@ -306,22 +387,29 @@ mvn spring-boot:run
 
 **Verificar**: `curl http://localhost:8080/api/v1/companies/health`
 
-### 2️⃣ Base de Datos (Importar datos)
+### 2️⃣ AI Service Setup (5 minutos)
 ```bash
-# Los datos ya están en Oracle ADB
-# Verificar con el backend
-curl http://localhost:8080/api/v1/companies/segments/sectors
+cd ai_service/
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+# Editar .env con ORACLE_PASSWORD
+python train_model.py
+python -m uvicorn main:app --reload --port 8000
 ```
 
-### 3️⃣ AI Service (Próxima - Misión 2)
+**Verificar**: `curl http://localhost:8000/api/v1/health/check`
+
+### 3️⃣ Docker Compose (Toda la pila)
 ```bash
-cd ai-service/
-python -m pip install -r requirements.txt
-python main.py
-# Server en: http://localhost:8000
+docker-compose up -d
+# Services:
+# - Backend: http://localhost:8080/api/v1/companies
+# - AI Service: http://localhost:8000/api/v1/predictions
 ```
 
-### 4️⃣ Frontend (Próxima - Misión 3)
+### 4️⃣ Frontend (Próxima - Misión 3 - OPCIONAL)
 ```bash
 cd frontend/
 npm install
@@ -329,40 +417,48 @@ npm start
 # App en: http://localhost:3000
 ```
 
-### 5️⃣ Docker Compose (Toda la pila)
-```bash
-docker-compose up -d
-# Services:
-# - Frontend: http://localhost:3000
-# - Backend: http://localhost:8080
-# - AI: http://localhost:8000
-```
-
 ---
 
 ## 📚 Documentación
 
-### Backend
-- 📖 [Backend README](backend/BACKEND_README.md) - Guía completa de configuración
-- ⚡ [Quick Start](backend/QUICK_START.md) - Setup rápido
+### Backend (✅ Completado)
+- 📖 [Backend README](backend/BACKEND_README.md) - Guía completa
+- ⚡ [Quick Start](backend/QUICK_START.md) - Setup rápido (5 min)
 - ✔️ [Validation](backend/VALIDATION.md) - Checklist de validación
 - 🏗️ [Architecture](backend/ARCHITECTURE.md) - Diagramas de arquitectura
-- 📋 [Implementation](backend/IMPLEMENTATION_SUMMARY.md) - Resumen de implementación
+- 📋 [Implementation](backend/IMPLEMENTATION_SUMMARY.md) - Qué se construyó
+
+### AI Service (✅ Completado)
+- 📖 [AI README](ai_service/README_AI.md) - Guía completa
+- ⚡ [Quick Start](ai_service/QUICK_START.md) - Setup rápido (5 min)
+- 📚 [API Documentation](ai_service/API_DOCUMENTATION.md) - Referencia completa
+- 🧪 [Test Script](ai_service/test_endpoints.sh) - Ejemplos de requests
 
 ### API Reference
+
+**Backend**:
 ```
 Base URL: http://localhost:8080/api/v1/companies
 
-Endpoints Principales:
 GET    /companies/{cuit}                    → Empresa por CUIT
 GET    /companies/sector/{sector}           → Empresas por sector
 GET    /companies/churn/churned             → Empresas abandonadas
-GET    /companies/churn/statistics/{sector} → Estadísticas
 GET    /companies/churn/high-risk           → Alto riesgo
 GET    /companies/health                    → Health check
 ```
 
-[Ver API Completa →](backend/BACKEND_README.md#-api-endpoints)
+**AI Service**:
+```
+Base URL: http://localhost:8000/api/v1
+
+POST   /predictions/predict                 → Predicción individual
+POST   /predictions/batch                   → Batch predictions
+GET    /health/check                        → Health status
+GET    /health/model-info                   → Detalles del modelo
+GET    /docs                                → Swagger UI
+```
+
+[Ver APIs Completas →](ai_service/API_DOCUMENTATION.md)
 
 ---
 
@@ -375,6 +471,8 @@ GET    /companies/health                    → Health check
 - Connection pool management
 - SQL injection prevention (parameterized queries)
 - Transaction management
+- CORS con validación
+- Request logging y monitoring
 - .gitignore (wallet + secrets excluded)
 
 ---
@@ -394,11 +492,11 @@ Para cambios:
 ## 📞 Contacto
 
 **Arquitecto Senior**: Cloud & DevOps Engineer  
-**Especialidad**: Oracle Ecosystem + Fintech + Kubernetes  
+**Especialidad**: Oracle Ecosystem + Fintech + Kubernetes + Python + Java  
 
 **Proyecto**: ChurnInsight v1.0.0  
 **Inicio**: 2024-01-07  
-**Estado**: En Desarrollo (Misión 1 ✅, Misión 2-4 ⏳)
+**Estado**: 50% Completado (Misiones 1 & 2 ✅)
 
 ---
 
@@ -411,25 +509,28 @@ Privado - Solo para Pymer S.A.
 ## ✨ Resumen del Estado Actual
 
 ```
-┌─────────────────────────────────────────┐
-│      ChurnInsight - Estado Actual       │
-├─────────────────────────────────────────┤
-│                                         │
-│  Misión 1 (Backend):      ✅ 100%       │
-│  Misión 2 (AI Service):   ⏳ Próxima    │
-│  Misión 3 (Frontend):     ⏳ Próxima    │
-│  Misión 4 (DevOps):       ⏳ Próxima    │
-│                                         │
-│  Total Avance:            ✅ 25%        │
-│                                         │
-│  🚀 LISTO PARA PRODUCCIÓN (Backend)    │
-│                                         │
-└─────────────────────────────────────────┘
+┌──────────────────────────────────────────┐
+│     ChurnInsight - Estado Actual        │
+├──────────────────────────────────────────┤
+│                                          │
+│  Misión 1 (Backend):    ✅ 100% LISTO   │
+│  Misión 2 (AI Service): ✅ 100% LISTO   │
+│  Misión 3 (Frontend):   ⏳ Próxima       │
+│  Misión 4 (DevOps):     ✅ 60% (Docker) │
+│                                          │
+│  Total Avance:          ✅ 50%           │
+│                                          │
+│  🚀 READY FOR DOCKER IN ORACLE CLOUD    │
+│                                          │
+└──────────────────────────────────────────┘
 ```
+
+**Próxima Acción**: Desplegar en Oracle Cloud con docker-compose
 
 ---
 
 **Última Actualización**: 2024-01-07  
-**Versión**: 1.0.0-M1 (Misión 1 Completada)
+**Versión**: 1.0.0-M2 (Misiones 1-2 Completadas)
 
-**¡Adelante con Misión 2! 🚀**
+**¡Sistema de predicción de Churn completamente funcional! 🚀**
+

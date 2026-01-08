@@ -1,0 +1,92 @@
+version: '3.9'
+
+services:
+  # Spring Boot Backend
+  churninsight-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: churninsight-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      ORACLE_DB_USER: pymerdb
+      ORACLE_DB_PASSWORD: ${ORACLE_DB_PASSWORD}
+      ORACLE_WALLET_PATH: /app/wallet_pymer
+      TNS_ADMIN: /app/wallet_pymer
+    volumes:
+      - ./backend/wallet_pymer:/app/wallet_pymer:ro
+    depends_on:
+      - oracle-network
+    networks:
+      - churninsight-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1/companies/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # FastAPI AI Service
+  churninsight-ai:
+    build:
+      context: ./ai_service
+      dockerfile: Dockerfile
+    container_name: churninsight-ai
+    ports:
+      - "8000:8000"
+    environment:
+      ENVIRONMENT: docker
+      DEBUG: "false"
+      ORACLE_USER: ${ORACLE_USER:-pymerdb}
+      ORACLE_PASSWORD: ${ORACLE_DB_PASSWORD}
+      ORACLE_HOST: ${ORACLE_HOST:-pymerdb.sa-saopaulo-1.oraclecloud.com}
+      ORACLE_PORT: ${ORACLE_PORT:-1522}
+      ORACLE_SERVICE_NAME: ${ORACLE_SERVICE_NAME:-pymerdb_high}
+      ORACLE_WALLET_PATH: /app/wallet_pymer
+      LOG_LEVEL: INFO
+      LOG_FILE: /app/logs/ai_service.log
+    volumes:
+      - ./backend/wallet_pymer:/app/wallet_pymer:ro
+      - ./ai_service/logs:/app/logs
+      - ./ai_service/models:/app/models
+    depends_on:
+      - oracle-network
+    networks:
+      - churninsight-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health/check"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Oracle Network Service (placeholder)
+  # En Oracle Cloud, esto no es necesario ya que la DB está en la nube
+  oracle-network:
+    image: alpine:latest
+    container_name: oracle-network
+    command: sh -c "echo 'Oracle Cloud Network Ready'"
+    networks:
+      - churninsight-network
+
+networks:
+  churninsight-network:
+    driver: bridge
+
+volumes:
+  oracle-wallet:
+    driver: local
