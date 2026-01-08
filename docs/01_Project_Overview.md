@@ -207,7 +207,8 @@ python -m uvicorn main:app --reload --port 8000
 ```bash
 curl -X POST http://localhost:8000/api/v1/predictions/predict \
   -H "Content-Type: application/json" \
-  -d '{
+  -d 
+  {
     "cuit": "20748123114",
     "ingresos": 1500000.00,
     "gastos": 1000000.00,
@@ -221,7 +222,7 @@ curl -X POST http://localhost:8000/api/v1/predictions/predict \
     "transferencias_trimestre": 45,
     "pagos_trimestre": 30,
     "creditos_trimestre": 15
-  }'
+  }
 ```
 
 **Response**:
@@ -284,7 +285,7 @@ docker push ...
 docker-compose up -d
 ```
 
-**Pendiente**: 
+**Pendiente**:
 - GitHub Actions CI/CD (opcional)
 - Kubernetes manifests (opcional)
 
@@ -496,7 +497,7 @@ Para cambios:
 
 **Proyecto**: ChurnInsight v1.0.0  
 **Inicio**: 2024-01-07  
-**Estado**: 50% Completado (Misiones 1 & 2 ✅)
+**Estado**: 50% Completado (Misiones 1-2 ✅)
 
 ---
 

@@ -372,7 +372,8 @@ System.out.println("Risk: " + response.getRiskLevel());
 ```bash
 curl -X POST http://localhost:8000/api/v1/predictions/predict \
   -H "Content-Type: application/json" \
-  -d '{
+  -d 
+  {
     "cuit": "20748123114",
     "ingresos": 1500000.00,
     "gastos": 1000000.00,
@@ -386,7 +387,7 @@ curl -X POST http://localhost:8000/api/v1/predictions/predict \
     "transferencias_trimestre": 45,
     "pagos_trimestre": 30,
     "creditos_trimestre": 15
-  }'
+  }
 ```
 
 ---
