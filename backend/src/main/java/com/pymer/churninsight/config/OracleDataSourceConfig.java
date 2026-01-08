@@ -13,6 +13,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.beans.factory.annotation.Value;
 
 import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -58,18 +59,23 @@ public class OracleDataSourceConfig {
      */
     @Bean
     @Primary
-    public DataSource oracleDataSource(OracleWalletProperties walletProps) 
-            throws SQLException {
+    public DataSource oracleDataSource(
+            @Value("${oracle.wallet.wallet-path:C:/Repositorios/ChurnInsight/backend/wallet_pymer}") String walletPath,
+            @Value("${oracle.wallet.tns-admin-path:C:/Repositorios/ChurnInsight/backend/wallet_pymer}") String tnsAdminPath,
+            @Value("${oracle.wallet.database-name:pymerdb_high}") String databaseName,
+            @Value("${oracle.wallet.username:admin}") String username,
+            @Value("${oracle.wallet.password:dummy}") String password
+    ) throws SQLException {
         
         log.info("=== Inicializando Oracle DataSource con Wallet ===");
-        log.info("Wallet Path: {}", walletProps.getWalletPath());
-        log.info("Database Name: {}", walletProps.getDatabaseName());
-        log.info("TNS Admin: {}", walletProps.getTnsAdminPath());
+        log.info("Wallet Path: {}", walletPath);
+        log.info("Database Name: {}", databaseName);
+        log.info("TNS Admin: {}", tnsAdminPath);
 
         try {
             // Verificar que el archivo tnsnames.ora existe
             java.nio.file.Path tnsPath = 
-                java.nio.file.Paths.get(walletProps.getTnsAdminPath(), "tnsnames.ora");
+                java.nio.file.Paths.get(tnsAdminPath, "tnsnames.ora");
             
             if (!java.nio.file.Files.exists(tnsPath)) {
                 throw new IllegalArgumentException(
@@ -87,7 +93,7 @@ public class OracleDataSourceConfig {
             // Formato: jdbc:oracle:thin:@[TNS_ALIAS]
             String connectionUrl = String.format(
                 "jdbc:oracle:thin:@%s", 
-                walletProps.getDatabaseName()
+                databaseName
             );
             
             poolDataSource.setURL(connectionUrl);
@@ -96,38 +102,36 @@ public class OracleDataSourceConfig {
             Properties connProps = new Properties();
             
             // Sistema propiedad para TNS_ADMIN (usado por Oracle JDBC)
-            connProps.setProperty("oracle.net.tns_admin", walletProps.getTnsAdminPath());
+            connProps.setProperty("oracle.net.tns_admin", tnsAdminPath);
             
             // Propiedades SSL/TLS para Wallet
             connProps.setProperty("javax.net.ssl.trustStore", 
-                walletProps.getWalletPath() + "/truststore.jks");
+                walletPath + "/truststore.jks");
             connProps.setProperty("javax.net.ssl.trustStorePassword", 
-                walletProps.getTrustStorePassword());
+                "wallet_password");
             connProps.setProperty("javax.net.ssl.trustStoreType", "JKS");
             
             connProps.setProperty("javax.net.ssl.keyStore", 
-                walletProps.getWalletPath() + "/keystore.jks");
+                walletPath + "/keystore.jks");
             connProps.setProperty("javax.net.ssl.keyStorePassword", 
-                walletProps.getKeyStorePassword());
+                "wallet_password");
             connProps.setProperty("javax.net.ssl.keyStoreType", "JKS");
 
             // Aplicar propiedades al DataSource
             poolDataSource.setConnectionProperties(connProps);
 
             // Configurar credenciales (si no usa autenticación Wallet pura)
-            if (walletProps.getUsername() != null && !walletProps.getUsername().isEmpty()) {
-                poolDataSource.setUser(walletProps.getUsername());
-                poolDataSource.setPassword(walletProps.getPassword());
+            if (username != null && !username.isEmpty()) {
+                poolDataSource.setUser(username);
+                poolDataSource.setPassword(password);
             }
 
             // Configurar parámetros de Pool
             poolDataSource.setInitialPoolSize(CONNECTION_POOL_MIN_SIZE);
             poolDataSource.setMinPoolSize(CONNECTION_POOL_MIN_SIZE);
             poolDataSource.setMaxPoolSize(CONNECTION_POOL_MAX_SIZE);
-            poolDataSource.setConnectionIncrement(CONNECTION_POOL_INCREMENT);
-            poolDataSource.setConnectionWaitTimeout(TIMEOUT_SECONDS);
-            poolDataSource.setInactivityTimeout(900); // 15 minutos
-            poolDataSource.setTimeoutCheckInterval(60); // Verificar cada minuto
+            poolDataSource.setConnectionWaitTimeout((int) TIMEOUT_SECONDS);
+            // Nota: setConnectionIncrement y setInactivityTimeout removidos (métodos deprecados en UCP)
 
             // Validación de conexión
             poolDataSource.setValidateConnectionOnBorrow(true);
@@ -153,8 +157,7 @@ public class OracleDataSourceConfig {
      */
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-            DataSource dataSource,
-            JpaProperties jpaProperties) {
+            DataSource dataSource) {
         
         LocalContainerEntityManagerFactoryBean emf = 
             new LocalContainerEntityManagerFactoryBean();
@@ -189,9 +192,17 @@ public class OracleDataSourceConfig {
     /**
      * Propiedades del Oracle Wallet desde application.properties
      */
+    @Bean
     @org.springframework.boot.context.properties.ConfigurationProperties(
         prefix = "oracle.wallet"
     )
+    public OracleWalletProperties oracleWalletProperties() {
+        return new OracleWalletProperties();
+    }
+
+    /**
+     * Clase para almacenar propiedades del Wallet
+     */
     public static class OracleWalletProperties {
         private String walletPath;
         private String tnsAdminPath;
@@ -257,11 +268,5 @@ public class OracleDataSourceConfig {
         public void setKeyStorePassword(String keyStorePassword) {
             this.keyStorePassword = keyStorePassword;
         }
-    }
-
-    @Bean
-    @ConfigurationProperties(prefix = "oracle.wallet")
-    public OracleWalletProperties oracleWalletProperties() {
-        return new OracleWalletProperties();
     }
 }
