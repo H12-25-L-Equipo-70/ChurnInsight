@@ -45,60 +45,26 @@
 
 ```
 ChurnInsight/
-├── README.md                           # Este archivo
+├── README.md                           # Punto de entrada principal
+├── docs/                               # TODA la documentación del proyecto
+│   ├── 01_Project_Overview.md
+│   ├── 02_AI_Service_Quick_Start.md
+│   ├── 03_Backend_Quick_Start.md
+│   ├── 04_AI_Service_API.md
+│   ├── 05_Deployment_and_Commands.md
+│   └── 06_Backend_Architecture.md
 ├── backend/                            # ✅ COMPLETADO (Misión 1)
-│   ├── pom.xml                         # Maven configuration
+│   ├── pom.xml
 │   ├── src/
-│   │   ├── main/java/com/pymer/churninsight/
-│   │   │   ├── ChurnInsightApplication.java
-│   │   │   ├── config/
-│   │   │   │   └── OracleDataSourceConfig.java
-│   │   │   ├── domain/
-│   │   │   │   ├── entity/
-│   │   │   │   │   └── Company.java
-│   │   │   │   └── repository/
-│   │   │   │       └── CompanyRepository.java
-│   │   │   ├── application/
-│   │   │   │   ├── service/
-│   │   │   │   │   └── CompanyService.java
-│   │   │   │   └── dto/
-│   │   │   │       └── CompanyResponseDTO.java
-│   │   │   └── presentation/
-│   │   │       └── controller/
-│   │   │           └── CompanyController.java
-│   │   └── resources/
-│   │       ├── application.properties
-│   │       └── logback-spring.xml
 │   ├── wallet_pymer/
-│   │   ├── tnsnames.ora               # TNS aliases
-│   │   ├── sqlnet.ora
-│   │   ├── cwallet.sso                # Wallet credentials
-│   │   ├── ewallet.p12
-│   │   └── ojdbc.properties
-│   ├── .env.example
-│   ├── .gitignore
-│   ├── BACKEND_README.md              # Full configuration guide
-│   ├── QUICK_START.md                 # 5-minute setup
-│   ├── VALIDATION.md                  # Validation checklist
-│   ├── ARCHITECTURE.md                # Architecture diagrams
-│   ├── IMPLEMENTATION_SUMMARY.md      # What was built
-│   └── CONSTRUCTION_CHECKLIST.md      # This checklist
-│
-├── frontend/                          # ⏳ Misión 3 (Próxima)
-│   ├── src/
-│   │   ├── app/
-│   │   ├── assets/
-│   │   └── index.html
-│   └── angular.json
-│
-├── ai-service/                        # ⏳ Misión 2 (Próxima)
+│   └── .env.example
+├── ai_service/                        # ✅ COMPLETADO (Misión 2)
 │   ├── main.py
 │   ├── requirements.txt
-│   └── models/
-│       └── churn_model.pkl
-│
+│   ├── app/
+│   └── .env.example
 └── data/
-    └── dataset_empresas_fintech_v2.7.csv  # Raw data
+    └── dataset_empresas_fintech_v2.7.csv
 ```
 
 ---
@@ -134,12 +100,9 @@ mvn spring-boot:run
 ```
 
 **Documentación**:
-- 📖 [Backend README](backend/BACKEND_README.md) - Guía completa
-- ⚡ [Quick Start](backend/QUICK_START.md) - 5 minutos
-- ✔️ [Validation](backend/VALIDATION.md) - Checklist
-- 🏗️ [Architecture](backend/ARCHITECTURE.md) - Diagramas
-- 📋 [Implementation Summary](backend/IMPLEMENTATION_SUMMARY.md) - Qué se construyó
-- ✅ [Construction Checklist](backend/CONSTRUCTION_CHECKLIST.md) - Verificación
+- 📖 [Project Overview](01_Project_Overview.md) - Guía completa
+- ⚡ [Backend Quick Start](03_Backend_Quick_Start.md) - 5 minutos
+- 🏗️ [Backend Architecture](06_Backend_Architecture.md) - Diagramas
 
 ---
 
@@ -188,10 +151,10 @@ python -m uvicorn main:app --reload --port 8000
 ```
 
 **Documentación**:
-- 📖 [AI README](ai_service/README_AI.md) - Guía completa
-- ⚡ [Quick Start](ai_service/QUICK_START.md) - 5 minutos
-- 📚 [API Documentation](ai_service/API_DOCUMENTATION.md) - Referencia completa
-- 🧪 [Test Script](ai_service/test_endpoints.sh) - Ejemplos de requests
+- 📖 [Project Overview](01_Project_Overview.md) - Guía completa
+- ⚡ [AI Service Quick Start](02_AI_Service_Quick_Start.md) - 5 minutos
+- 📚 [AI Service API](04_AI_Service_API.md) - Referencia completa
+- 🧪 [Test Script](../ai_service/test_endpoints.sh) - Ejemplos de requests
 
 **Endpoints Principales**:
 
@@ -420,20 +383,16 @@ npm start
 
 ---
 
-## 📚 Documentación
+## 📚 Documentación Principal
 
-### Backend (✅ Completado)
-- 📖 [Backend README](backend/BACKEND_README.md) - Guía completa
-- ⚡ [Quick Start](backend/QUICK_START.md) - Setup rápido (5 min)
-- ✔️ [Validation](backend/VALIDATION.md) - Checklist de validación
-- 🏗️ [Architecture](backend/ARCHITECTURE.md) - Diagramas de arquitectura
-- 📋 [Implementation](backend/IMPLEMENTATION_SUMMARY.md) - Qué se construyó
+Toda la documentación del proyecto se ha consolidado en la carpeta `/docs`.
 
-### AI Service (✅ Completado)
-- 📖 [AI README](ai_service/README_AI.md) - Guía completa
-- ⚡ [Quick Start](ai_service/QUICK_START.md) - Setup rápido (5 min)
-- 📚 [API Documentation](ai_service/API_DOCUMENTATION.md) - Referencia completa
-- 🧪 [Test Script](ai_service/test_endpoints.sh) - Ejemplos de requests
+- 📖 **[01_Project_Overview.md](01_Project_Overview.md)**: Visión general, arquitectura y estado del proyecto.
+- ⚡ **[02_AI_Service_Quick_Start.md](02_AI_Service_Quick_Start.md)**: Guía de inicio rápido para el servicio de IA.
+- ⚡ **[03_Backend_Quick_Start.md](03_Backend_Quick_Start.md)**: Guía de inicio rápido para el backend.
+- 📚 **[04_AI_Service_API.md](04_AI_Service_API.md)**: Documentación detallada de la API del servicio de IA.
+- 🚀 **[05_Deployment_and_Commands.md](05_Deployment_and_Commands.md)**: Guía de despliegue y comandos útiles.
+- 🏗️ **[06_Backend_Architecture.md](06_Backend_Architecture.md)**: Diagramas de arquitectura del backend.
 
 ### API Reference
 
@@ -459,7 +418,7 @@ GET    /health/model-info                   → Detalles del modelo
 GET    /docs                                → Swagger UI
 ```
 
-[Ver APIs Completas →](ai_service/API_DOCUMENTATION.md)
+[Ver APIs Completas →](04_AI_Service_API.md)
 
 ---
 

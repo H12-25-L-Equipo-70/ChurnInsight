@@ -118,8 +118,6 @@ backend/
 ├── pom.xml
 ├── .env.example
 ├── .gitignore
-├── BACKEND_README.md
-├── VALIDATION.md
 └── QUICK_START.md (este archivo)
 ```
 

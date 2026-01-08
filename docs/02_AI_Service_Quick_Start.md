@@ -114,8 +114,6 @@ ai_service/
 ├── requirements.txt       # Dependencias Python
 ├── Dockerfile            # Para Docker
 ├── .env.example          # Variables de entorno
-├── README_AI.md          # Documentación completa
-├── API_DOCUMENTATION.md  # API Reference
 ├── test_endpoints.sh     # Tests
 │
 ├── app/
@@ -193,9 +191,9 @@ ai_service/
 ## 📞 Contacto
 
 Preguntas? Ver:
-- 📖 [README_AI.md](README_AI.md) - Documentación completa
-- 📚 [API_DOCUMENTATION.md](API_DOCUMENTATION.md) - API Reference
-- 🐛 [test_endpoints.sh](test_endpoints.sh) - Ejemplos de requests
+- 📖 [Project Overview](01_Project_Overview.md) - Documentación completa
+- 📚 [AI Service API](04_AI_Service_API.md) - API Reference
+- 🐛 [test_endpoints.sh](../ai_service/test_endpoints.sh) - Ejemplos de requests
 
 ---
 
