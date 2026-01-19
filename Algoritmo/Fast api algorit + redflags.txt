@@ -1,0 +1,99 @@
+from fastapi import FastAPI
+from pydantic import BaseModel, Field
+import pandas as pd
+import joblib
+
+# --- 1) Esquema de entrada ---
+class EmpresaInput(BaseModel):
+    CUIT: str
+    NOMBRE_EMPRESA: str
+    PERIODO_FISCAL: str
+    EMPLEADOS: int
+    INGRESOS: float
+    GASTOS: float
+    DEUDA: float
+    ACTIVOS: float
+    PRESTAMOS_SOLICITADOS: int
+    PRESTAMOS_APROBADOS: int
+    MONTO_SOLICITADO: float
+    MONTO_APROBADO: float
+    TICKET_PROMEDIO_SOLICITADO: float
+    TICKET_PROMEDIO_APROBADO: float
+    PRESTAMOS_CANCELADOS: int
+    PRESTAMOS_VIGENTES: int
+    TIEMPO_CANCELACION_PRESTAMO: int
+    SERVICIOS_UTILIZADOS: int
+    TRANSFERENCIAS: int
+    PAGOS: int
+    CREDITOS: int
+    INVERSIONES: int
+    TRIMESTRE_DIAS_ACTIVIDAD: int
+    TRIMESTRE_DIAS_INACTIVIDAD: int
+    PROMEDIO_LOGIN_DIA: float
+    TOTAL_LOGIN_DIA: int
+
+# --- 2) Inicializar API ---
+app = FastAPI(title="Pymer Churn Predictor API")
+
+# --- 3) Cargar pipeline y umbral ---
+artifact = joblib.load("pymer_churn_pipeline.pkl")
+pipeline = artifact["pipeline"]
+threshold = artifact["threshold"]
+
+# --- 4) Función para calcular red flags ---
+def calcular_red_flags(df: pd.DataFrame):
+    flags = []
+
+    # Engagement
+    ratio_inactividad = df['TRIMESTRE_DIAS_INACTIVIDAD'][0] / (
+        df['TRIMESTRE_DIAS_ACTIVIDAD'][0] + df['TRIMESTRE_DIAS_INACTIVIDAD'][0]
+    )
+    if ratio_inactividad > 0.5:
+        flags.append("Alta inactividad en la app")
+
+    if df['PROMEDIO_LOGIN_DIA'][0] < 3:
+        flags.append("Caída significativa en logins diarios")
+
+    if df['SERVICIOS_UTILIZADOS'][0] <= 1:
+        flags.append("Abandono de funcionalidades: pocos servicios usados")
+
+    # Liquidez y finanzas
+    if df['MONTO_SOLICITADO'][0] > 0:
+        ratio_aprobacion = df['MONTO_APROBADO'][0] / df['MONTO_SOLICITADO'][0]
+        if ratio_aprobacion < 0.3:
+            flags.append("Baja aprobación de préstamos")
+
+    margen = df['INGRESOS'][0] - df['GASTOS'][0]
+    if margen < 0:
+        flags.append("Margen negativo persistente")
+
+    # Producto y crédito
+    if df['TIEMPO_CANCELACION_PRESTAMO'][0] < 30:
+        flags.append("Cancelación anticipada de préstamos")
+
+    if (df['TRANSFERENCIAS'][0] + df['PAGOS'][0]) < 5:
+        flags.append("Disminución en volumen de operaciones")
+
+    return flags
+
+# --- 5) Endpoint de predicción con red flags ---
+@app.post("/predict_churn")
+def predict_churn(data: EmpresaInput):
+    df_input = pd.DataFrame([data.dict()])
+
+    # Predicción
+    proba = pipeline.predict_proba(df_input)[:, 1][0]
+    risk = int(proba >= threshold)
+
+    # Red flags
+    flags = calcular_red_flags(df_input)
+
+    return {
+        "CUIT": data.CUIT,
+        "NOMBRE_EMPRESA": data.NOMBRE_EMPRESA,
+        "PERIODO_FISCAL": data.PERIODO_FISCAL,
+        "churn_probability": round(float(proba), 4),
+        "churn_prediction": risk,
+        "threshold_used": round(threshold, 3),
+        "red_flags": flags
+    }
