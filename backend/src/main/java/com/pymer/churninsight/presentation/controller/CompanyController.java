@@ -28,7 +28,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping("/companies")
+@RequestMapping("/api/v1/companies")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class CompanyController {
 

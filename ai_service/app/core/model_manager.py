@@ -53,15 +53,38 @@ class ChurnModel:
         """
         Normaliza features para predicción
         Convierte diccionario a numpy array en orden correcto
+        Soporta tanto uppercase (INGRESOS) como lowercase (ingresos)
         """
         feature_vector = []
         missing_features = []
         
+        # Mapping de features uppercase -> lowercase para compatibilidad
+        feature_map = {
+            "INGRESOS": "ingresos",
+            "GASTOS": "gastos", 
+            "DEUDA": "deuda_total",
+            "ACTIVOS": "activos_totales",
+            "PRESTAMOS_SOLICITADOS": "prestamos_solicitados",
+            "PRESTAMOS_APROBADOS": "prestamos_aprobados",
+            "TRIMESTRE_DIAS_ACTIVIDAD": "trimestre_dias_actividad",
+            "PROMEDIO_LOGIN_DIA": "trimestre_logins_promedio",
+            "TRANSFERENCIAS": "transferencias_trimestre",
+            "PAGOS": "pagos_trimestre",
+            "CREDITOS": "creditos_trimestre"
+        }
+        
         for feature in self.features:
+            # Buscar el valor: primero por nombre exact, luego por map
+            value = None
+            
             if feature in features:
-                feature_vector.append(features[feature])
+                value = features[feature]
+            elif feature in feature_map and feature_map[feature] in features:
+                value = features[feature_map[feature]]
+            
+            if value is not None:
+                feature_vector.append(float(value))
             else:
-                # Si falta una feature, usar 0 como placeholder
                 feature_vector.append(0.0)
                 missing_features.append(feature)
         
@@ -80,10 +103,20 @@ class ChurnModel:
         """
         Genera predicción simulada basada en heurísticas
         Útil cuando no hay modelo entrenado
+        Soporta tanto uppercase (DEUDA) como lowercase (deuda_total)
         """
+        # Mapping de features para compatibilidad
+        def get_feature(uppercase_name, lowercase_names, default=0):
+            if uppercase_name in features:
+                return features[uppercase_name]
+            for lowercase_name in lowercase_names:
+                if lowercase_name in features:
+                    return features[lowercase_name]
+            return default
+        
         # Score basado en razón deuda/patrimonio
-        debt = features.get('deuda_total', 0)
-        assets = features.get('activos_totales', 1)
+        debt = get_feature("DEUDA", ["deuda_total"], 0)
+        assets = get_feature("ACTIVOS", ["activos_totales"], 1)
         
         if assets > 0:
             debt_ratio = debt / assets
@@ -91,12 +124,12 @@ class ChurnModel:
             debt_ratio = 0
         
         # Score basado en actividad
-        dias_actividad = features.get('trimestre_dias_actividad', 90)
+        dias_actividad = get_feature("TRIMESTRE_DIAS_ACTIVIDAD", ["trimestre_dias_actividad"], 90)
         activity_score = max(0, 1 - (dias_actividad / 90))
         
         # Score basado en ingresos
-        ingresos = features.get('ingresos', 1)
-        gastos = features.get('gastos', 0)
+        ingresos = get_feature("INGRESOS", ["ingresos"], 1)
+        gastos = get_feature("GASTOS", ["gastos"], 0)
         
         if ingresos > 0:
             profitability = (ingresos - gastos) / ingresos

@@ -47,10 +47,10 @@ class Settings(BaseSettings):
     
     # Feature Engineering
     required_features: list = [
-        "ingresos", "gastos", "margen_operativo", "deuda_total",
-        "activos_totales", "prestamos_solicitados", "prestamos_aprobados",
-        "trimestre_dias_actividad", "trimestre_logins_promedio",
-        "transferencias_trimestre", "pagos_trimestre", "creditos_trimestre"
+        "INGRESOS", "GASTOS", "DEUDA", "ACTIVOS",
+        "PRESTAMOS_SOLICITADOS", "PRESTAMOS_APROBADOS",
+        "TRIMESTRE_DIAS_ACTIVIDAD", "PROMEDIO_LOGIN_DIA",
+        "TRANSFERENCIAS", "PAGOS", "CREDITOS"
     ]
     
     class Config:
