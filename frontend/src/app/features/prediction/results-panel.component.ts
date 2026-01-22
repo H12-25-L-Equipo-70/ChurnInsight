@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject, computed } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { 
   PredictionResponse, 
@@ -7,6 +7,7 @@ import {
   RedFlag
 } from '../../core/models/churn.interface';
 import { ExportService } from '../../core/services/export.service';
+import { PredictionsDataService } from '../../core/services/predictions-data.service';
 
 /**
  * ResultsPanelComponent
@@ -31,7 +32,17 @@ export class ResultsPanelComponent {
   @Output() downloadReport = new EventEmitter<string>();
 
   private exportService = inject(ExportService);
+  private predictionsService = inject(PredictionsDataService);
   exportStatus = { message: '', isError: false };
+
+  constructor() {
+    // Efecto: Guardar automáticamente cuando hay un resultado
+    effect(() => {
+      if (this.predictionResult && this.profile && this.metrics) {
+        this.autoSavePrediction();
+      }
+    });
+  }
 
   /**
    * Computed: Probabilidad en porcentaje formateada
@@ -60,6 +71,91 @@ export class ResultsPanelComponent {
     if (normalized > 0.4) return 'medio';
     return 'bajo';
   });
+
+  /**
+   * Computed: Red flags procesados y categorizados
+   * Maneja tanto strings simples como objetos RedFlag
+   */
+  processedRedFlags = computed(() => {
+    const result = this.predictionResult;
+    if (!result?.red_flags) return [];
+    
+    return result.red_flags.map((flag, index) => {
+      // Si es string simple, convertir a objeto
+      if (typeof flag === 'string') {
+        return {
+          id: index,
+          description: flag,
+          severity: this._estimateSeverity(flag, index),
+          isString: true
+        };
+      }
+      
+      // Si es objeto RedFlag
+      return {
+        id: index,
+        flag: flag.flag || '',
+        description: flag.description || flag as any,
+        severity: flag.severity || 'medium',
+        value: flag.value,
+        isString: false
+      };
+    });
+  });
+
+  /**
+   * Estima severidad de un flag basado en palabras clave
+   */
+  private _estimateSeverity(flagText: string, index: number): 'critical' | 'high' | 'medium' | 'low' {
+    const text = flagText.toLowerCase();
+    
+    // Critical: problemas muy serios
+    if (text.includes('critico') || text.includes('crítico') || text.includes('grave')) {
+      return 'critical';
+    }
+    
+    // High: problemas importantes
+    if (text.includes('caida') || text.includes('caída') || text.includes('disminución') || 
+        text.includes('alto') || text.includes('significativa')) {
+      return 'high';
+    }
+    
+    // Medium: problemas moderados
+    if (text.includes('bajo') || text.includes('leve') || text.includes('información')) {
+      return 'medium';
+    }
+    
+    // Low: información adicional
+    return 'low';
+  }
+
+  /**
+   * Cuenta flags por severidad
+   */
+  countFlagsBySeverity(severity: 'critical' | 'high' | 'medium' | 'low'): number {
+    return this.processedRedFlags().filter(f => f.severity === severity).length;
+  }
+
+  /**
+   * Guarda automáticamente la predicción (sin errores si BD no está disponible)
+   */
+  private autoSavePrediction(): void {
+    if (!this.predictionResult || !this.profile || !this.metrics) return;
+
+    this.predictionsService.savePrediction(
+      this.profile,
+      this.predictionResult,
+      this.metrics
+    ).subscribe({
+      next: (saved) => {
+        console.log('💾 Predicción guardada automáticamente', saved);
+      },
+      error: (error) => {
+        // No mostrar error al usuario, solo log
+        console.warn('⚠️ No se pudo guardar en BD, se guardará en localStorage', error);
+      }
+    });
+  }
 
   /**
    * Descarga reporte en CSV

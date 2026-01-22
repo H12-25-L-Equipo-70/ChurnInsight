@@ -156,13 +156,15 @@ export interface FlatCompanyRecord extends Omit<StaticProfile, 'CUIT'> {
 
 /**
  * Red Flag - Indicador de riesgo identificado por el modelo
- * Cada bandera proporciona contexto específico del por qué del riesgo
+ * Puede venir como string simple o como objeto con contexto
  */
 export interface RedFlag {
-  flag: string; // Nombre de la bandera (ej: "HIGH_INACTIVITY", "NEGATIVE_MARGIN")
-  description: string; // Descripción en español
-  severity: 'critical' | 'high' | 'medium' | 'low'; // Nivel de severidad
+  flag?: string; // Nombre de la bandera (ej: "HIGH_INACTIVITY")
+  description?: string; // Descripción en español
+  severity?: 'critical' | 'high' | 'medium' | 'low'; // Nivel de severidad
   value?: number | string; // Valor asociado a la bandera
+  // Para compatibilidad: si viene como string simple del backend
+  [key: string]: any;
 }
 
 /**

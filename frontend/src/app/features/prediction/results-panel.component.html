@@ -47,7 +47,85 @@
     </div>
   </div>
 
-  <!-- Recomendaciones -->
+  <!-- Red Flags - Alertas de Riesgo -->
+  <div *ngIf="processedRedFlags().length > 0" class="bg-amber-50 border border-amber-200 rounded-lg p-6">
+    <h4 class="text-lg font-semibold text-amber-900 mb-4 flex items-center gap-2">
+      <span class="text-2xl">🚩</span> Señales de Alerta Detectadas
+    </h4>
+    
+    <div class="space-y-3">
+      <div *ngFor="let flag of processedRedFlags()" 
+           class="p-4 bg-white rounded-lg border-l-4 transition-shadow hover:shadow-md"
+           [ngClass]="{
+             'border-red-500 bg-red-50': flag.severity === 'critical',
+             'border-orange-500 bg-orange-50': flag.severity === 'high',
+             'border-amber-500 bg-amber-50': flag.severity === 'medium',
+             'border-blue-500 bg-blue-50': flag.severity === 'low'
+           }">
+        
+        <!-- Icono y Severidad -->
+        <div class="flex items-start gap-3">
+          <div class="flex-shrink-0 mt-0.5">
+            <span [ngSwitch]="flag.severity" class="text-2xl">
+              <span *ngSwitchCase="'critical'">🔴</span>
+              <span *ngSwitchCase="'high'">🟠</span>
+              <span *ngSwitchCase="'medium'">🟡</span>
+              <span *ngSwitchCase="'low'">🔵</span>
+            </span>
+          </div>
+          
+          <div class="flex-1 min-w-0">
+            <!-- Descripción principal -->
+            <p class="font-semibold text-sm mb-1"
+               [ngClass]="{
+                 'text-red-900': flag.severity === 'critical',
+                 'text-orange-900': flag.severity === 'high',
+                 'text-amber-900': flag.severity === 'medium',
+                 'text-blue-900': flag.severity === 'low'
+               }">
+              {{ flag.description }}
+            </p>
+            
+            <!-- Etiqueta de severidad -->
+            <span class="inline-block mt-2 px-2 py-1 text-xs font-semibold rounded-full"
+                  [ngClass]="{
+                    'bg-red-200 text-red-800': flag.severity === 'critical',
+                    'bg-orange-200 text-orange-800': flag.severity === 'high',
+                    'bg-amber-200 text-amber-800': flag.severity === 'medium',
+                    'bg-blue-200 text-blue-800': flag.severity === 'low'
+                  }">
+              {{ flag.severity | uppercase }}
+            </span>
+            
+            <!-- Valor asociado si existe -->
+            <p *ngIf="flag.value" class="text-xs text-slate-600 mt-2">
+              Valor: <span class="font-mono font-semibold">{{ flag.value }}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Resumen de flags por severidad -->
+    <div class="mt-4 pt-4 border-t border-amber-200 grid grid-cols-4 gap-2 text-xs">
+      <div class="text-center">
+        <p class="font-semibold text-red-900">{{ countFlagsBySeverity('critical') }}</p>
+        <p class="text-red-700">Críticos</p>
+      </div>
+      <div class="text-center">
+        <p class="font-semibold text-orange-900">{{ countFlagsBySeverity('high') }}</p>
+        <p class="text-orange-700">Altos</p>
+      </div>
+      <div class="text-center">
+        <p class="font-semibold text-amber-900">{{ countFlagsBySeverity('medium') }}</p>
+        <p class="text-amber-700">Medios</p>
+      </div>
+      <div class="text-center">
+        <p class="font-semibold text-blue-900">{{ countFlagsBySeverity('low') }}</p>
+        <p class="text-blue-700">Bajos</p>
+      </div>
+    </div>
+  </div>
   <div *ngIf="predictionResult.recomendaciones && predictionResult.recomendaciones.length > 0" 
        class="bg-slate-50 border border-slate-200 rounded-lg p-6">
     <h4 class="text-lg font-semibold text-slate-900 mb-4">
