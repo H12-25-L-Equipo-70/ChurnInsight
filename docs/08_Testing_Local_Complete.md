@@ -516,35 +516,204 @@ curl http://localhost:8080/api/v1/companies/20748123114
 # 3. Verificar logs en ambas terminales para rastrear flujo
 ```
 
----
-
 ## 🐳 TESTING CON DOCKER
 
-### Build Docker Image (AI Service):
+### ⚠️ REQUISITOS PREVIOS
+- Docker Desktop instalado (Windows/Mac): https://www.docker.com/products/docker-desktop
+- Docker iniciado y corriendo ✅
+- Verificar: `docker --version` y `docker ps`
 
+### PROBLEMA COMÚN: "dockerDesktopLinuxEngine file not found"
+
+**Solución:**
+```powershell
+# 1. Verificar que Docker Desktop está corriendo
+docker info
+
+# 2. Si NO funciona, abrir Docker Desktop:
+# Windows: Buscar y abrir aplicación "Docker Desktop"
+# Esperar a que muestre ✓ "Docker is running"
+
+# 3. Esperar ~30 segundos
+# 4. Volver a intentar:
+docker ps
+```
+
+### BUILD: Construir Imágenes Docker
+
+**Opción 1: Construir Ambas (Recomendado)**
+```bash
+# Desde raíz del proyecto
+cd c:\Repositorios\ChurnInsight
+
+docker-compose build
+
+# Salida esperada:
+# Building churninsight-ai
+# Building churninsight-backend
+# Successfully built ...
+```
+
+**Opción 2: Construir Individual**
+
+AI Service:
 ```bash
 cd ai_service
-
-# Build
 docker build -t churninsight-ai:1.0.0 .
+docker images | grep churninsight-ai  # Verificar
+```
 
-# Run
+Backend:
+```bash
+cd backend
+docker build -t churninsight-backend:1.0.0 .
+docker images | grep churninsight-backend  # Verificar
+```
+
+### RUN: Ejecutar Contenedores
+
+**Opción 1: Ejecutar Ambas (Recomendado)**
+```bash
+# Desde raíz del proyecto
+docker-compose up -d
+
+# Verificar que están corriendo
+docker-compose ps
+
+# Salida esperada:
+# NAME                 STATUS
+# churninsight-ai      Up 5 seconds
+# churninsight-backend Up 5 seconds
+```
+
+**Opción 2: Ejecutar Individual**
+
+AI Service:
+```bash
 docker run -d \
   --name churninsight-ai \
   -p 8000:8000 \
-  -e ENVIRONMENT=development \
-  -e LOG_LEVEL=INFO \
+  -e ENVIRONMENT=docker \
+  -v $(pwd)/ai_service/logs:/app/logs \
+  -v $(pwd)/ai_service/models:/app/models \
   churninsight-ai:1.0.0
+```
 
-# Test
+Backend:
+```bash
+docker run -d \
+  --name churninsight-backend \
+  -p 8080:8080 \
+  -e SPRING_PROFILES_ACTIVE=docker \
+  churninsight-backend:1.0.0
+```
+
+### TEST: Verificar Servicios
+
+```bash
+# Verificar que ambos están corriendo
+docker ps
+
+# Ver logs (en tiempo real)
+docker-compose logs -f
+
+# O específico:
+docker logs -f churninsight-ai
+docker logs -f churninsight-backend
+```
+
+**Esperar a que ambos muestren "startup complete" o similar**
+
+### TEST 1: Health Check - AI Service
+
+```bash
 curl http://localhost:8000/api/v1/health/check
 
-# Logs
-docker logs -f churninsight-ai
+# Respuesta esperada (200 OK):
+{
+  "status": "healthy",
+  "version": "1.0.0",
+  "environment": "docker",
+  "model_loaded": true,
+  "database_connected": null,
+  "timestamp": "2024-01-21T15:30:00.123456Z"
+}
+```
 
-# Stop
-docker stop churninsight-ai
-docker rm churninsight-ai
+### TEST 2: Health Check - Backend
+
+```bash
+curl http://localhost:8080/api/v1/companies/health
+
+# Respuesta esperada (200 OK):
+{
+  "service": "Company Service",
+  "version": "1.0.0",
+  "status": "UP"
+}
+```
+
+### TEST 3: Predicción - AI Service
+
+```bash
+curl -X POST http://localhost:8000/api/v1/predictions/predict_churn \
+  -H "Content-Type: application/json" \
+  -d '{
+    "CUIT": "20748123114",
+    "NOMBRE_EMPRESA": "TestCo",
+    "PERIODO_FISCAL": "2024-Q4",
+    "EMPLEADOS": 10,
+    "INGRESOS": 1000000,
+    "GASTOS": 800000,
+    "DEUDA": 200000,
+    "ACTIVOS": 1500000,
+    "PRESTAMOS_SOLICITADOS": 1,
+    "PRESTAMOS_APROBADOS": 1,
+    "MONTO_SOLICITADO": 100000,
+    "MONTO_APROBADO": 100000,
+    "TICKET_PROMEDIO_SOLICITADO": 100000,
+    "TICKET_PROMEDIO_APROBADO": 100000,
+    "PRESTAMOS_CANCELADOS": 0,
+    "PRESTAMOS_VIGENTES": 1,
+    "TIEMPO_CANCELACION_PRESTAMO": 0,
+    "SERVICIOS_UTILIZADOS": 3,
+    "TRANSFERENCIAS": 10,
+    "PAGOS": 5,
+    "CREDITOS": 2,
+    "INVERSIONES": 0,
+    "TRIMESTRE_DIAS_ACTIVIDAD": 80,
+    "TRIMESTRE_DIAS_INACTIVIDAD": 10,
+    "PROMEDIO_LOGIN_DIA": 5,
+    "TOTAL_LOGIN_DIA": 400
+  }'
+
+# Respuesta esperada (200 OK)
+```
+
+### STOP: Detener Servicios
+
+```bash
+# Detener y remover
+docker-compose down
+
+# Solo detener (sin remover)
+docker-compose stop
+
+# Verificar que se detuvieron
+docker ps  # Debe estar vacío
+```
+
+### CLEANUP: Limpiar Recursos
+
+```bash
+# Remover contenedores
+docker-compose down -v
+
+# Remover imágenes
+docker rmi churninsight-ai:1.0.0 churninsight-backend:1.0.0
+
+# Verificar
+docker images | grep churninsight  # Debe estar vacío
 ```
 
 ---

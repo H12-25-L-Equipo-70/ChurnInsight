@@ -62,7 +62,36 @@ curl -X POST http://localhost:8000/api/v1/predictions/predict_churn \
 
 ---
 
-## 📚 Documentación
+## � Docker (Alternativa - Testing/Producción)
+
+**Requisitos**: Docker Desktop instalado y corriendo
+
+```bash
+# Build imágenes
+docker-compose build
+
+# Ejecutar servicios
+docker-compose up -d
+
+# Verificar
+docker-compose ps
+
+# Test
+curl http://localhost:8000/api/v1/health/check
+curl http://localhost:8080/api/v1/companies/health
+
+# Detener
+docker-compose down
+```
+
+**⚠️ Problema**: Si Docker no está corriendo:
+- Abrir aplicación "Docker Desktop"
+- Esperar a ver ✓ "Docker is running"
+- Ver: [DOCKER_GUIDE.md](DOCKER_GUIDE.md) para más ayuda
+
+---
+
+## �📚 Documentación
 
 | Documento | Descripción |
 |-----------|------------|
@@ -74,6 +103,7 @@ curl -X POST http://localhost:8000/api/v1/predictions/predict_churn \
 | [06_Backend_Architecture.md](docs/06_Backend_Architecture.md) | Arquitectura técnica backend |
 | **[07_Integration_NewNotebook.md](docs/07_Integration_NewNotebook.md)** | **✅ NUEVA: Integración new_notebook.md** |
 | **[08_Testing_Local_Complete.md](docs/08_Testing_Local_Complete.md)** | **✅ NUEVA: Guía completa de testing** |
+| **[DOCKER_GUIDE.md](DOCKER_GUIDE.md)** | **✅ NUEVA: Guía completa de Docker** |
 
 ---
 
