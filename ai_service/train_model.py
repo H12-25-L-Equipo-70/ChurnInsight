@@ -20,9 +20,11 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Rutas
-DATA_PATH = "./data/dataset_empresas_fintech_v2.7.csv"
-MODEL_PATH = "./models/churn_model.pkl"
-SCALER_PATH = "./models/scaler.pkl"
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # ChurnInsight root
+DATA_PATH = os.path.join(BASE_DIR, "data", "dataset_empresas_fintech_v2.7.csv")
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "models", "churn_model.pkl")
+SCALER_PATH = os.path.join(os.path.dirname(__file__), "models", "scaler.pkl")
 
 
 def load_and_prepare_data(csv_path: str) -> tuple:
@@ -33,28 +35,56 @@ def load_and_prepare_data(csv_path: str) -> tuple:
     try:
         df = pd.read_csv(csv_path)
         logger.info(f"Dataset cargado: {df.shape[0]} filas, {df.shape[1]} columnas")
+        logger.info(f"Columnas del dataset: {list(df.columns)}")
         
-        # Features para el modelo
+        # Features para el modelo (11 features que espera la API)
+        # Mapeo: Nombre en CSV -> Nombre en minúsculas para el modelo
         feature_columns = [
-            'ingresos', 'gastos', 'margen_operativo', 'deuda_total',
-            'activos_totales', 'prestamos_solicitados', 'prestamos_aprobados',
-            'trimestre_dias_actividad', 'trimestre_logins_promedio',
-            'transferencias_trimestre', 'pagos_trimestre', 'creditos_trimestre'
+            'ingresos',              # INGRESOS
+            'gastos',                # GASTOS
+            'deuda',                 # DEUDA (o Deuda en CSV)
+            'activos',               # ACTIVOS (o Activos en CSV)
+            'prestamos_solicitados', # PRESTAMOS_SOLICITADOS
+            'prestamos_aprobados',   # PRESTAMOS_APROBADOS
+            'trimestre_dias_actividad', # TRIMESTRE_DIAS_ACTIVIDAD
+            'promedio_login_dia',    # PROMEDIO_LOGIN_DIA
+            'transferencias',        # TRANSFERENCIAS (o Transferencias_Trimestre)
+            'pagos',                 # PAGOS (o Pagos_Trimestre)
+            'creditos'               # CREDITOS (o Creditos_Trimestre)
         ]
         
-        # Target variable
-        target_column = 'churn'  # O el nombre real en el dataset
+        # Normalizar nombres de columnas a minúsculas para compatibilidad
+        df.columns = df.columns.str.lower().str.replace(' ', '_')
+        logger.info(f"Columnas normalizadas: {list(df.columns)[:5]}...")
+        
+        # Target variable - puede ser 'churn' o similar
+        target_column = None
+        if 'churn' in df.columns:
+            target_column = 'churn'
+        else:
+            logger.warning(f"Columna 'churn' no encontrada. Columnas disponibles: {list(df.columns)}")
+            return create_dummy_data()
         
         # Seleccionar columnas disponibles
         available_features = [col for col in feature_columns if col in df.columns]
         logger.info(f"Features disponibles: {available_features}")
         
-        # Manejar valores faltantes
-        df = df[available_features + [target_column]].dropna()
-        logger.info(f"Después de limpiar: {df.shape[0]} filas")
+        if not available_features:
+            logger.warning("No features disponibles, usando dummy data")
+            return create_dummy_data()
         
-        X = df[available_features]
-        y = df[target_column]
+        # Manejar valores faltantes
+        df_clean = df[available_features + [target_column]].dropna()
+        logger.info(f"Después de limpiar: {df_clean.shape[0]} filas")
+        
+        if df_clean.shape[0] < 10:
+            logger.warning("Muy pocos datos después de limpiar, usando dummy data")
+            return create_dummy_data()
+        
+        X = df_clean[available_features]
+        y = df_clean[target_column]
+        
+        logger.info(f"Churn distribution en datos reales: {y.value_counts().to_dict()}")
         
         return X, y, available_features
         
@@ -64,6 +94,7 @@ def load_and_prepare_data(csv_path: str) -> tuple:
         return create_dummy_data()
     except Exception as e:
         logger.error(f"Error cargando datos: {str(e)}")
+        logger.error(f"Stack: {type(e).__name__}")
         return create_dummy_data()
 
 
@@ -76,32 +107,31 @@ def create_dummy_data() -> tuple:
     n_samples = 200
     
     feature_columns = [
-        'ingresos', 'gastos', 'margen_operativo', 'deuda_total',
-        'activos_totales', 'prestamos_solicitados', 'prestamos_aprobados',
-        'trimestre_dias_actividad', 'trimestre_logins_promedio',
-        'transferencias_trimestre', 'pagos_trimestre', 'creditos_trimestre'
+        'ingresos', 'gastos', 'deuda', 'activos',
+        'prestamos_solicitados', 'prestamos_aprobados',
+        'trimestre_dias_actividad', 'promedio_login_dia',
+        'transferencias', 'pagos', 'creditos'
     ]
     
     data = {
         'ingresos': np.random.uniform(100000, 5000000, n_samples),
         'gastos': np.random.uniform(50000, 3000000, n_samples),
-        'margen_operativo': np.random.uniform(-20, 50, n_samples),
-        'deuda_total': np.random.uniform(0, 2000000, n_samples),
-        'activos_totales': np.random.uniform(100000, 5000000, n_samples),
+        'deuda': np.random.uniform(0, 2000000, n_samples),
+        'activos': np.random.uniform(100000, 5000000, n_samples),
         'prestamos_solicitados': np.random.randint(0, 10, n_samples),
         'prestamos_aprobados': np.random.randint(0, 8, n_samples),
         'trimestre_dias_actividad': np.random.randint(0, 91, n_samples),
-        'trimestre_logins_promedio': np.random.uniform(0, 30, n_samples),
-        'transferencias_trimestre': np.random.randint(0, 100, n_samples),
-        'pagos_trimestre': np.random.randint(0, 80, n_samples),
-        'creditos_trimestre': np.random.randint(0, 50, n_samples),
+        'promedio_login_dia': np.random.uniform(0, 30, n_samples),
+        'transferencias': np.random.randint(0, 100, n_samples),
+        'pagos': np.random.randint(0, 80, n_samples),
+        'creditos': np.random.randint(0, 50, n_samples),
     }
     
     X = pd.DataFrame(data)
     
     # Crear target basado en heurística
     y = (
-        (X['deuda_total'] / (X['activos_totales'] + 1) > 0.5).astype(int) |
+        (X['deuda'] / (X['activos'] + 1) > 0.5).astype(int) |
         (X['trimestre_dias_actividad'] < 30).astype(int) |
         ((X['ingresos'] - X['gastos']) < 0).astype(int)
     ).astype(int)

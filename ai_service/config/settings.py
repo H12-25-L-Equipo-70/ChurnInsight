@@ -6,6 +6,9 @@ from typing import Optional
 
 logger = logging.getLogger(__name__)
 
+# Get absolute path to ai_service directory
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 class Settings(BaseSettings):
     """
     Configuración de la aplicación FastAPI
@@ -33,24 +36,33 @@ class Settings(BaseSettings):
     oracle_password: str = os.getenv("ORACLE_PASSWORD", "")
     oracle_wallet_path: str = os.getenv("ORACLE_WALLET_PATH", "../backend/wallet_pymer")
     
-    # ML Model Configuration
-    model_path: str = os.getenv("MODEL_PATH", "./models/churn_model.pkl")
-    scaler_path: str = os.getenv("SCALER_PATH", "./models/scaler.pkl")
+    # ML Model Configuration - Using absolute paths
+    model_path: str = os.getenv("MODEL_PATH", str(BASE_DIR / "models" / "churn_model.pkl"))
+    scaler_path: str = os.getenv("SCALER_PATH", str(BASE_DIR / "models" / "scaler.pkl"))
     
-    # Logging Configuration
+    # Logging Configuration - Using absolute paths
     log_level: str = os.getenv("LOG_LEVEL", "INFO")
-    log_file: str = os.getenv("LOG_FILE", "./logs/ai_service.log")
+    log_file: str = os.getenv("LOG_FILE", str(BASE_DIR / "logs" / "ai_service.log"))
     
     # Model Configuration
     model_threshold: float = float(os.getenv("MODEL_THRESHOLD", 0.5))
     batch_size: int = int(os.getenv("BATCH_SIZE", 32))
     
     # Feature Engineering
+    # IMPORTANTE: Estos features deben coincidir exactamente con los features del modelo entrenado
+    # Si cambias aquí, debes reentrenar el modelo
     required_features: list = [
-        "INGRESOS", "GASTOS", "DEUDA", "ACTIVOS",
-        "PRESTAMOS_SOLICITADOS", "PRESTAMOS_APROBADOS",
-        "TRIMESTRE_DIAS_ACTIVIDAD", "PROMEDIO_LOGIN_DIA",
-        "TRANSFERENCIAS", "PAGOS", "CREDITOS"
+        "ingresos",
+        "gastos",
+        "deuda",
+        "activos",
+        "prestamos_solicitados",
+        "prestamos_aprobados",
+        "trimestre_dias_actividad",
+        "promedio_login_dia",
+        "transferencias",
+        "pagos",
+        "creditos"
     ]
     
     class Config:

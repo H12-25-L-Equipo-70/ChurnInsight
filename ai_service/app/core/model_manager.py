@@ -58,44 +58,61 @@ class ChurnModel:
         feature_vector = []
         missing_features = []
         
-        # Mapping de features uppercase -> lowercase para compatibilidad
+        # Mapping de features UPPERCASE (API) -> lowercase (modelo entrenado)
         feature_map = {
             "INGRESOS": "ingresos",
             "GASTOS": "gastos", 
-            "DEUDA": "deuda_total",
-            "ACTIVOS": "activos_totales",
             "PRESTAMOS_SOLICITADOS": "prestamos_solicitados",
             "PRESTAMOS_APROBADOS": "prestamos_aprobados",
             "TRIMESTRE_DIAS_ACTIVIDAD": "trimestre_dias_actividad",
+            # Legacy mappings para compatibilidad
+            "DEUDA": "deuda_total",
+            "ACTIVOS": "activos_totales",
             "PROMEDIO_LOGIN_DIA": "trimestre_logins_promedio",
             "TRANSFERENCIAS": "transferencias_trimestre",
             "PAGOS": "pagos_trimestre",
             "CREDITOS": "creditos_trimestre"
         }
         
+        logger.debug(f"Features esperados por modelo: {self.features}")
+        logger.debug(f"Features recibidos: {list(features.keys())}")
+        
         for feature in self.features:
             # Buscar el valor: primero por nombre exact, luego por map
             value = None
             
+            # Intenta primero con lowercase exacto
             if feature in features:
                 value = features[feature]
-            elif feature in feature_map and feature_map[feature] in features:
-                value = features[feature_map[feature]]
+            # Luego intenta con uppercase
+            elif feature.upper() in features:
+                value = features[feature.upper()]
+            # Luego busca en el mapping
+            else:
+                for uppercase_key, lowercase_key in feature_map.items():
+                    if lowercase_key == feature and uppercase_key in features:
+                        value = features[uppercase_key]
+                        break
             
             if value is not None:
                 feature_vector.append(float(value))
+                logger.debug(f"  {feature}: {value}")
             else:
                 feature_vector.append(0.0)
                 missing_features.append(feature)
+                logger.warning(f"  {feature}: FALTANTE (usando 0)")
         
         if missing_features:
             logger.warning(f"Features faltantes, usando 0: {missing_features}")
         
         array = np.array(feature_vector).reshape(1, -1)
+        logger.debug(f"Feature vector shape: {array.shape}, values: {array}")
         
         # Aplicar scaler si está disponible
         if self.scaler:
-            array = self.scaler.transform(array)
+            array_scaled = self.scaler.transform(array)
+            logger.debug(f"After scaling: {array_scaled}")
+            return array_scaled
         
         return array
     
@@ -162,16 +179,23 @@ class ChurnModel:
             - risk_level: str ('bajo', 'medio', 'alto')
         """
         try:
+            logger.info(f"=== PREDICT START ===")
+            logger.info(f"Model available: {self.model is not None}")
+            
             # Normalizar features
             X = self._normalize_features(features)
+            logger.info(f"Features normalized. Shape: {X.shape}")
             
             # Realizar predicción
             if self.model is not None:
+                logger.info(f"Using trained model (type: {type(self.model).__name__})")
                 probability = self.model.predict_proba(X)[0][1]
-                logger.debug(f"Predicción del modelo: {probability:.4f}")
+                logger.info(f"Predicción del modelo: {probability:.4f}")
             else:
+                logger.info(f"Model is None, using mock prediction")
                 # Usar predicción simulada si no hay modelo
                 probability = self._get_mock_prediction(features)
+                logger.info(f"Mock prediction: {probability:.4f}")
             
             # Asegurar que está en [0, 1]
             probability = max(0.0, min(1.0, float(probability)))
@@ -185,10 +209,13 @@ class ChurnModel:
                 risk_level = "bajo"
             
             logger.info(f"Predicción completada: prob={probability:.4f}, riesgo={risk_level}")
+            logger.info(f"=== PREDICT END ===")
             return probability, risk_level
             
         except Exception as e:
-            logger.error(f"Error en predicción: {str(e)}")
+            logger.error(f"ERROR en predicción: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
             return 0.5, "desconocido"
     
     def batch_predict(self, data: pd.DataFrame) -> pd.DataFrame:
