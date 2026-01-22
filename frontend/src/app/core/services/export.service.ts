@@ -71,7 +71,7 @@ Inversiones,${metrics?.services_flags?.Inversiones ? 'Sí' : 'No'}
 Total Servicios,${metrics?.services_flags?.Servicios_Utilizados || 0}/4
 
 RESULTADO DE PREDICCIÓN
-Nivel de Riesgo,${result?.prevision?.toUpperCase() || 'N/A'}
+Nivel de Riesgo,${(result?.prevision || 'N/A').toUpperCase()}
 Probabilidad de Churn,${((result?.probabilidad || 0) * 100).toFixed(2)}%
 Confianza del Modelo,${((result?.confidence || 0) * 100).toFixed(0)}%
 
@@ -120,7 +120,7 @@ ChurnInsight - Resultado de Predicción
 Empresa: ${profile?.Nombre_Empresa || 'N/A'}
 CUIT: ${profile?.CUIT || 'N/A'}
 
-Nivel de Riesgo: ${result?.prevision?.toUpperCase() || 'N/A'}
+Nivel de Riesgo: ${(result?.prevision || 'N/A').toUpperCase()}
 Probabilidad de Churn: ${((result?.probabilidad || 0) * 100).toFixed(1)}%
 Confianza: ${((result?.confidence || 0) * 100).toFixed(0)}%
 
@@ -144,9 +144,10 @@ ${(result?.recomendaciones || []).map((rec) => `• ${rec}`).join('\n') || 'Sin 
     profile: Partial<StaticProfile>,
     result: PredictionResponse
   ): string {
-    const riskLevel = result.prevision.charAt(0).toUpperCase() + 
-                      result.prevision.slice(1);
-    const probability = (result.probabilidad * 100).toFixed(1);
+    const prevision = result.prevision || 'desconocido';
+    const riskLevel = prevision.charAt(0).toUpperCase() + 
+                      prevision.slice(1);
+    const probability = ((result.probabilidad || 0) * 100).toFixed(1);
 
     return `
 La empresa ${profile.Nombre_Empresa} (CUIT: ${profile.CUIT}) 

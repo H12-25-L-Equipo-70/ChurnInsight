@@ -155,21 +155,84 @@ export interface FlatCompanyRecord extends Omit<StaticProfile, 'CUIT'> {
 }
 
 /**
- * Respuesta del servicio de predicción
- * Contrato para el backend: predicción de riesgo de churn
+ * Red Flag - Indicador de riesgo identificado por el modelo
+ * Cada bandera proporciona contexto específico del por qué del riesgo
+ */
+export interface RedFlag {
+  flag: string; // Nombre de la bandera (ej: "HIGH_INACTIVITY", "NEGATIVE_MARGIN")
+  description: string; // Descripción en español
+  severity: 'critical' | 'high' | 'medium' | 'low'; // Nivel de severidad
+  value?: number | string; // Valor asociado a la bandera
+}
+
+/**
+ * Input para predicción - mapea los 30+ campos del modelo AI
+ * Estructura completa de EmpresaInput del servicio AI Service
+ */
+export interface EmpresaInput {
+  // Identificación
+  CUIT: string | number;
+  NOMBRE_EMPRESA: string;
+  PERIODO_FISCAL: string; // Ej: "2024-Q4"
+  
+  // Estructura financiera
+  EMPLEADOS?: number; // Cantidad de empleados (opcional)
+  INGRESOS: number;
+  GASTOS: number;
+  DEUDA: number;
+  ACTIVOS: number;
+  MARGEN?: number; // Campo local, no se envía al AI Service
+  
+  // Comportamiento de crédito (9 campos)
+  PRESTAMOS_SOLICITADOS: number;
+  PRESTAMOS_APROBADOS: number;
+  PRESTAMOS_CANCELADOS: number;
+  PRESTAMOS_VIGENTES: number;
+  TICKET_PROMEDIO_SOLICITADO: number;
+  TICKET_PROMEDIO_APROBADO: number;
+  MONTO_SOLICITADO: number;
+  MONTO_APROBADO: number;
+  TIEMPO_CANCELACION_PRESTAMO: number;
+  
+  // Transaccionalidad - IMPORTANTE: El AI Service espera estos como números (0 o 1), no booleanos
+  SERVICIOS_UTILIZADOS: number;
+  TRANSFERENCIAS: number; // 0 o 1
+  PAGOS: number; // 0 o 1
+  CREDITOS: number; // 0 o 1
+  INVERSIONES: number; // 0 o 1
+  
+  // App Engagement (4 campos)
+  TRIMESTRE_DIAS_ACTIVIDAD: number;
+  TRIMESTRE_DIAS_INACTIVIDAD: number;
+  PROMEDIO_LOGIN_DIA: number;
+  TOTAL_LOGIN_DIA: number;
+}
+
+/**
+ * Respuesta completa del servicio de predicción del AI Service
+ * Incluye probabilidad, flagas de riesgo y umbral usado
  */
 export interface PredictionResponse {
-  prevision: 'alto' | 'medio' | 'bajo'; // Riesgo de abandono
-  probabilidad: number; // 0-1 (0% a 100%)
-  confidence?: number; // Confianza del modelo (opcional)
-  recomendaciones?: string[]; // Acciones sugeridas (opcional)
+  // Respuesta original (para compatibilidad)
+  prevision?: 'alto' | 'medio' | 'bajo';
+  probabilidad?: number;
+  confidence?: number;
+  recomendaciones?: string[];
+  
+  // Nuevos campos del AI Service
+  CUIT: string;
+  NOMBRE_EMPRESA: string;
+  churn_probability: number; // 0-1 o 0-100%
+  churn_prediction: 'YES' | 'NO'; // Predicción binaria
+  threshold_used: number; // Umbral de decisión usado
+  red_flags: RedFlag[]; // Banderas de riesgo detalladas
+  timestamp: string; // ISO 8601 format
 }
 
 /**
  * Payload para enviar al servicio de predicción
- * Estructura que el frontend envía al backend
+ * Estructura que el frontend envía al backend (legacy + new)
  */
-export interface PredictionRequest {
-  company_profile: StaticProfile;
-  quarterly_data: QuarterlyMetrics;
+export interface PredictionRequest extends EmpresaInput {
+  // Hereda todos los campos de EmpresaInput
 }

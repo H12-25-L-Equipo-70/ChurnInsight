@@ -405,7 +405,47 @@ tail -f backend/target/*.log
 
 ---
 
-## 🐛 Troubleshooting
+## �️ Frontend Integration ✨ NUEVO
+
+El Frontend Angular 21 ahora está **completamente integrado** con Backend + AI Service.
+
+### Terminal 4: Frontend (ng serve)
+```bash
+cd frontend
+npm install
+ng serve
+# ✅ http://localhost:4200
+```
+
+### Características Implementadas
+- ✅ HTTP real a `/api/v1/predictions/predict_churn` (AI Service)
+- ✅ Integración con `/api/v1/companies/{cuit}` (Backend)
+- ✅ 30+ campos de EmpresaInput mapeados desde formulario
+- ✅ Red flags contextualizados con severidad
+- ✅ Recomendaciones inteligentes automáticas
+- ✅ Error handling comprehensivo
+- ✅ Exportación CSV/JSON
+
+### Flujo Completo
+```
+Angular Form (30 campos)
+    ↓
+QuarterlyMetrics
+    ↓
+PredictionService (HTTP POST)
+    ↓
+AI Service (predict_churn)
+    ↓
+PredictionResponse (con red_flags)
+    ↓
+ResultsPanel (muestra red flags + timestamp)
+```
+
+**Documentación detallada**: [docs/09_Frontend_Integration_Guide.md](docs/09_Frontend_Integration_Guide.md)
+
+---
+
+## �🐛 Troubleshooting
 
 | Problema | Solución |
 |----------|----------|
@@ -444,4 +484,4 @@ Propiedad de Pymer - ChurnInsight Project
 ---
 
 **Última actualización**: 21 de Enero, 2025  
-**Versión**: 1.0.0 - Integración new_notebook.md completa ✅
+**Versión**: 1.1.0 - Frontend Angular integrado ✅ | Backend integrado ✅ | AI Service operacional ✅

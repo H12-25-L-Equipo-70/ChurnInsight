@@ -146,6 +146,7 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
 
   /**
    * Inicializa el formulario con validaciones
+   * Incluye todos los 30+ campos del EmpresaInput
    */
   private initializeForm(): void {
     this.companyForm = this.fb.group({
@@ -163,7 +164,7 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
       sector: ['', Validators.required],
       provincia: ['', Validators.required],
 
-      // Sección 2: Salud Financiera
+      // Sección 2: Salud Financiera - FINANCIALS (5 campos)
       ingresos: [
         null,
         [Validators.required, Validators.min(0)]
@@ -181,14 +182,18 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.min(0)]
       ],
 
-      // Créditos
+      // CREDIT BEHAVIOR (9 campos)
       prestamos_solicitados: [null, [Validators.required, Validators.min(0)]],
       prestamos_aprobados: [null, [Validators.required, Validators.min(0)]],
+      prestamos_cancelados: [null, [Validators.required, Validators.min(0)]],
       prestamos_vigentes: [null, [Validators.required, Validators.min(0)]],
+      ticket_promedio_solicitado: [null, [Validators.required, Validators.min(0)]],
+      ticket_promedio_aprobado: [null, [Validators.required, Validators.min(0)]],
       monto_solicitado: [null, [Validators.required, Validators.min(0)]],
       monto_aprobado: [null, [Validators.required, Validators.min(0)]],
+      tiempo_cancelacion_prestamo: [null, [Validators.required, Validators.min(0)]],
 
-      // Sección 3: Comportamiento en App
+      // Sección 3: Comportamiento en App - APP ENGAGEMENT (4 campos)
       trimestre_dias_actividad: [
         null,
         [Validators.required, Validators.min(0), Validators.max(90)]
@@ -200,7 +205,7 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
       promedio_login_dia: [null, [Validators.required, Validators.min(0)]],
       total_login_dia: [null, [Validators.required, Validators.min(0)]],
 
-      // Servicios
+      // SERVICES FLAGS (5 campos)
       transferencias: [false],
       pagos: [false],
       creditos: [false],
@@ -255,10 +260,19 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
         this.validateField('activos', errors);
         this.validateField('prestamos_solicitados', errors);
         this.validateField('prestamos_aprobados', errors);
+        this.validateField('prestamos_cancelados', errors);
+        this.validateField('prestamos_vigentes', errors);
+        this.validateField('ticket_promedio_solicitado', errors);
+        this.validateField('ticket_promedio_aprobado', errors);
+        this.validateField('monto_solicitado', errors);
+        this.validateField('monto_aprobado', errors);
+        this.validateField('tiempo_cancelacion_prestamo', errors);
         break;
       case 3: // Engagement
         this.validateField('trimestre_dias_actividad', errors);
+        this.validateField('trimestre_dias_inactividad', errors);
         this.validateField('promedio_login_dia', errors);
+        this.validateField('total_login_dia', errors);
         break;
     }
 
@@ -303,6 +317,7 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
 
   /**
    * Envía el formulario para predicción
+   * Ahora llama al AI Service con HTTP real
    */
   async submitPrediction(): Promise<void> {
     if (!this.companyForm.valid) {
@@ -316,12 +331,20 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
     try {
       const quarterlyData = this.buildQuarterlyMetrics();
       const profile = this.buildStaticProfile();
+      const values = this.companyForm.value;
       
       // Guarda los datos actuales
       this.currentMetrics.set(quarterlyData);
       this.currentProfile.set(profile);
       
-      this.predictionService.predict(quarterlyData).subscribe({
+      // Llamar al service con metadatos de empresa
+      this.predictionService.predict(
+        quarterlyData,
+        values.cuit,
+        values.nombre_empresa,
+        values.sector,
+        values.provincia
+      ).subscribe({
         next: (response) => {
           this.predictionResult.set(response);
           this.showResults.set(true);
@@ -330,53 +353,55 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error en predicción:', error);
           this.isLoading.set(false);
-          alert('Error al obtener predicción. Intenta de nuevo.');
+          alert(`❌ ${error.message}`);
         }
       });
     } catch (error) {
       console.error('Error:', error);
       this.isLoading.set(false);
+      alert('Error al procesar los datos. Intenta de nuevo.');
     }
   }
 
   /**
    * Construye el objeto QuarterlyMetrics desde los valores del formulario
+   * Mapea los campos del formulario a la estructura QuarterlyMetrics
    */
   private buildQuarterlyMetrics(): QuarterlyMetrics {
     const values = this.companyForm.value;
 
     const financials: Financials = {
-      Ingresos: values.ingresos,
-      Gastos: values.gastos,
-      Margen: values.ingresos - values.gastos,
-      Deuda: values.deuda,
-      Activos: values.activos
+      Ingresos: Number(values.ingresos) || 0,
+      Gastos: Number(values.gastos) || 0,
+      Margen: (Number(values.ingresos) || 0) - (Number(values.gastos) || 0),
+      Deuda: Number(values.deuda) || 0,
+      Activos: Number(values.activos) || 0
     };
 
     const creditBehavior: CreditBehavior = {
-      Prestamos_Solicitados: values.prestamos_solicitados,
-      Prestamos_Aprobados: values.prestamos_aprobados,
-      Prestamos_Cancelados: 0, // Puede agregarse al formulario
-      Prestamos_Vigentes: values.prestamos_vigentes,
-      Ticket_Promedio_Solicitado: values.monto_solicitado / Math.max(values.prestamos_solicitados, 1),
-      Ticket_Promedio_Aprobado: values.monto_aprobado / Math.max(values.prestamos_aprobados, 1),
-      Monto_Solicitado: values.monto_solicitado,
-      Monto_Aprobado: values.monto_aprobado,
-      Tiempo_Cancelacion_Prestamo: 60 // Valor por defecto
+      Prestamos_Solicitados: Number(values.prestamos_solicitados) || 0,
+      Prestamos_Aprobados: Number(values.prestamos_aprobados) || 0,
+      Prestamos_Cancelados: Number(values.prestamos_cancelados) || 0,
+      Prestamos_Vigentes: Number(values.prestamos_vigentes) || 0,
+      Ticket_Promedio_Solicitado: Number(values.ticket_promedio_solicitado) || 0,
+      Ticket_Promedio_Aprobado: Number(values.ticket_promedio_aprobado) || 0,
+      Monto_Solicitado: Number(values.monto_solicitado) || 0,
+      Monto_Aprobado: Number(values.monto_aprobado) || 0,
+      Tiempo_Cancelacion_Prestamo: Number(values.tiempo_cancelacion_prestamo) || 0
     };
 
     const appEngagement: AppEngagement = {
-      Trimestre_Dias_Actividad: values.trimestre_dias_actividad,
-      Trimestre_Dias_Inactividad: values.trimestre_dias_inactividad,
-      Promedio_Login_Dia: values.promedio_login_dia,
-      Total_Login_Dia: values.total_login_dia
+      Trimestre_Dias_Actividad: Number(values.trimestre_dias_actividad) || 0,
+      Trimestre_Dias_Inactividad: Number(values.trimestre_dias_inactividad) || 0,
+      Promedio_Login_Dia: Number(values.promedio_login_dia) || 0,
+      Total_Login_Dia: Number(values.total_login_dia) || 0
     };
 
     const servicesFlags: ServicesFlags = {
-      Transferencias: values.transferencias,
-      Pagos: values.pagos,
-      Creditos: values.creditos,
-      Inversiones: values.inversiones,
+      Transferencias: !!values.transferencias,
+      Pagos: !!values.pagos,
+      Creditos: !!values.creditos,
+      Inversiones: !!values.inversiones,
       Servicios_Utilizados: this.servicesCount()
     };
 

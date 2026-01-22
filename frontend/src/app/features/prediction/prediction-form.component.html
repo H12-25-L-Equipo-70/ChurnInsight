@@ -260,6 +260,20 @@
                     [class.border-slate-300]="!hasFieldError('prestamos_aprobados')">
                 </div>
 
+                <!-- Préstamos Cancelados -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Préstamos Cancelados <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="prestamos_cancelados"
+                    placeholder="Ej: 2"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('prestamos_cancelados')"
+                    [class.border-slate-300]="!hasFieldError('prestamos_cancelados')">
+                </div>
+
                 <!-- Préstamos Vigentes -->
                 <div>
                   <label class="block text-sm font-medium text-slate-700 mb-2">
@@ -269,15 +283,47 @@
                     type="number"
                     formControlName="prestamos_vigentes"
                     placeholder="Ej: 3"
-                    class="w-full px-4 py-2 border rounded-lg">
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('prestamos_vigentes')"
+                    [class.border-slate-300]="!hasFieldError('prestamos_vigentes')">
+                </div>
+              </div>
+
+              <!-- Ratio de Aprobación -->
+              <div class="bg-white p-4 rounded-lg border-l-4 border-blue-500 mb-6">
+                <p class="text-sm text-slate-600 mb-1">Ratio de Aprobación</p>
+                <p class="text-2xl font-bold text-blue-600">
+                  {{ creditApprovalRatio().toFixed(1) }}%
+                </p>
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-4 mb-6">
+                <!-- Ticket Promedio Solicitado -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Ticket Promedio Solicitado (ARS) <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="ticket_promedio_solicitado"
+                    placeholder="Ej: 50000"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('ticket_promedio_solicitado')"
+                    [class.border-slate-300]="!hasFieldError('ticket_promedio_solicitado')">
                 </div>
 
-                <!-- Ratio de Aprobación -->
-                <div class="bg-white p-4 rounded-lg border-l-4 border-blue-500">
-                  <p class="text-sm text-slate-600 mb-1">Ratio de Aprobación</p>
-                  <p class="text-2xl font-bold text-blue-600">
-                    {{ creditApprovalRatio().toFixed(1) }}%
-                  </p>
+                <!-- Ticket Promedio Aprobado -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Ticket Promedio Aprobado (ARS) <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="ticket_promedio_aprobado"
+                    placeholder="Ej: 40000"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('ticket_promedio_aprobado')"
+                    [class.border-slate-300]="!hasFieldError('ticket_promedio_aprobado')">
                 </div>
               </div>
 
@@ -290,8 +336,10 @@
                   <input
                     type="number"
                     formControlName="monto_solicitado"
-                    placeholder="Ej: 7000000"
-                    class="w-full px-4 py-2 border rounded-lg">
+                    placeholder="Ej: 250000"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('monto_solicitado')"
+                    [class.border-slate-300]="!hasFieldError('monto_solicitado')">
                 </div>
 
                 <!-- Monto Aprobado -->
@@ -302,8 +350,24 @@
                   <input
                     type="number"
                     formControlName="monto_aprobado"
-                    placeholder="Ej: 7000000"
-                    class="w-full px-4 py-2 border rounded-lg">
+                    placeholder="Ej: 120000"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('monto_aprobado')"
+                    [class.border-slate-300]="!hasFieldError('monto_aprobado')">
+                </div>
+
+                <!-- Tiempo Cancelación Préstamo -->
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Tiempo Promedio de Cancelación (Días) <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    formControlName="tiempo_cancelacion_prestamo"
+                    placeholder="Ej: 60"
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('tiempo_cancelacion_prestamo')"
+                    [class.border-slate-300]="!hasFieldError('tiempo_cancelacion_prestamo')">
                 </div>
               </div>
             </div>
