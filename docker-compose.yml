@@ -1,0 +1,65 @@
+services:
+  # FastAPI AI Service
+  churninsight-ai:
+    build:
+      context: ./ai_service
+      dockerfile: Dockerfile
+    container_name: churninsight-ai
+    ports:
+      - "8000:8000"
+    environment:
+      ENVIRONMENT: docker
+      DEBUG: "false"
+      LOG_LEVEL: INFO
+    volumes:
+      - ./ai_service/logs:/app/logs
+      - ./ai_service/models:/app/models
+    networks:
+      - churninsight-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health/check"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Spring Boot Backend
+  churninsight-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: churninsight-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    volumes:
+      - ./backend/wallet_pymer:/app/wallet_pymer:ro
+    depends_on:
+      churninsight-ai:
+        condition: service_healthy
+    networks:
+      - churninsight-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1/companies/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  churninsight-network:
+    driver: bridge
+
