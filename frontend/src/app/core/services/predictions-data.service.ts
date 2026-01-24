@@ -1,4 +1,5 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -29,11 +30,19 @@ export interface SavedPrediction {
 })
 export class PredictionsDataService {
   private readonly http = inject(HttpClient);
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly BACKEND_URL = 'http://localhost:8080/api/v1';
   private readonly PREDICTIONS_ENDPOINT = `${this.BACKEND_URL}/predictions`;
   
   // Cache local como fallback
   private localCache: SavedPrediction[] = [];
+
+  /**
+   * Verifica si estamos ejecutando en el navegador (no en SSR)
+   */
+  private isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
 
   /**
    * Guarda una predicción en BD (con fallback a localStorage)
@@ -57,22 +66,9 @@ export class PredictionsDataService {
       confidence: result.confidence
     };
 
-    // Intentar guardar en BD
-    return this.http.post<SavedPrediction>(
-      `${this.PREDICTIONS_ENDPOINT}/save`,
-      savedPrediction
-    ).pipe(
-      map(response => {
-        console.log('✅ Predicción guardada en BD');
-        this.localCache.push(response);
-        return response;
-      }),
-      catchError(error => {
-        // BD no disponible: guardar en localStorage
-        console.warn('⚠️ BD no disponible, guardando en localStorage', error);
-        return this._saveToLocalStorage(savedPrediction);
-      })
-    );
+    // Como no tenemos endpoint de backend para guardar predicciones,
+    // guardar directamente en localStorage
+    return this._saveToLocalStorage(savedPrediction);
   }
 
   /**
@@ -156,18 +152,28 @@ export class PredictionsDataService {
    * Guarda predicción en localStorage
    */
   private _saveToLocalStorage(prediction: SavedPrediction): Observable<SavedPrediction> {
+    // Solo funciona en el navegador, no en SSR
+    if (!this.isBrowser()) {
+      console.warn('⚠️ localStorage no disponible en servidor, guardando en caché local');
+      const withId = { ...prediction, id: Date.now().toString(), saved_at: new Date().toISOString() };
+      this.localCache.push(withId);
+      return of(withId);
+    }
+
     try {
       const stored = JSON.parse(localStorage.getItem('churninsight_predictions') || '[]');
       const withId = { ...prediction, id: Date.now().toString(), saved_at: new Date().toISOString() };
       stored.push(withId);
       localStorage.setItem('churninsight_predictions', JSON.stringify(stored));
       
-      console.log('💾 Predicción guardada en localStorage (BD no disponible)');
+      console.log('💾 Predicción guardada en localStorage', withId);
       return of(withId);
     } catch (error) {
       console.error('❌ Error guardando en localStorage', error);
-      // Aún así, no fallar la aplicación
-      return of(prediction);
+      // Si falla localStorage, guardar en cache local
+      const withId = { ...prediction, id: Date.now().toString(), saved_at: new Date().toISOString() };
+      this.localCache.push(withId);
+      return of(withId);
     }
   }
 
@@ -175,6 +181,12 @@ export class PredictionsDataService {
    * Carga predicciones desde localStorage
    */
   private _loadFromLocalStorage(): SavedPrediction[] {
+    // Si no estamos en el navegador, usar caché local
+    if (!this.isBrowser()) {
+      console.warn('⚠️ localStorage no disponible en servidor, usando caché local');
+      return this.localCache;
+    }
+
     try {
       const stored = localStorage.getItem('churninsight_predictions');
       return stored ? JSON.parse(stored) : [];
@@ -188,6 +200,11 @@ export class PredictionsDataService {
    * Elimina predicción de localStorage
    */
   private _deleteFromLocalStorage(id: string): void {
+    if (!this.isBrowser()) {
+      this.localCache = this.localCache.filter(p => p.id !== id);
+      return;
+    }
+
     try {
       const stored = JSON.parse(localStorage.getItem('churninsight_predictions') || '[]');
       const filtered = stored.filter((p: SavedPrediction) => p.id !== id);
@@ -201,6 +218,12 @@ export class PredictionsDataService {
    * Limpia todo el caché local
    */
   clearLocalCache(): void {
+    if (!this.isBrowser()) {
+      this.localCache = [];
+      console.log('✅ Caché local limpiado (servidor)');
+      return;
+    }
+
     try {
       localStorage.removeItem('churninsight_predictions');
       this.localCache = [];

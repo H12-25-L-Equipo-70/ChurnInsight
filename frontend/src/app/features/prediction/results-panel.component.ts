@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject, computed, effect } from '@angular/core';
+import { Component, input, output, inject, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { 
   PredictionResponse, 
@@ -24,12 +24,12 @@ import { PredictionsDataService } from '../../core/services/predictions-data.ser
   templateUrl: './results-panel.component.html'
 })
 export class ResultsPanelComponent {
-  @Input() predictionResult: PredictionResponse | null = null;
-  @Input() profile: Partial<StaticProfile> | null = null;
-  @Input() metrics: QuarterlyMetrics | null = null;
+  predictionResult = input<PredictionResponse | null>(null);
+  profile = input<Partial<StaticProfile> | null>(null);
+  metrics = input<QuarterlyMetrics | null>(null);
   
-  @Output() newPrediction = new EventEmitter<void>();
-  @Output() downloadReport = new EventEmitter<string>();
+  newPrediction = output<void>();
+  downloadReport = output<string>();
 
   private exportService = inject(ExportService);
   private predictionsService = inject(PredictionsDataService);
@@ -39,7 +39,10 @@ export class ResultsPanelComponent {
   constructor() {
     // Efecto: Guardar automáticamente cuando hay un resultado
     effect(() => {
-      if (this.predictionResult && this.profile && this.metrics) {
+      const pred = this.predictionResult();
+      const prof = this.profile();
+      const met = this.metrics();
+      if (pred && prof && met) {
         this.autoSavePrediction();
       }
     });
@@ -49,8 +52,9 @@ export class ResultsPanelComponent {
    * Computed: Probabilidad en porcentaje formateada
    */
   churnProbabilityPercent = computed(() => {
-    if (!this.predictionResult) return '0%';
-    const prob = this.predictionResult.churn_probability || this.predictionResult.probabilidad || 0;
+    const result = this.predictionResult();
+    if (!result) return '0%';
+    const prob = result.churn_probability || result.probabilidad || 0;
     const normalized = prob > 1 ? prob : prob * 100;
     return `${Math.round(normalized)}%`;
   });
@@ -59,7 +63,7 @@ export class ResultsPanelComponent {
    * Computed: Nivel de riesgo basado en probabilidad
    */
   riskLevel = computed(() => {
-    const result = this.predictionResult;
+    const result = this.predictionResult();
     if (!result) return 'bajo';
     
     // Intentar usar prevision del response, si no, calcular
@@ -78,7 +82,7 @@ export class ResultsPanelComponent {
    * Maneja tanto strings simples como objetos RedFlag
    */
   processedRedFlags = computed(() => {
-    const result = this.predictionResult;
+    const result = this.predictionResult();
     if (!result?.red_flags) return [];
     
     return result.red_flags.map((flag, index) => {
@@ -103,7 +107,6 @@ export class ResultsPanelComponent {
       };
     });
   });
-
   /**
    * Estima severidad de un flag basado en palabras clave
    */
@@ -141,19 +144,19 @@ export class ResultsPanelComponent {
    * Guarda automáticamente la predicción (sin errores si BD no está disponible)
    */
   private autoSavePrediction(): void {
-    if (!this.predictionResult || !this.profile || !this.metrics) return;
+    const pred = this.predictionResult();
+    const prof = this.profile();
+    const met = this.metrics();
+    
+    if (!pred || !prof || !met) return;
 
-    this.predictionsService.savePrediction(
-      this.profile,
-      this.predictionResult,
-      this.metrics
-    ).subscribe({
+    this.predictionsService.savePrediction(prof, pred, met).subscribe({
       next: (saved) => {
         console.log('💾 Predicción guardada automáticamente', saved);
       },
       error: (error) => {
         // No mostrar error al usuario, solo log
-        console.warn('⚠️ No se pudo guardar en BD, se guardará en localStorage', error);
+        console.warn('⚠️ No se pudo guardar la predicción', error);
       }
     });
   }
@@ -162,13 +165,16 @@ export class ResultsPanelComponent {
    * Descarga reporte en CSV
    */
   downloadCSV(): void {
-    if (!this.profile || !this.metrics || !this.predictionResult) return;
+    const prof = this.profile();
+    const met = this.metrics();
+    const pred = this.predictionResult();
+    if (!prof || !met || !pred) return;
     
     this.exportService.exportToCSV(
-      this.profile,
-      this.metrics,
-      this.predictionResult,
-      `churn_${this.profile.CUIT}_${new Date().toISOString().split('T')[0]}.csv`
+      prof,
+      met,
+      pred,
+      `churn_${prof.CUIT}_${new Date().toISOString().split('T')[0]}.csv`
     );
     
     this.showExportStatus('✅ Reporte CSV descargado correctamente', false);
@@ -178,13 +184,16 @@ export class ResultsPanelComponent {
    * Descarga reporte en JSON
    */
   downloadJSON(): void {
-    if (!this.profile || !this.metrics || !this.predictionResult) return;
+    const prof = this.profile();
+    const met = this.metrics();
+    const pred = this.predictionResult();
+    if (!prof || !met || !pred) return;
     
     this.exportService.exportToJSON(
-      this.profile,
-      this.metrics,
-      this.predictionResult,
-      `churn_${this.profile.CUIT}_${new Date().toISOString().split('T')[0]}.json`
+      prof,
+      met,
+      pred,
+      `churn_${prof.CUIT}_${new Date().toISOString().split('T')[0]}.json`
     );
     
     this.showExportStatus('✅ Reporte JSON descargado correctamente', false);
@@ -194,18 +203,21 @@ export class ResultsPanelComponent {
    * Descarga reporte en PDF
    */
   async downloadPDF(): Promise<void> {
-    if (!this.profile || !this.metrics || !this.predictionResult) return;
+    const prof = this.profile();
+    const met = this.metrics();
+    const pred = this.predictionResult();
+    if (!prof || !met || !pred) return;
     
     try {
       this.isExporting = true;
       this.showExportStatus('⏳ Generando PDF...', false);
       
       await this.exportService.exportToPDF(
-        this.profile,
-        this.metrics,
-        this.predictionResult,
+        prof,
+        met,
+        pred,
         [],
-        `churn_${this.profile.CUIT}_${new Date().toISOString().split('T')[0]}.pdf`
+        `churn_${prof.CUIT}_${new Date().toISOString().split('T')[0]}.pdf`
       );
       
       this.showExportStatus('✅ Reporte PDF descargado correctamente', false);
@@ -221,12 +233,11 @@ export class ResultsPanelComponent {
    * Copia resultado al portapapeles
    */
   async copyToClipboard(): Promise<void> {
-    if (!this.profile || !this.predictionResult) return;
+    const prof = this.profile();
+    const pred = this.predictionResult();
+    if (!prof || !pred) return;
     
-    const success = await this.exportService.copyToClipboard(
-      this.profile,
-      this.predictionResult
-    );
+    const success = await this.exportService.copyToClipboard(prof, pred);
     
     this.showExportStatus(
       success ? '✅ Copiado al portapapeles' : '❌ Error al copiar',
@@ -255,7 +266,8 @@ export class ResultsPanelComponent {
    * Obtiene red flags agrupados por severidad
    */
   getRedFlagsBySeverity(): { critical: RedFlag[]; high: RedFlag[]; medium: RedFlag[]; low: RedFlag[] } {
-    const flags = this.predictionResult?.red_flags || [];
+    const pred = this.predictionResult();
+    const flags = pred?.red_flags || [];
     
     return {
       critical: flags.filter(f => f.severity === 'critical'),

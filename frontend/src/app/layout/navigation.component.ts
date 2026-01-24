@@ -11,9 +11,9 @@ import { RouterModule } from '@angular/router';
 export class NavigationComponent {
   // Navigation items can be defined here if they become dynamic
   navItems = [
+    { path: '/dashboard', icon: '📈', label: 'Dashboard' },
     { path: '/prediction', icon: '🤖', label: 'Prediction' },
     { path: '/companies', icon: '📊', label: 'Empresas' },
-    { path: '/history', icon: '📋', label: 'Historial' },
-    { path: '/dashboard', icon: '📈', label: 'Dashboard' }
+    { path: '/history', icon: '📋', label: 'Historial' }
   ];
 }

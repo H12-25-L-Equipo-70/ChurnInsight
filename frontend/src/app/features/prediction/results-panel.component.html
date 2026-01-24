@@ -1,4 +1,4 @@
-<div *ngIf="predictionResult" class="space-y-6" role="region" aria-label="Resultados de la predicción de churn">
+<div *ngIf="predictionResult()" class="space-y-6" role="region" aria-label="Resultados de la predicción de churn">
   <!-- Header de Resultados -->
   <div [ngClass]="getRiskBgColor(riskLevel())" 
        class="border-l-4 rounded-lg p-6" role="status" aria-live="polite" aria-atomic="true">
@@ -22,7 +22,7 @@
       <div class="flex-1 h-3 bg-slate-200 rounded-full overflow-hidden">
         <div 
           class="h-full bg-gradient-to-r from-emerald-500 to-red-500 transition-all duration-500"
-          [style.width.%]="(predictionResult.churn_probability > 1 ? predictionResult.churn_probability : predictionResult.churn_probability * 100)">
+          [style.width.%]="(predictionResult()?.churn_probability ?? 0 > 1 ? predictionResult()?.churn_probability ?? 0 : (predictionResult()?.churn_probability ?? 0) * 100)">
         </div>
       </div>
       <p class="text-xs text-slate-500 mt-2">
@@ -32,17 +32,17 @@
   </div>
 
   <!-- Confianza del Modelo -->
-  <div *ngIf="predictionResult.confidence" class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+  <div *ngIf="predictionResult()?.confidence" class="bg-blue-50 border border-blue-200 rounded-lg p-4">
     <p class="text-sm text-slate-600 mb-2 font-medium">Confianza del Modelo ML</p>
     <div class="flex items-center gap-3">
       <div class="flex-1 h-2 bg-blue-200 rounded-full overflow-hidden">
         <div 
           class="h-full bg-blue-600 transition-all"
-          [style.width.%]="(predictionResult.confidence * 100)">
+          [style.width.%]="(predictionResult()?.confidence ?? 0 * 100)">
         </div>
       </div>
       <p class="text-lg font-semibold text-blue-600 min-w-fit">
-        {{ ((predictionResult.confidence || 0) * 100).toFixed(0) }}%
+        {{ ((predictionResult()?.confidence ?? 0) * 100).toFixed(0) }}%
       </p>
     </div>
   </div>
@@ -126,13 +126,13 @@
       </div>
     </div>
   </div>
-  <div *ngIf="predictionResult.recomendaciones && predictionResult.recomendaciones.length > 0" 
+  <div *ngIf="predictionResult()?.recomendaciones?.length ?? 0 > 0" 
        class="bg-slate-50 border border-slate-200 rounded-lg p-6">
     <h4 class="text-lg font-semibold text-slate-900 mb-4">
       📋 Recomendaciones Prioritarias
     </h4>
     <ul class="space-y-3">
-      <li *ngFor="let rec of predictionResult.recomendaciones; let i = index" 
+      <li *ngFor="let rec of predictionResult()?.recomendaciones ?? []; let i = index" 
           class="flex items-start gap-3 p-3 bg-white rounded-lg border border-slate-200 hover:shadow-md transition">
         <span class="inline-flex items-center justify-center h-6 w-6 rounded-full 
                      bg-slate-100 text-slate-700 font-semibold text-sm flex-shrink-0">
@@ -144,22 +144,22 @@
   </div>
 
   <!-- Tarjeta de Información de la Empresa -->
-  <div *ngIf="profile" class="grid sm:grid-cols-2 gap-4">
+  <div *ngIf="profile()" class="grid sm:grid-cols-2 gap-4">
     <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
       <p class="text-xs text-slate-500 uppercase tracking-wide font-semibold">Empresa</p>
-      <p class="text-lg font-bold text-slate-900 mt-1">{{ profile.Nombre_Empresa || 'N/A' }}</p>
+      <p class="text-lg font-bold text-slate-900 mt-1">{{ profile()?.Nombre_Empresa || 'N/A' }}</p>
     </div>
     <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
       <p class="text-xs text-slate-500 uppercase tracking-wide font-semibold">CUIT</p>
-      <p class="text-lg font-mono font-bold text-slate-900 mt-1">{{ profile.CUIT || 'N/A' }}</p>
+      <p class="text-lg font-mono font-bold text-slate-900 mt-1">{{ profile()?.CUIT || 'N/A' }}</p>
     </div>
     <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
       <p class="text-xs text-slate-500 uppercase tracking-wide font-semibold">Sector</p>
-      <p class="text-lg font-bold text-slate-900 mt-1">{{ profile.Sector || 'N/A' }}</p>
+      <p class="text-lg font-bold text-slate-900 mt-1">{{ profile()?.Sector || 'N/A' }}</p>
     </div>
     <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
       <p class="text-xs text-slate-500 uppercase tracking-wide font-semibold">Provincia</p>
-      <p class="text-lg font-bold text-slate-900 mt-1">{{ profile.Provincia || 'N/A' }}</p>
+      <p class="text-lg font-bold text-slate-900 mt-1">{{ profile()?.Provincia || 'N/A' }}</p>
     </div>
   </div>
 

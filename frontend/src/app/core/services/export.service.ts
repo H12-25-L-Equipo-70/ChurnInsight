@@ -231,14 +231,16 @@ ${result.recomendaciones && result.recomendaciones.length > 0
       const prob = Number(result.churn_probability) || 0;
       const conf = Number(result.confidence) || 0.95;
       const threshold = Number(result.threshold_used) || 0.5;
+      const probPercentage = prob > 1 ? prob : prob * 100;
       
+      // Usar la MISMA lógica del modal para calcular nivel de riesgo
       let riskColor: [number, number, number];
       let riskLabel: string;
       
-      if (prob >= 0.7) {
+      if (probPercentage >= 66) {
         riskColor = [220, 38, 38];
         riskLabel = 'ALTO';
-      } else if (prob >= 0.4) {
+      } else if (probPercentage >= 33) {
         riskColor = [245, 158, 11];
         riskLabel = 'MEDIO';
       } else {
@@ -261,7 +263,8 @@ ${result.recomendaciones && result.recomendaciones.length > 0
       doc.setTextColor(100, 100, 100);
       doc.text(`Empresa: ${result.NOMBRE_EMPRESA || profile?.Nombre_Empresa || 'N/A'}`, 15, currentY + 14);
       doc.text(`CUIT: ${result.CUIT || profile?.CUIT || 'N/A'}`, 15, currentY + 20);
-      doc.text(`Prediccion: ${result.churn_prediction === 'YES' ? 'ABANDONO PROBABLE' : 'RETENCION ESPERADA'}`, 15, currentY + 26);
+      const predictionLabel = Number(result.churn_prediction) === 1 ? 'CHURN PROBABLE' : 'CLIENTE ACTIVO';
+      doc.text(`Prediccion: ${predictionLabel}`, 15, currentY + 26);
       
       const [r1, g1, b1] = riskColor;
       doc.setFillColor(r1, g1, b1);
@@ -275,12 +278,13 @@ ${result.recomendaciones && result.recomendaciones.length > 0
 
       // SECCION 2: METRICAS CLAVE DEL RESULTADO
       const redFlagCount = (result.red_flags?.length || 0);
-      const predictionColor = result.churn_prediction === 'YES' ? [220, 38, 38] : [34, 197, 94];
+      const isChurn = Number(result.churn_prediction) === 1;
+      const predictionColor = isChurn ? [220, 38, 38] : [34, 197, 94];
       const alertColor = redFlagCount > 0 ? [239, 68, 68] : [34, 197, 94];
       const metricsTop = [
-        { label: 'Probabilidad', value: `${(prob * 100).toFixed(1)}%`, color: riskColor },
+        { label: 'Probabilidad', value: `${probPercentage.toFixed(1)}%`, color: riskColor },
         { label: 'Umbral', value: `${(threshold * 100).toFixed(0)}%`, color: [107, 114, 128] as [number, number, number] },
-        { label: 'Prediccion', value: result.churn_prediction === 'YES' ? 'SI' : 'NO', color: predictionColor as [number, number, number] },
+        { label: 'Prediccion', value: isChurn ? 'CHURN' : 'ACTIVO', color: predictionColor as [number, number, number] },
         { label: 'Alertas', value: `${redFlagCount}`, color: alertColor as [number, number, number] }
       ];
       
