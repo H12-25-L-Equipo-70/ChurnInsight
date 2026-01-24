@@ -1,12 +1,16 @@
 com/pymer/churninsight/config/OracleDataSourceConfig$OracleWalletProperties.class
 com/pymer/churninsight/config/OracleDataSourceConfig.class
+com/pymer/churninsight/domain/entity/Prediction.class
 com/pymer/churninsight/ChurnInsightApplication.class
 com/pymer/churninsight/domain/repository/CompanyRepository.class
 com/pymer/churninsight/application/service/CompanyService$ChurnStatisticsDTO.class
 com/pymer/churninsight/domain/entity/Company.class
+com/pymer/churninsight/presentation/controller/PredictionController.class
 com/pymer/churninsight/application/dto/CompanyResponseDTO$CompanyResponseDTOBuilder.class
 com/pymer/churninsight/presentation/controller/CompanyController.class
 com/pymer/churninsight/application/service/CompanyService$ChurnStatisticsDTO$ChurnStatisticsDTOBuilder.class
 com/pymer/churninsight/application/service/CompanyService.class
 com/pymer/churninsight/application/dto/CompanyResponseDTO.class
+com/pymer/churninsight/domain/entity/Prediction$PredictionBuilder.class
+com/pymer/churninsight/domain/repository/PredictionRepository.class
 com/pymer/churninsight/domain/entity/Company$CompanyBuilder.class

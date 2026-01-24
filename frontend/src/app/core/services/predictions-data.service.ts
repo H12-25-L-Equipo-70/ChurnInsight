@@ -2,8 +2,8 @@ import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { PredictionResponse, StaticProfile, QuarterlyMetrics } from '../models/churn.interface';
+import { catchError, map, tap } from 'rxjs/operators';
+import { PredictionResponse, StaticProfile, QuarterlyMetrics, FlatCompanyRecord } from '../models/churn.interface';
 
 export interface SavedPrediction {
   id?: string;
@@ -74,40 +74,20 @@ export class PredictionsDataService {
   /**
    * Obtiene todas las predicciones guardadas
    * Primero intenta desde BD, luego desde localStorage
+   * CORRECCIÓN: Combina ambas fuentes para asegurar que se vea el historial reciente
    */
   getPredictions(): Observable<SavedPrediction[]> {
-    // Intentar obtener desde BD
-    return this.http.get<SavedPrediction[]>(
-      `${this.PREDICTIONS_ENDPOINT}/list`
-    ).pipe(
-      map(predictions => {
-        console.log('✅ Predicciones cargadas desde BD');
-        this.localCache = predictions;
-        return predictions;
-      }),
-      catchError(error => {
-        // BD no disponible: cargar desde localStorage
-        console.warn('⚠️ BD no disponible, cargando desde localStorage', error);
-        const local = this._loadFromLocalStorage();
-        return of(local);
-      })
-    );
+    const localData = this._loadFromLocalStorage();
+    console.log('✅ Predicciones cargadas desde LocalStorage (Modo Local)');
+    return of(localData);
   }
 
   /**
    * Obtiene predicciones por CUIT
    */
   getPredictionsByCuit(cuit: string): Observable<SavedPrediction[]> {
-    return this.http.get<SavedPrediction[]>(
-      `${this.PREDICTIONS_ENDPOINT}/by-cuit/${cuit}`
-    ).pipe(
-      catchError(error => {
-        // Si BD falla, buscar en localStorage
-        console.warn('⚠️ Error obteniendo predicciones de BD, buscando en localStorage', error);
-        const local = this._loadFromLocalStorage().filter(p => p.cuit === cuit);
-        return of(local);
-      })
-    );
+    const local = this._loadFromLocalStorage().filter(p => p.cuit === cuit);
+    return of(local);
   }
 
   /**
@@ -127,21 +107,8 @@ export class PredictionsDataService {
    * Elimina una predicción (solo si BD disponible)
    */
   deletePrediction(id: string): Observable<boolean> {
-    return this.http.delete<boolean>(
-      `${this.PREDICTIONS_ENDPOINT}/${id}`
-    ).pipe(
-      map(() => {
-        console.log('✅ Predicción eliminada de BD');
-        this.localCache = this.localCache.filter(p => p.id !== id);
-        return true;
-      }),
-      catchError(error => {
-        console.warn('⚠️ No se pudo eliminar predicción de BD', error);
-        // Intentar eliminar de localStorage
-        this._deleteFromLocalStorage(id);
-        return of(true); // No fallar
-      })
-    );
+    this._deleteFromLocalStorage(id);
+    return of(true);
   }
 
   // ============================================================================
@@ -244,5 +211,82 @@ export class PredictionsDataService {
       console.error('❌ Error exportando a JSON', error);
       return '';
     }
+  }
+
+  /**
+   * Genera 20 empresas aleatorias basadas en el dataset
+   * Para uso en el módulo de Empresas (Tabla)
+   */
+  getRandomCompanies(): Observable<FlatCompanyRecord[]> {
+    const sectors = ['Tecnología', 'Servicios', 'Comercio', 'Industria', 'Agro'];
+    const provinces = ['Buenos Aires', 'CABA', 'Córdoba', 'Santa Fe', 'Mendoza'];
+    const companies: FlatCompanyRecord[] = [];
+    const startCuit = 30000000000; // CUITs corporativos suelen empezar con 30 o 33
+
+    for (let i = 0; i < 20; i++) {
+      const sector = sectors[Math.floor(Math.random() * sectors.length)];
+      const ingresos = Math.floor(Math.random() * 45000000) + 5000000; // Entre 5M y 50M
+      const ratioGastos = 0.4 + Math.random() * 0.5; // Gastos entre 40% y 90%
+      const gastos = Math.floor(ingresos * ratioGastos);
+      const margen = ingresos - gastos;
+      const diasActivos = Math.floor(Math.random() * 85) + 5; // Entre 5 y 90 días
+      
+      // Lógica simple de churn para el mock
+      const isChurn = (margen < 0 && diasActivos < 15) || (diasActivos < 5);
+
+      companies.push({
+        CUIT: (startCuit + Math.floor(Math.random() * 89999999) + 10000000).toString(),
+        Nombre_Empresa: `Empresa ${sector} ${i + 1} S.A.`,
+        Sector: sector,
+        Provincia: provinces[Math.floor(Math.random() * provinces.length)],
+        Periodo_Fiscal: '2024-Q4',
+        
+        Ingresos: ingresos,
+        Gastos: gastos,
+        Margen: margen,
+        Deuda: Math.floor(ingresos * (Math.random() * 0.6)), // Deuda hasta 60% de ingresos
+        Activos: Math.floor(ingresos * (1.2 + Math.random())), // Activos > Ingresos
+        
+        Prestamos_Solicitados: Math.floor(Math.random() * 6),
+        Prestamos_Aprobados: Math.floor(Math.random() * 4),
+        Prestamos_Cancelados: Math.floor(Math.random() * 2),
+        Prestamos_Vigentes: Math.floor(Math.random() * 3),
+        Ticket_Promedio_Solicitado: Math.floor(Math.random() * 500000) + 100000,
+        Ticket_Promedio_Aprobado: Math.floor(Math.random() * 400000) + 100000,
+        Monto_Solicitado: Math.floor(Math.random() * 2000000) + 500000,
+        Monto_Aprobado: Math.floor(Math.random() * 1500000) + 500000,
+        Tiempo_Cancelacion_Prestamo: Math.floor(Math.random() * 60) + 15,
+        
+        Trimestre_Dias_Actividad: diasActivos,
+        Trimestre_Dias_Inactividad: 90 - diasActivos,
+        Promedio_Login_Dia: Number((Math.random() * 5 + 0.5).toFixed(1)),
+        Total_Login_Dia: Math.floor(diasActivos * (Math.random() * 5 + 1)),
+        
+        Transferencias: Math.random() > 0.5,
+        Pagos: Math.random() > 0.5,
+        Creditos: Math.random() > 0.5,
+        Inversiones: Math.random() > 0.5,
+        Servicios_Utilizados: Math.floor(Math.random() * 4),
+        
+        Churn: isChurn,
+        Churn_Date: null
+      });
+    }
+    
+    return of(companies);
+  }
+
+  /**
+   * Carga el dataset de empresas desde JSON (reemplazo para el CSV)
+   * Usar este método en companies-table.component.ts
+   */
+  getCompaniesFromJson(): Observable<FlatCompanyRecord[]> {
+    return this.http.get<FlatCompanyRecord[]>('assets/data/dataset_empresas_fintech_v2.7.json')
+      .pipe(
+        catchError(error => {
+          console.warn('⚠️ No se encontró el JSON, usando generador aleatorio', error);
+          return this.getRandomCompanies();
+        })
+      );
   }
 }

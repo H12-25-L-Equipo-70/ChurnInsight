@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PredictionService } from '../../core/services/prediction.service';
+import { PredictionsDataService } from '../../core/services/predictions-data.service';
 import { ResultsPanelComponent } from './results-panel.component';
 import { ResultsModalComponent } from './results-modal.component';
 import { 
@@ -36,6 +37,7 @@ import {
 export class PredictionFormComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private predictionService = inject(PredictionService);
+  private predictionsDataService = inject(PredictionsDataService);
   private destroy$ = new Subject<void>();
 
   // ============================================
@@ -531,6 +533,13 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
       ).subscribe({
         next: (response) => {
           this.predictionResult.set(response);
+          
+          // ✅ GUARDAR AUTOMÁTICAMENTE EN HISTORIAL LOCAL
+          this.predictionsDataService.savePrediction(profile, response, quarterlyData).subscribe({
+            next: () => console.log('💾 Predicción guardada en historial local'),
+            error: (e) => console.warn('⚠️ No se pudo guardar en historial', e)
+          });
+
           this.isResultsModalOpen.set(true);  // Abrir modal de resultados
           this.isLoading.set(false);
         },
@@ -672,4 +681,3 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
     this.closeResultsModal();
   }
 }
-

@@ -1,7 +1,10 @@
+/media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/backend/src/main/java/com/pymer/churninsight/domain/entity/Prediction.java
 /media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/backend/src/main/java/com/pymer/churninsight/application/service/CompanyService.java
 /media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/backend/src/main/java/com/pymer/churninsight/domain/entity/Company.java
+/media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/backend/src/main/java/com/pymer/churninsight/presentation/controller/PredictionController.java
 /media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/backend/src/main/java/com/pymer/churninsight/config/OracleDataSourceConfig.java
 /media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/backend/src/main/java/com/pymer/churninsight/ChurnInsightApplication.java
 /media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/backend/src/main/java/com/pymer/churninsight/presentation/controller/CompanyController.java
 /media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/backend/src/main/java/com/pymer/churninsight/domain/repository/CompanyRepository.java
 /media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/backend/src/main/java/com/pymer/churninsight/application/dto/CompanyResponseDTO.java
+/media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/backend/src/main/java/com/pymer/churninsight/domain/repository/PredictionRepository.java

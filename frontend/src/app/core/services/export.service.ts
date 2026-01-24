@@ -205,7 +205,7 @@ ${result.recomendaciones && result.recomendaciones.length > 0
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
       let currentY = 10;
-      const now = new Date();
+      const now = new Date(result.timestamp || new Date());
 
       // HEADER CORPORATIVO
       doc.setFillColor(30, 41, 59);
@@ -349,42 +349,108 @@ ${result.recomendaciones && result.recomendaciones.length > 0
       
       currentY += 2;
 
-      // SECCION 4: METRICAS DISPONIBLES
-      if (metrics && (metrics.credit_behavior || metrics.app_engagement)) {
+      // SECCION 4: DETALLE COMPLETO DE DATOS (Grid Layout)
+      if (metrics) {
+        // Título de sección
         doc.setFont('Helvetica', 'bold');
         doc.setFontSize(11);
         doc.setTextColor(30, 41, 59);
-        doc.text('METRICAS OPERACIONALES', 10, currentY + 1);
+        doc.text('DETALLE DE DATOS INGRESADOS', 10, currentY + 1);
         currentY += 6;
-        
-        const operationalData = [
-          { label: 'Prestamos Solicitados', value: String(metrics?.credit_behavior?.Prestamos_Solicitados || 0) },
-          { label: 'Prestamos Aprobados', value: String(metrics?.credit_behavior?.Prestamos_Aprobados || 0) },
-          { label: 'Dias Activos (90d)', value: `${metrics?.app_engagement?.Trimestre_Dias_Actividad || 0}` },
-          { label: 'Logins Promedio/Dia', value: `${(metrics?.app_engagement?.Promedio_Login_Dia || 0).toFixed(1)}` }
+
+        // Definir grupos de datos
+        const groups = [
+          {
+            title: 'ESTRUCTURA FINANCIERA',
+            color: [240, 253, 244], // green-50
+            borderColor: [187, 247, 208], // green-200
+            items: [
+              { label: 'Ingresos', value: this.formatCurrency(metrics.financials?.Ingresos) },
+              { label: 'Gastos', value: this.formatCurrency(metrics.financials?.Gastos) },
+              { label: 'Margen Operativo', value: this.formatCurrency(metrics.financials?.Margen) },
+              { label: 'Deuda Total', value: this.formatCurrency(metrics.financials?.Deuda) },
+              { label: 'Activos Totales', value: this.formatCurrency(metrics.financials?.Activos) }
+            ]
+          },
+          {
+            title: 'COMPORTAMIENTO CREDITICIO',
+            color: [239, 246, 255], // blue-50
+            borderColor: [191, 219, 254], // blue-200
+            items: [
+              { label: 'Prestamos Solicitados', value: String(metrics.credit_behavior?.Prestamos_Solicitados || 0) },
+              { label: 'Prestamos Aprobados', value: String(metrics.credit_behavior?.Prestamos_Aprobados || 0) },
+              { label: 'Prestamos Vigentes', value: String(metrics.credit_behavior?.Prestamos_Vigentes || 0) },
+              { label: 'Monto Solicitado', value: this.formatCurrency(metrics.credit_behavior?.Monto_Solicitado) },
+              { label: 'Monto Aprobado', value: this.formatCurrency(metrics.credit_behavior?.Monto_Aprobado) },
+              { label: 'Ticket Prom. Solic.', value: this.formatCurrency(metrics.credit_behavior?.Ticket_Promedio_Solicitado) },
+              { label: 'Tiempo Cancelacion', value: `${metrics.credit_behavior?.Tiempo_Cancelacion_Prestamo || 0} dias` }
+            ]
+          },
+          {
+            title: 'ENGAGEMENT & SERVICIOS',
+            color: [255, 251, 235], // amber-50
+            borderColor: [253, 230, 138], // amber-200
+            items: [
+              { label: 'Dias Activos (Trim)', value: `${metrics.app_engagement?.Trimestre_Dias_Actividad || 0} / 90` },
+              { label: 'Dias Inactivos', value: `${metrics.app_engagement?.Trimestre_Dias_Inactividad || 0}` },
+              { label: 'Logins Totales', value: String(metrics.app_engagement?.Total_Login_Dia || 0) },
+              { label: 'Promedio Diario', value: (metrics.app_engagement?.Promedio_Login_Dia || 0).toFixed(1) },
+              { label: 'Servicios Usados', value: `${metrics.services_flags?.Servicios_Utilizados || 0} / 4` },
+              { label: 'Transferencias', value: metrics.services_flags?.Transferencias ? 'SI' : 'NO' },
+              { label: 'Pagos / Inversiones', value: (metrics.services_flags?.Pagos || metrics.services_flags?.Inversiones) ? 'SI' : 'NO' }
+            ]
+          }
         ];
-        
-        for (let i = 0; i < operationalData.length; i += 2) {
-          const row = [operationalData[i], operationalData[i + 1]];
-          row.forEach((metric, colIdx) => {
-            const x = 10 + colIdx * (colWidth + 2.5);
-            doc.setFillColor(240, 248, 255);
-            doc.setDrawColor(176, 196, 222);
-            doc.setLineWidth(0.5);
-            doc.rect(x, currentY, colWidth, 16);
-            
-            doc.setFontSize(9);
+
+        // Renderizar grupos en columnas
+        const colWidth = (pageWidth - 25) / 3;
+        let maxHeight = 0;
+
+        groups.forEach((group, idx) => {
+          const x = 10 + idx * (colWidth + 2.5);
+          let y = currentY;
+
+          // Header del grupo
+          doc.setFillColor(...(group.color as [number, number, number]));
+          doc.setDrawColor(...(group.borderColor as [number, number, number]));
+          doc.setLineWidth(0.5);
+          
+          // Calcular altura necesaria
+          const boxHeight = 8 + (group.items.length * 7);
+          if (boxHeight > maxHeight) maxHeight = boxHeight;
+
+          doc.rect(x, y, colWidth, boxHeight, 'FD');
+
+          // Título
+          doc.setFontSize(8);
+          doc.setFont('Helvetica', 'bold');
+          doc.setTextColor(70, 80, 90);
+          doc.text(group.title, x + 3, y + 5);
+          
+          // Línea separadora
+          doc.setDrawColor(...(group.borderColor as [number, number, number]));
+          doc.line(x, y + 7, x + colWidth, y + 7);
+
+          y += 11;
+
+          // Items
+          group.items.forEach(item => {
+            // Label
+            doc.setFont('Helvetica', 'normal');
+            doc.setFontSize(7);
+            doc.setTextColor(100, 100, 100);
+            doc.text(item.label, x + 3, y);
+
+            // Value
             doc.setFont('Helvetica', 'bold');
-            doc.setTextColor(70, 130, 180);
-            doc.text(metric.label, x + 3, currentY + 5);
-            
-            doc.setFontSize(10);
-            doc.setFont('Helvetica', 'bold');
-            doc.setTextColor(25, 25, 112);
-            doc.text(metric.value, x + 3, currentY + 12);
+            doc.setTextColor(30, 40, 50);
+            doc.text(item.value, x + colWidth - 3, y, { align: 'right' });
+
+            y += 7;
           });
-          currentY += 18;
-        }
+        });
+
+        currentY += maxHeight + 5;
       }
 
       // GRÁFICAS

@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CompaniesDataService, CompanyData } from '../../core/services/companies-data.service';
 import { PredictionService } from '../../core/services/prediction.service';
-import { QuarterlyMetrics, PredictionResponse, StaticProfile } from '../../core/models/churn.interface';
+import { PredictionsDataService } from '../../core/services/predictions-data.service';
+import { QuarterlyMetrics, PredictionResponse, StaticProfile, FlatCompanyRecord } from '../../core/models/churn.interface';
 import { ResultsModalComponent } from '../prediction/results-modal.component';
 
 /**
@@ -112,6 +113,7 @@ import { ResultsModalComponent } from '../prediction/results-modal.component';
 export class CompaniesTableComponent implements OnInit {
   private companiesService = inject(CompaniesDataService);
   private predictionService = inject(PredictionService);
+  private predictionsDataService = inject(PredictionsDataService);
 
   allCompanies = signal<CompanyData[]>([]);
   filteredCompanies = signal<CompanyData[]>([]);
@@ -133,13 +135,30 @@ export class CompaniesTableComponent implements OnInit {
    */
   loadCompanies(): void {
     this.isLoading.set(true);
-    this.companiesService.loadCompaniesData().subscribe({
-      next: (companies) => {
-        this.allCompanies.set(companies);
+    
+    // Usar PredictionsDataService para cargar empresas (Soporta JSON y Mock fallback)
+    this.predictionsDataService.getCompaniesFromJson().subscribe({
+      next: (companies: FlatCompanyRecord[]) => {
+        // Mapear FlatCompanyRecord a CompanyData (keys en mayúsculas para la tabla)
+        const mappedCompanies: CompanyData[] = companies.map((c: FlatCompanyRecord) => ({
+          ...c, // Spread al inicio para evitar errores de sobrescritura
+          CUIT: c.CUIT,
+          NOMBRE_EMPRESA: c.Nombre_Empresa,
+          SECTOR: c.Sector,
+          PROVINCIA: c.Provincia,
+          INGRESOS: c.Ingresos,
+          GASTOS: c.Gastos,
+          ACTIVOS: c.Activos,
+          DEUDA: c.Deuda,
+          EMPLEADOS: Math.floor(Math.random() * 200) + 10, // Mock empleados si no existen
+          Churn: c.Churn
+        }));
+
+        this.allCompanies.set(mappedCompanies);
         this.filterCompanies();
         this.isLoading.set(false);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error cargando empresas:', error);
         this.isLoading.set(false);
       }
@@ -183,6 +202,13 @@ export class CompaniesTableComponent implements OnInit {
     ).subscribe({
       next: (result) => {
         this.predictedResult.set(result);
+        
+        // ✅ GUARDAR AUTOMÁTICAMENTE EN HISTORIAL LOCAL
+        this.predictionsDataService.savePrediction(profile, result, mockMetrics).subscribe({
+          next: () => console.log('💾 Predicción guardada en historial local'),
+          error: (e) => console.warn('⚠️ No se pudo guardar en historial', e)
+        });
+
         this.loadingCuit.set(null);
         this.isModalOpen.set(true);
       },
@@ -238,4 +264,3 @@ export class CompaniesTableComponent implements OnInit {
     };
   }
 }
-

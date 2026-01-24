@@ -43,3 +43,251 @@
 2026-01-24 17:19:13,383 - app.routes.predictions - INFO - [predictions.py:92] - [b455a55b] Predicción: prob=0.5978, prediction=1, flags=5, threshold=0.500
 2026-01-24 17:19:13,383 - app.routes.predictions - INFO - [predictions.py:127] - [b455a55b] ✅ Predicción completada exitosamente
 2026-01-24 17:19:13,384 - main - INFO - [main.py:48] - [74da5fd6] Response: 200
+2026-01-24 17:28:42,220 - main - INFO - [main.py:44] - [4b7e2113] OPTIONS /api/v1/predictions/predict_churn
+2026-01-24 17:28:42,221 - main - INFO - [main.py:48] - [4b7e2113] Response: 200
+2026-01-24 17:28:42,230 - main - INFO - [main.py:44] - [f5fe365d] POST /api/v1/predictions/predict_churn
+2026-01-24 17:28:42,234 - app.routes.predictions - INFO - [predictions.py:60] - [e61869c9] Predicción churn para CUIT: 27727739928 (sbdjh)
+2026-01-24 17:28:42,234 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 3 detectadas
+2026-01-24 17:28:42,235 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 17:28:42,235 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 17:28:42,235 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 17:28:42,236 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 17:28:42,236 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.4043
+2026-01-24 17:28:42,236 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.4043, riesgo=medio
+2026-01-24 17:28:42,237 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 17:28:42,237 - app.routes.predictions - INFO - [predictions.py:92] - [e61869c9] Predicción: prob=0.4043, prediction=0, flags=3, threshold=0.500
+2026-01-24 17:28:42,238 - app.routes.predictions - INFO - [predictions.py:127] - [e61869c9] ✅ Predicción completada exitosamente
+2026-01-24 17:28:42,239 - main - INFO - [main.py:48] - [f5fe365d] Response: 200
+2026-01-24 17:34:19,980 - main - INFO - [main.py:44] - [ed3bf6af] POST /api/v1/predictions/predict_churn
+2026-01-24 17:34:19,995 - app.routes.predictions - INFO - [predictions.py:60] - [dbd450d8] Predicción churn para CUIT: 29394857184 (Test)
+2026-01-24 17:34:19,996 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 2 detectadas
+2026-01-24 17:34:19,996 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 17:34:19,996 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 17:34:19,996 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 17:34:19,996 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 17:34:19,997 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.4627
+2026-01-24 17:34:19,997 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.4627, riesgo=medio
+2026-01-24 17:34:19,997 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 17:34:19,997 - app.routes.predictions - INFO - [predictions.py:92] - [dbd450d8] Predicción: prob=0.4627, prediction=0, flags=2, threshold=0.500
+2026-01-24 17:34:19,997 - app.routes.predictions - INFO - [predictions.py:127] - [dbd450d8] ✅ Predicción completada exitosamente
+2026-01-24 17:34:19,998 - main - INFO - [main.py:48] - [ed3bf6af] Response: 200
+2026-01-24 17:43:09,765 - main - INFO - [main.py:44] - [80bd8c76] OPTIONS /api/v1/predictions/predict_churn
+2026-01-24 17:43:09,784 - main - INFO - [main.py:48] - [80bd8c76] Response: 200
+2026-01-24 17:43:09,787 - main - INFO - [main.py:44] - [184a51d7] POST /api/v1/predictions/predict_churn
+2026-01-24 17:43:09,788 - app.routes.predictions - INFO - [predictions.py:60] - [cede864c] Predicción churn para CUIT: 28336425324 (test)
+2026-01-24 17:43:09,788 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 2 detectadas
+2026-01-24 17:43:09,788 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 17:43:09,789 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 17:43:09,789 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 17:43:09,789 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 17:43:09,789 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.1213
+2026-01-24 17:43:09,789 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.1213, riesgo=bajo
+2026-01-24 17:43:09,789 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 17:43:09,789 - app.routes.predictions - INFO - [predictions.py:92] - [cede864c] Predicción: prob=0.1213, prediction=0, flags=2, threshold=0.500
+2026-01-24 17:43:09,790 - app.routes.predictions - INFO - [predictions.py:127] - [cede864c] ✅ Predicción completada exitosamente
+2026-01-24 17:43:09,790 - main - INFO - [main.py:48] - [184a51d7] Response: 200
+2026-01-24 17:51:22,552 - main - INFO - [main.py:44] - [8ded9a08] POST /api/v1/predictions/predict_churn
+2026-01-24 17:51:22,571 - app.routes.predictions - INFO - [predictions.py:60] - [b7ba4285] Predicción churn para CUIT: 84738438476 (tech test)
+2026-01-24 17:51:22,571 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 3 detectadas
+2026-01-24 17:51:22,571 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 17:51:22,571 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 17:51:22,572 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 17:51:22,572 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 17:51:22,572 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.3032
+2026-01-24 17:51:22,572 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.3032, riesgo=bajo
+2026-01-24 17:51:22,572 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 17:51:22,572 - app.routes.predictions - INFO - [predictions.py:92] - [b7ba4285] Predicción: prob=0.3032, prediction=0, flags=3, threshold=0.500
+2026-01-24 17:51:22,572 - app.routes.predictions - INFO - [predictions.py:127] - [b7ba4285] ✅ Predicción completada exitosamente
+2026-01-24 17:51:22,573 - main - INFO - [main.py:48] - [8ded9a08] Response: 200
+2026-01-24 17:59:23,783 - main - INFO - [main.py:44] - [db788c07] OPTIONS /api/v1/predictions/predict_churn
+2026-01-24 17:59:23,784 - main - INFO - [main.py:48] - [db788c07] Response: 200
+2026-01-24 17:59:23,787 - main - INFO - [main.py:44] - [aaeeabe5] POST /api/v1/predictions/predict_churn
+2026-01-24 17:59:23,788 - app.routes.predictions - INFO - [predictions.py:60] - [1d44825e] Predicción churn para CUIT: 20123456789 (Tech Solutions S.A.)
+2026-01-24 17:59:23,788 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 7 detectadas
+2026-01-24 17:59:23,789 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 17:59:23,789 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 17:59:23,789 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 17:59:23,789 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 17:59:23,789 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.1975
+2026-01-24 17:59:23,789 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.1975, riesgo=bajo
+2026-01-24 17:59:23,789 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 17:59:23,789 - app.routes.predictions - INFO - [predictions.py:92] - [1d44825e] Predicción: prob=0.1975, prediction=0, flags=7, threshold=0.500
+2026-01-24 17:59:23,790 - app.routes.predictions - INFO - [predictions.py:127] - [1d44825e] ✅ Predicción completada exitosamente
+2026-01-24 17:59:23,790 - main - INFO - [main.py:48] - [aaeeabe5] Response: 200
+2026-01-24 17:59:33,635 - main - INFO - [main.py:44] - [2206d0c5] POST /api/v1/predictions/predict_churn
+2026-01-24 17:59:33,636 - app.routes.predictions - INFO - [predictions.py:60] - [4a15b341] Predicción churn para CUIT: 20345678901 (Retail Plus Ltd.)
+2026-01-24 17:59:33,637 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 4 detectadas
+2026-01-24 17:59:33,637 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 17:59:33,637 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 17:59:33,637 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 17:59:33,637 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 17:59:33,638 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.4417
+2026-01-24 17:59:33,638 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.4417, riesgo=medio
+2026-01-24 17:59:33,638 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 17:59:33,638 - app.routes.predictions - INFO - [predictions.py:92] - [4a15b341] Predicción: prob=0.4417, prediction=0, flags=4, threshold=0.500
+2026-01-24 17:59:33,638 - app.routes.predictions - INFO - [predictions.py:127] - [4a15b341] ✅ Predicción completada exitosamente
+2026-01-24 17:59:33,638 - main - INFO - [main.py:48] - [2206d0c5] Response: 200
+2026-01-24 18:02:04,413 - main - INFO - [main.py:44] - [a0ef57e8] POST /api/v1/predictions/predict_churn
+2026-01-24 18:02:04,417 - app.routes.predictions - INFO - [predictions.py:60] - [db637871] Predicción churn para CUIT: 23423746789 (dfksj)
+2026-01-24 18:02:04,418 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 3 detectadas
+2026-01-24 18:02:04,419 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 18:02:04,419 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 18:02:04,420 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 18:02:04,420 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 18:02:04,421 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.0646
+2026-01-24 18:02:04,422 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.0646, riesgo=bajo
+2026-01-24 18:02:04,422 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 18:02:04,422 - app.routes.predictions - INFO - [predictions.py:92] - [db637871] Predicción: prob=0.0646, prediction=0, flags=3, threshold=0.500
+2026-01-24 18:02:04,423 - app.routes.predictions - INFO - [predictions.py:127] - [db637871] ✅ Predicción completada exitosamente
+2026-01-24 18:02:04,425 - main - INFO - [main.py:48] - [a0ef57e8] Response: 200
+2026-01-24 18:03:10,610 - main - INFO - [main.py:44] - [d080ac19] POST /api/v1/predictions/predict_churn
+2026-01-24 18:03:10,611 - app.routes.predictions - INFO - [predictions.py:60] - [3269af36] Predicción churn para CUIT: 30052034917 (Empresa Agro 13 S.A.)
+2026-01-24 18:03:10,611 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 4 detectadas
+2026-01-24 18:03:10,611 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 18:03:10,611 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 18:03:10,611 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 18:03:10,612 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 18:03:10,612 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.4456
+2026-01-24 18:03:10,612 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.4456, riesgo=medio
+2026-01-24 18:03:10,612 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 18:03:10,612 - app.routes.predictions - INFO - [predictions.py:92] - [3269af36] Predicción: prob=0.4456, prediction=0, flags=4, threshold=0.500
+2026-01-24 18:03:10,612 - app.routes.predictions - INFO - [predictions.py:127] - [3269af36] ✅ Predicción completada exitosamente
+2026-01-24 18:03:10,613 - main - INFO - [main.py:48] - [d080ac19] Response: 200
+2026-01-24 18:06:17,250 - main - INFO - [main.py:44] - [ff18278a] POST /api/v1/predictions/predict_churn
+2026-01-24 18:06:17,254 - app.routes.predictions - INFO - [predictions.py:60] - [b84d8d0e] Predicción churn para CUIT: 76564736289 (test)
+2026-01-24 18:06:17,254 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 3 detectadas
+2026-01-24 18:06:17,255 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 18:06:17,255 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 18:06:17,256 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 18:06:17,256 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 18:06:17,256 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.4073
+2026-01-24 18:06:17,257 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.4073, riesgo=medio
+2026-01-24 18:06:17,257 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 18:06:17,258 - app.routes.predictions - INFO - [predictions.py:92] - [b84d8d0e] Predicción: prob=0.4073, prediction=0, flags=3, threshold=0.500
+2026-01-24 18:06:17,258 - app.routes.predictions - INFO - [predictions.py:127] - [b84d8d0e] ✅ Predicción completada exitosamente
+2026-01-24 18:06:17,260 - main - INFO - [main.py:48] - [ff18278a] Response: 200
+2026-01-24 18:10:10,798 - main - INFO - [main.py:44] - [da846cac] OPTIONS /api/v1/predictions/predict_churn
+2026-01-24 18:10:10,799 - main - INFO - [main.py:48] - [da846cac] Response: 200
+2026-01-24 18:10:10,810 - main - INFO - [main.py:44] - [c7a6e30b] POST /api/v1/predictions/predict_churn
+2026-01-24 18:10:10,816 - app.routes.predictions - INFO - [predictions.py:60] - [870b6de9] Predicción churn para CUIT: 40302637162 (232ssdf)
+2026-01-24 18:10:10,818 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 3 detectadas
+2026-01-24 18:10:10,819 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 18:10:10,821 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 18:10:10,821 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 18:10:10,822 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 18:10:10,822 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.0783
+2026-01-24 18:10:10,823 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.0783, riesgo=bajo
+2026-01-24 18:10:10,823 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 18:10:10,823 - app.routes.predictions - INFO - [predictions.py:92] - [870b6de9] Predicción: prob=0.0783, prediction=0, flags=3, threshold=0.500
+2026-01-24 18:10:10,824 - app.routes.predictions - INFO - [predictions.py:127] - [870b6de9] ✅ Predicción completada exitosamente
+2026-01-24 18:10:10,826 - main - INFO - [main.py:48] - [c7a6e30b] Response: 200
+2026-01-24 18:17:59,738 - main - INFO - [main.py:44] - [656b7f9b] POST /api/v1/predictions/predict_churn
+2026-01-24 18:17:59,742 - app.routes.predictions - INFO - [predictions.py:60] - [c493a634] Predicción churn para CUIT: 28323112364 (SKJDFN)
+2026-01-24 18:17:59,743 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 5 detectadas
+2026-01-24 18:17:59,743 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 18:17:59,743 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 18:17:59,744 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 18:17:59,744 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 18:17:59,744 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.3771
+2026-01-24 18:17:59,745 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.3771, riesgo=bajo
+2026-01-24 18:17:59,745 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 18:17:59,745 - app.routes.predictions - INFO - [predictions.py:92] - [c493a634] Predicción: prob=0.3771, prediction=0, flags=5, threshold=0.500
+2026-01-24 18:17:59,746 - app.routes.predictions - INFO - [predictions.py:127] - [c493a634] ✅ Predicción completada exitosamente
+2026-01-24 18:17:59,747 - main - INFO - [main.py:48] - [656b7f9b] Response: 200
+2026-01-24 18:21:06,528 - main - INFO - [main.py:44] - [1a58d210] OPTIONS /api/v1/predictions/predict_churn
+2026-01-24 18:21:06,530 - main - INFO - [main.py:48] - [1a58d210] Response: 200
+2026-01-24 18:21:06,539 - main - INFO - [main.py:44] - [1796856b] POST /api/v1/predictions/predict_churn
+2026-01-24 18:21:06,541 - app.routes.predictions - INFO - [predictions.py:60] - [d971c8dd] Predicción churn para CUIT: 30013547225 (Empresa Servicios 1 S.A.)
+2026-01-24 18:21:06,542 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 5 detectadas
+2026-01-24 18:21:06,542 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 18:21:06,543 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 18:21:06,543 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 18:21:06,543 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 18:21:06,544 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.6279
+2026-01-24 18:21:06,544 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.6279, riesgo=medio
+2026-01-24 18:21:06,544 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 18:21:06,544 - app.routes.predictions - INFO - [predictions.py:92] - [d971c8dd] Predicción: prob=0.6279, prediction=1, flags=5, threshold=0.500
+2026-01-24 18:21:06,545 - app.routes.predictions - INFO - [predictions.py:127] - [d971c8dd] ✅ Predicción completada exitosamente
+2026-01-24 18:21:06,546 - main - INFO - [main.py:48] - [1796856b] Response: 200
+2026-01-24 18:21:47,665 - main - INFO - [main.py:44] - [2a9b3b5a] POST /api/v1/predictions/predict_churn
+2026-01-24 18:21:47,669 - app.routes.predictions - INFO - [predictions.py:60] - [7664d5c6] Predicción churn para CUIT: 12312312787 (wefbj)
+2026-01-24 18:21:47,670 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 3 detectadas
+2026-01-24 18:21:47,670 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 18:21:47,670 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 18:21:47,671 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 18:21:47,671 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 18:21:47,672 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.2361
+2026-01-24 18:21:47,672 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.2361, riesgo=bajo
+2026-01-24 18:21:47,673 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 18:21:47,674 - app.routes.predictions - INFO - [predictions.py:92] - [7664d5c6] Predicción: prob=0.2361, prediction=0, flags=3, threshold=0.500
+2026-01-24 18:21:47,674 - app.routes.predictions - INFO - [predictions.py:127] - [7664d5c6] ✅ Predicción completada exitosamente
+2026-01-24 18:21:47,676 - main - INFO - [main.py:48] - [2a9b3b5a] Response: 200
+2026-01-24 18:22:01,554 - main - INFO - [main.py:44] - [d7a92b1a] POST /api/v1/predictions/predict_churn
+2026-01-24 18:22:01,557 - app.routes.predictions - INFO - [predictions.py:60] - [9e0b45bd] Predicción churn para CUIT: 30052065695 (Empresa Agro 6 S.A.)
+2026-01-24 18:22:01,557 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 4 detectadas
+2026-01-24 18:22:01,558 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 18:22:01,558 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 18:22:01,559 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 18:22:01,559 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 18:22:01,559 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.4902
+2026-01-24 18:22:01,560 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.4902, riesgo=medio
+2026-01-24 18:22:01,560 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 18:22:01,560 - app.routes.predictions - INFO - [predictions.py:92] - [9e0b45bd] Predicción: prob=0.4902, prediction=0, flags=4, threshold=0.500
+2026-01-24 18:22:01,561 - app.routes.predictions - INFO - [predictions.py:127] - [9e0b45bd] ✅ Predicción completada exitosamente
+2026-01-24 18:22:01,562 - main - INFO - [main.py:48] - [d7a92b1a] Response: 200
+2026-01-24 18:22:04,004 - main - INFO - [main.py:44] - [34e6c820] POST /api/v1/predictions/predict_churn
+2026-01-24 18:22:04,007 - app.routes.predictions - INFO - [predictions.py:60] - [8843592b] Predicción churn para CUIT: 30086678105 (Empresa Comercio 9 S.A.)
+2026-01-24 18:22:04,007 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 4 detectadas
+2026-01-24 18:22:04,008 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 18:22:04,008 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 18:22:04,008 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 18:22:04,009 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 18:22:04,009 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.5400
+2026-01-24 18:22:04,009 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.5400, riesgo=medio
+2026-01-24 18:22:04,009 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 18:22:04,010 - app.routes.predictions - INFO - [predictions.py:92] - [8843592b] Predicción: prob=0.5400, prediction=1, flags=4, threshold=0.500
+2026-01-24 18:22:04,010 - app.routes.predictions - INFO - [predictions.py:127] - [8843592b] ✅ Predicción completada exitosamente
+2026-01-24 18:22:04,012 - main - INFO - [main.py:48] - [34e6c820] Response: 200
+2026-01-24 18:26:22,224 - main - INFO - [main.py:44] - [4ccf0953] POST /api/v1/predictions/predict_churn
+2026-01-24 18:26:22,241 - app.routes.predictions - INFO - [predictions.py:60] - [b218d8b7] Predicción churn para CUIT: 37463526178 (23sadbaj)
+2026-01-24 18:26:22,242 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 4 detectadas
+2026-01-24 18:26:22,243 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 18:26:22,243 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 18:26:22,244 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 18:26:22,244 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 18:26:22,245 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.2930
+2026-01-24 18:26:22,245 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.2930, riesgo=bajo
+2026-01-24 18:26:22,245 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 18:26:22,246 - app.routes.predictions - INFO - [predictions.py:92] - [b218d8b7] Predicción: prob=0.2930, prediction=0, flags=4, threshold=0.500
+2026-01-24 18:26:22,246 - app.routes.predictions - INFO - [predictions.py:127] - [b218d8b7] ✅ Predicción completada exitosamente
+2026-01-24 18:26:22,248 - main - INFO - [main.py:48] - [4ccf0953] Response: 200
+2026-01-24 18:26:52,114 - main - INFO - [main.py:44] - [c2e2a09f] POST /api/v1/predictions/predict_churn
+2026-01-24 18:26:52,118 - app.routes.predictions - INFO - [predictions.py:60] - [b39efb0c] Predicción churn para CUIT: 30023514735 (Empresa Industria 4 S.A.)
+2026-01-24 18:26:52,119 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 3 detectadas
+2026-01-24 18:26:52,119 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 18:26:52,120 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 18:26:52,120 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 18:26:52,120 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 18:26:52,121 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.5647
+2026-01-24 18:26:52,121 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.5647, riesgo=medio
+2026-01-24 18:26:52,122 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 18:26:52,122 - app.routes.predictions - INFO - [predictions.py:92] - [b39efb0c] Predicción: prob=0.5647, prediction=1, flags=3, threshold=0.500
+2026-01-24 18:26:52,122 - app.routes.predictions - INFO - [predictions.py:127] - [b39efb0c] ✅ Predicción completada exitosamente
+2026-01-24 18:26:52,124 - main - INFO - [main.py:48] - [c2e2a09f] Response: 200
