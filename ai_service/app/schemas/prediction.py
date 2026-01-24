@@ -3,6 +3,13 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime
 
 
+class RedFlag(BaseModel):
+    """Modelo para una señal de alerta (red flag) con severidad"""
+    flag: str = Field(..., description="Identificador único del flag", min_length=1)
+    description: str = Field(..., description="Descripción del flag", min_length=1)
+    severity: str = Field(..., description="Nivel de severidad", pattern="^(critical|high|medium|low)$")
+
+
 class EmpresaInput(BaseModel):
     """Schema de entrada para predicción de churn - Integrado desde new_notebook.md"""
     
@@ -153,7 +160,7 @@ class PredictionResponse(BaseModel):
     churn_probability: float = Field(..., description="Probabilidad de churn (0-1)", ge=0, le=1)
     churn_prediction: int = Field(..., description="Predicción binaria: 0=no churn, 1=churn", ge=0, le=1)
     threshold_used: float = Field(..., description="Umbral utilizado para la predicción", ge=0, le=1)
-    red_flags: List[str] = Field(default_factory=list, description="Lista de señales de alerta identificadas")
+    red_flags: List[RedFlag] = Field(default_factory=list, description="Lista de señales de alerta identificadas con severidad")
     confidence: float = Field(default=0.95, description="Confianza del modelo")
     timestamp: datetime = Field(default_factory=datetime.utcnow)
     
@@ -166,7 +173,13 @@ class PredictionResponse(BaseModel):
                 "churn_probability": 0.23,
                 "churn_prediction": 0,
                 "threshold_used": 0.5,
-                "red_flags": [],
+                "red_flags": [
+                    {
+                        "flag": "HIGH_DEBT",
+                        "description": "Ratio deuda/activos muy alto (>70%): sobreendeudamiento",
+                        "severity": "high"
+                    }
+                ],
                 "confidence": 0.95,
                 "timestamp": "2024-01-07T10:30:00Z"
             }

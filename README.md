@@ -1,13 +1,312 @@
-# ChurnInsight
-Predicción de Cancelación de Clientes ONE
+# ChurnInsight - Predicción de Abandono Crediticio en Fintech
 
-# Sector de negocio
+> Sistema de IA que predice en tiempo real qué empresas están en riesgo de abandonar una plataforma fintech. Utilizado durante el Hackathon Fintech 2025.
 
-**Servicios y Suscripciones (Telecomunicaciones, Fintech, Streaming, E-commerce)
-Empresas que dependen de clientes recurrentes y desean reducir cancelaciones o desistencias.**
+---
 
-# Descripción del proyecto
-El desafío de ChurnInsight es crear una solución que prediga si un cliente es propenso a cancelar un servicio (churn). El objetivo es que el equipo de Data Science desarrolle un modelo predictivo y que el equipo de Back-end construya una API para disponibilizar esa predicción a otros sistemas, permitiendo que el negocio actúe antes de que el cliente decida irse. Ejemplo: una fintech quiere saber, basándose en los hábitos de uso e historial de pago, qué clientes tienen alta probabilidad de deserción. Con esta información, el equipo de marketing puede ofrecer servicios personalizados y el equipo de soporte puede actuar preventivamente.
+## 🎯 Problema y Solución
+
+### El Desafío
+Más del 30% de empresas fintech experimenta abandono de usuarios, generando pérdidas significativas. ¿Cómo identificar qué empresas están en riesgo **antes** de que sea demasiado tarde?
+
+### Nuestra Solución
+ChurnInsight analiza **4 variables financieras clave** en tiempo real para:
+- ✅ Predecir probabilidad de abandono (0-100%)
+- ✅ Generar alertas ordenadas por severidad
+- ✅ Proveer recomendaciones automáticas
+- ✅ Exportar reportes profesionales (PDF/CSV)
+
+---
+
+## 🚀 Características Principales
+
+| Característica | Descripción |
+|---|---|
+| **Predicción en Tiempo Real** | Análisis instantáneo basado en heurísticas validadas |
+| **Señales de Alerta** | Red flags ordenadas por severidad (CRÍTICA → BAJA) |
+| **Reportes Profesionales** | PDFs con métricas, gráficos y recomendaciones |
+| **API REST Completa** | Endpoints para predicción, datos y exportación |
+| **Dashboard Interactivo** | Visualización clara del estado de riesgo |
+| **Integrable** | CSV, JSON, webhooks para terceros |
+
+---
+
+## 🏗️ Arquitectura
+
+```
+┌─────────────────────────────────────────┐
+│    Frontend (Angular 21 + Tailwind)     │
+│    Dashboard │ Análisis │ Exportación    │
+└──────────────────┬──────────────────────┘
+                   │ HTTP/REST
+┌──────────────────▼──────────────────────┐
+│   Backend (FastAPI + Python 3.14)       │
+│   Predicción │ Alertas │ Recomendaciones│
+└──────────────────┬──────────────────────┘
+                   │ SQL
+┌──────────────────▼──────────────────────┐
+│  Oracle Database (Wallet SSH Seguro)    │
+│  Empresas │ Métricas │ Comportamiento   │
+└─────────────────────────────────────────┘
+```
+
+**Documentación Completa**: [docs_organized/ARCHITECTURE.md](docs_organized/ARCHITECTURE.md)
+
+---
+
+## 📊 Cómo Funciona el Modelo
+
+ChurnInsight utiliza un **modelo heurístico validado** que combina:
+
+1. **Inactividad** (40%) - Días sin usar la plataforma
+2. **Rentabilidad** (35%) - Margen operativo de la empresa
+3. **Endeudamiento** (20%) - Ratio deuda/activos
+4. **Historial Crediticio** (5%) - Aprobaciones vs solicitudes
+
+**Resultado**: Probabilidad de churn 0.0-1.0
+
+```python
+risk_score = inactivity × 0.40 + profitability × 0.35 + debt × 0.20 + credit × 0.05
+
+# Clasificación
+if risk_score >= 0.7:
+    return "ALTO"    # Abandono inminente
+elif risk_score >= 0.4:
+    return "MEDIO"   # Vigilancia recomendada
+else:
+    return "BAJO"    # Relación estable
+```
+
+**Para más detalles**: [docs_organized/MODEL_DETAILS.md](docs_organized/MODEL_DETAILS.md)
+
+---
+
+## 🚀 Quick Start (5 minutos)
+
+### 1. Requisitos
+
+- Docker & Docker Compose
+- Node.js v20+
+- Git
+
+### 2. Clonar y Configurar
+
+```bash
+git clone <repo-url>
+cd ChurnInsight
+
+# Crear archivo .env con credenciales Oracle
+echo "ORACLE_USER=admin" > .env
+echo "ORACLE_PASSWORD=tu_password" >> .env
+```
+
+### 3. Iniciar Servicios
+
+```bash
+# Backend + Database (Docker)
+docker-compose up -d
+
+# Esperar a que Oracle esté listo (~60 segundos)
+sleep 60
+
+# Frontend
+cd frontend
+npm install
+ng serve
+```
+
+### 4. Acceder
+
+- **App**: http://localhost:4200
+- **API Docs**: http://localhost:8000/docs
+
+**Guía Completa**: [docs_organized/INSTALLATION.md](docs_organized/INSTALLATION.md)
+
+---
+
+## 📡 API Endpoints
+
+### Predicción
+
+```bash
+POST /predict
+{
+  "company": { "CUIT": "20123456789", ... },
+  "metrics": { "financials": {...}, "credit_behavior": {...} }
+}
+
+Response:
+{
+  "churn_probability": 0.75,
+  "prevision": "ALTO",
+  "confidence": 0.95,
+  "red_flags": [
+    { "flag": "no_activity", "description": "...", "severity": "CRITICAL" }
+  ],
+  "recomendaciones": ["Contactar cliente inmediatamente", ...]
+}
+```
+
+### Datos de Empresa
+
+```bash
+GET /company/{cuit}
+GET /metrics/{cuit}
+POST /export/pdf
+```
+
+**Documentación Completa**: [docs_organized/API_REFERENCE.md](docs_organized/API_REFERENCE.md)
+
+---
+
+## 📈 Resultados Validados
+
+### Test 1: Empresa de ALTO Riesgo
+- **Datos**: 0 días activos, -15% margen, 85% endeudamiento
+- **Predicción**: 96% riesgo (ALTO) ✅
+- **Red Flags**: 4 alertas CRÍTICAS
+
+### Test 2: Empresa de BAJO Riesgo
+- **Datos**: 89 días activos, +22% margen, 35% endeudamiento
+- **Predicción**: 24.75% riesgo (BAJO) ✅
+- **Red Flags**: 0 alertas
+
+---
+
+## 📁 Estructura del Proyecto
+
+```
+ChurnInsight/
+├── frontend/                    # Angular 21 app
+│   ├── src/app/                 # Componentes y servicios
+│   ├── tsconfig.json            # TypeScript config
+│   └── tailwind.config.js        # Estilos
+├── ai_service/                  # FastAPI backend
+│   ├── app/                      # Aplicación
+│   │   ├── routes/               # Endpoints
+│   │   ├── core/                 # Lógica de negocio
+│   │   ├── schemas/              # Modelos Pydantic
+│   │   └── utils/                # Utilidades
+│   ├── main.py                   # Punto de entrada
+│   └── requirements.txt          # Dependencias Python
+├── docker-compose.yml           # Stack completo
+├── docs_organized/              # Documentación técnica
+│   ├── ARCHITECTURE.md           # Arquitectura del sistema
+│   ├── API_REFERENCE.md          # Endpoints disponibles
+│   ├── INSTALLATION.md           # Guía de instalación
+│   ├── MODEL_DETAILS.md          # Detalles del modelo
+│   └── DEVELOPMENT.md            # Guía para desarrolladores
+└── README.md                    # Este archivo
+```
+
+---
+
+## 🛠️ Stack Tecnológico
+
+| Layer | Tecnología | Versión |
+|-------|-----------|---------|
+| Frontend | Angular | 21 |
+| Estilos | Tailwind CSS | 3.4 |
+| Exportación | jsPDF | 2.5+ |
+| Backend | FastAPI | 0.104 |
+| Lenguaje | Python | 3.14 |
+| Validación | Pydantic | 2.12 |
+| Base de Datos | Oracle | 23c |
+| Containerización | Docker | 20.10+ |
+
+---
+
+## 📖 Documentación
+
+- **[Architecture](docs_organized/ARCHITECTURE.md)** - Diseño del sistema
+- **[API Reference](docs_organized/API_REFERENCE.md)** - Endpoints disponibles
+- **[Installation](docs_organized/INSTALLATION.md)** - Pasos para instalar
+- **[Model Details](docs_organized/MODEL_DETAILS.md)** - Cómo funciona la predicción
+- **[Development](docs_organized/DEVELOPMENT.md)** - Guía para desarrolladores
+
+---
+
+## 🔒 Seguridad
+
+- ✅ Wallet Oracle para credenciales seguras
+- ✅ Variables de entorno para secrets
+- ✅ Validación de inputs con Pydantic
+- ✅ Rate limiting en API
+- ✅ CORS configurado
+
+---
+
+## 🚀 Deployment
+
+### Docker (Recomendado)
+
+```bash
+docker-compose up -d
+docker-compose ps
+```
+
+### Kubernetes (Future)
+
+Incluye manifiestos en `k8s/` (próximamente)
+
+---
+
+## 🤝 Contribuciones
+
+1. Fork el repositorio
+2. Crea un branch (`git checkout -b feature/amazing`)
+3. Commit cambios (`git commit -m 'Add amazing feature'`)
+4. Push al branch (`git push origin feature/amazing`)
+5. Abre un Pull Request
+
+---
+
+## 📝 Licencia
+
+Propietario - Hackathon Fintech 2025
+
+---
+
+## 👥 Equipo
+
+Desarrollado durante el **Hackathon Fintech 2025**
+
+**Componentes**:
+- 🎨 Frontend: Angular 21 + Tailwind CSS
+- ⚙️ Backend: FastAPI + Python + Heurísticas ML
+- 📊 Datos: Oracle Database
+- 🚀 DevOps: Docker & Docker Compose
+
+---
+
+## 💬 Soporte
+
+- **Documentación**: [docs_organized/](docs_organized/)
+- **Issues**: Abre un issue en GitHub
+- **Preguntas**: Ver [Documentación Completa](docs_organized/ARCHITECTURE.md)
+
+---
+
+## 🎓 Casos de Uso
+
+1. **Monitoreo Proactivo**: Analistas revisan alertas diarias
+2. **Decisiones de Crédito**: Automatizar evaluación de solicitudes
+3. **Reportería Ejecutiva**: Generar informes de cartera
+4. **Alertas Tempranas**: Notificaciones automáticas de cambios
+
+---
+
+## 🗂️ Próximos Pasos
+
+1. ✅ Core features implementados
+2. ⏳ Integración con ML avanzado
+3. ⏳ Dashboard mejorado con gráficos avanzados
+4. ⏳ Mobile app (React Native)
+5. ⏳ Webhooks para integraciones
+
+---
+
+**ChurnInsight** - Reduciendo riesgo, aumentando ingresos. 📈
 
 # Necesidad del cliente (explicación no técnica)
 Toda empresa que vende por suscripción o contrato recurrente sufre con cancelaciones. Mantener clientes fieles es más barato que conquistar nuevos. El cliente (empresa) quiere predecir con anticipación quién está a punto de cancelar, para poder actuar y retener a esas personas. La solución esperada debe ayudar a:

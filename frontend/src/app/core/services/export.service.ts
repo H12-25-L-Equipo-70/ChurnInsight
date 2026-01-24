@@ -5,7 +5,6 @@ import {
   StaticProfile 
 } from '../models/churn.interface';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 /**
  * ExportService
@@ -186,8 +185,8 @@ ${result.recomendaciones && result.recomendaciones.length > 0
   }
 
   /**
-   * Exporta a PDF con formato profesional y hermoso
-   * Incluye estadísticas visuales, gráficos de riesgo e imágenes de gráficas
+   * Exporta a PDF con formato profesional corporativo
+   * Muestra SOLO los datos reales del resultado de predicción
    */
   async exportToPDF(
     profile: Partial<StaticProfile>,
@@ -205,256 +204,186 @@ ${result.recomendaciones && result.recomendaciones.length > 0
 
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
-      let currentY = 15;
+      let currentY = 10;
+      const now = new Date();
 
-      // ============================================================================
-      // PÁGINA 1: PORTADA Y RESULTADO PRINCIPAL
-      // ============================================================================
-      
-      // Encabezado elegante con gradiente (simulado con rectángulos)
+      // HEADER CORPORATIVO
       doc.setFillColor(30, 41, 59);
-      doc.rect(0, 0, pageWidth, 45, 'F');
+      doc.rect(0, 0, pageWidth, 40, 'F');
       
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(28);
+      doc.setFontSize(26);
       doc.setFont('Helvetica', 'bold');
-      doc.text('ChurnInsight', 15, 18);
-      
-      doc.setFontSize(12);
-      doc.setFont('Helvetica', 'normal');
-      doc.text('Reporte de Análisis de Riesgo de Abandono', 15, 28);
-      
-      doc.setFontSize(9);
-      doc.setTextColor(200, 200, 200);
-      doc.text(`${new Date().toLocaleDateString('es-AR')} - ${new Date().toLocaleTimeString('es-AR')}`, 15, 36);
-
-      currentY = 55;
-      doc.setTextColor(0, 0, 0);
-
-      // SECCIÓN: Perfil de Empresa
-      doc.setFillColor(240, 246, 252);
-      doc.rect(10, currentY - 2, pageWidth - 20, 30, 'F');
-      
-      doc.setFontSize(12);
-      doc.setFont('Helvetica', 'bold');
-      doc.setTextColor(30, 41, 59);
-      doc.text('INFORMACIÓN DE LA EMPRESA', 15, currentY + 4);
+      doc.text('ChurnInsight', 15, 16);
       
       doc.setFontSize(10);
       doc.setFont('Helvetica', 'normal');
-      const companyInfo = [
-        { label: 'Empresa:', value: profile?.Nombre_Empresa || 'N/A' },
-        { label: 'CUIT:', value: profile?.CUIT || 'N/A' },
-        { label: 'Sector:', value: profile?.Sector || 'N/A' },
-        { label: 'Provincia:', value: profile?.Provincia || 'N/A' }
-      ];
+      doc.text('Reporte de Evaluacion de Riesgo de Abandono', 15, 24);
       
-      let infoY = currentY + 10;
-      companyInfo.slice(0, 2).forEach((info, idx) => {
-        const x = idx === 0 ? 15 : pageWidth / 2;
-        doc.setFont('Helvetica', 'bold');
-        doc.setTextColor(60, 80, 110);
-        doc.text(`${info.label}`, x, infoY);
-        doc.setFont('Helvetica', 'normal');
-        doc.setTextColor(0, 0, 0);
-        doc.text(String(info.value), x + 25, infoY);
-      });
+      doc.setFontSize(8);
+      doc.setTextColor(180, 180, 200);
+      doc.text(`Generado: ${now.toLocaleDateString('es-AR')} | ${now.toLocaleTimeString('es-AR')}`, 15, 31);
       
-      infoY += 7;
-      companyInfo.slice(2).forEach((info, idx) => {
-        const x = idx === 0 ? 15 : pageWidth / 2;
-        doc.setFont('Helvetica', 'bold');
-        doc.setTextColor(60, 80, 110);
-        doc.text(`${info.label}`, x, infoY);
-        doc.setFont('Helvetica', 'normal');
-        doc.setTextColor(0, 0, 0);
-        doc.text(String(info.value), x + 25, infoY);
-      });
+      currentY = 48;
+      doc.setTextColor(0, 0, 0);
 
-      currentY += 35;
-
-      // SECCION: RESULTADO PRINCIPAL DESTACADO
-      const riskLevel = result.prevision?.toUpperCase() || 'DESCONOCIDO';
-      const probability = (result.probabilidad || 0) * 100;
-      const confidence = (result.confidence || 0) * 100;
-
-      const riskColors: Record<string, { bg: [number, number, number], text: [number, number, number] }> = {
-        'ALTO': { bg: [220, 38, 38], text: [178, 0, 0] },
-        'MEDIO': { bg: [245, 158, 11], text: [180, 83, 9] },
-        'BAJO': { bg: [34, 197, 94], text: [5, 150, 105] }
-      };
-      const riskStyle = riskColors[riskLevel] || { bg: [100, 100, 100], text: [50, 50, 50] };
+      // SECCION 1: RESUMEN EJECUTIVO - Datos reales del resultado
+      const prob = Number(result.churn_probability) || 0;
+      const conf = Number(result.confidence) || 0.95;
+      const threshold = Number(result.threshold_used) || 0.5;
       
-      doc.setFillColor(...riskStyle.bg);
-      doc.roundedRect(10, currentY, pageWidth - 20, 35, 3, 3, 'F');
+      let riskColor: [number, number, number];
+      let riskLabel: string;
       
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(20);
-      doc.setFont('Helvetica', 'bold');
-      doc.text(`RIESGO: ${riskLevel}`, 15, currentY + 12);
+      if (prob >= 0.7) {
+        riskColor = [220, 38, 38];
+        riskLabel = 'ALTO';
+      } else if (prob >= 0.4) {
+        riskColor = [245, 158, 11];
+        riskLabel = 'MEDIO';
+      } else {
+        riskColor = [34, 197, 94];
+        riskLabel = 'BAJO';
+      }
       
-      doc.setFontSize(14);
-      doc.setFont('Helvetica', 'normal');
-      doc.text(`Probabilidad de Churn: ${probability.toFixed(1)}%`, 15, currentY + 23);
+      doc.setFillColor(240, 245, 250);
+      doc.setDrawColor(59, 130, 246);
+      doc.setLineWidth(1);
+      doc.rect(10, currentY, pageWidth - 20, 35);
       
       doc.setFontSize(11);
-      doc.text(`Confianza del Modelo: ${confidence.toFixed(0)}%`, 15, currentY + 31);
-      
-      currentY += 40;
-
-      // SECCIÓN: PREDICCIÓN Y CONFIANZA (2 columnas)
-      const boxWidth = (pageWidth - 30) / 2;
-      const boxHeight = 20;
-      
-      // Predicción
-      const isChurn = Number(result.churn_prediction) === 1 || String(result.churn_prediction).toUpperCase() === 'YES';
-      const predBg: [number, number, number] = isChurn ? [254, 242, 242] : [240, 253, 244];
-      const predText: [number, number, number] = isChurn ? [220, 38, 38] : [34, 197, 94];
-      
-      doc.setFillColor(...predBg);
-      doc.rect(10, currentY, boxWidth, boxHeight, 'F');
-      doc.setDrawColor(200, 200, 200);
-      doc.rect(10, currentY, boxWidth, boxHeight);
-      
-      doc.setFont('Helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(100, 100, 100);
-      doc.text('PREDICCIÓN', 14, currentY + 4);
-      
-      doc.setFontSize(16);
-      doc.setTextColor(...predText);
-      doc.text(isChurn ? 'CHURN' : 'ACTIVO', 14, currentY + 15);
-      
-      // Confianza
-      const confBg: [number, number, number] = [240, 245, 250];
-      const confText: [number, number, number] = [59, 130, 246];
-      doc.setFillColor(...confBg);
-      doc.rect(10 + boxWidth + 10, currentY, boxWidth, boxHeight, 'F');
-      doc.setDrawColor(200, 200, 200);
-      doc.rect(10 + boxWidth + 10, currentY, boxWidth, boxHeight);
-      
-      doc.setFont('Helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(100, 100, 100);
-      doc.text('CONFIANZA', 14 + boxWidth + 10, currentY + 4);
-      
-      doc.setFontSize(16);
-      doc.setTextColor(59, 130, 246);
-      doc.text(`${confidence.toFixed(0)}%`, 14 + boxWidth + 10, currentY + 15);
-      
-      currentY += 25;
-
-      // SECCIÓN: MÉTRICAS CLAVE (Grid 2x2)
-      const metricBoxes = [
-        {
-          label: 'Ingresos',
-          value: this.formatCurrency(metrics?.financials?.Ingresos),
-          icon: '💰'
-        },
-        {
-          label: 'Gastos',
-          value: this.formatCurrency(metrics?.financials?.Gastos),
-          icon: '📊'
-        },
-        {
-          label: 'Deuda Total',
-          value: this.formatCurrency(metrics?.financials?.Deuda),
-          icon: '💳'
-        },
-        {
-          label: 'Margen Neto',
-          value: this.formatCurrency(metrics?.financials?.Margen),
-          icon: '📈'
-        }
-      ];
-
-      doc.setFontSize(9);
       doc.setFont('Helvetica', 'bold');
       doc.setTextColor(30, 41, 59);
-      doc.text('METRICAS FINANCIERAS', 15, currentY);
-      currentY += 5;
+      doc.text('EVALUACION DE RIESGO', 15, currentY + 6);
+      
+      doc.setFontSize(10);
+      doc.setFont('Helvetica', 'normal');
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Empresa: ${result.NOMBRE_EMPRESA || profile?.Nombre_Empresa || 'N/A'}`, 15, currentY + 14);
+      doc.text(`CUIT: ${result.CUIT || profile?.CUIT || 'N/A'}`, 15, currentY + 20);
+      doc.text(`Prediccion: ${result.churn_prediction === 'YES' ? 'ABANDONO PROBABLE' : 'RETENCION ESPERADA'}`, 15, currentY + 26);
+      
+      const [r1, g1, b1] = riskColor;
+      doc.setFillColor(r1, g1, b1);
+      doc.rect(pageWidth - 55, currentY + 6, 45, 11, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.text(riskLabel, pageWidth - 45, currentY + 15);
+      
+      currentY += 42;
 
-      metricBoxes.forEach((metric, idx) => {
-        const row = Math.floor(idx / 2);
-        const col = idx % 2;
-        const x = 10 + col * (pageWidth / 2);
-        const y = currentY + row * 15;
-
+      // SECCION 2: METRICAS CLAVE DEL RESULTADO
+      const redFlagCount = (result.red_flags?.length || 0);
+      const predictionColor = result.churn_prediction === 'YES' ? [220, 38, 38] : [34, 197, 94];
+      const alertColor = redFlagCount > 0 ? [239, 68, 68] : [34, 197, 94];
+      const metricsTop = [
+        { label: 'Probabilidad', value: `${(prob * 100).toFixed(1)}%`, color: riskColor },
+        { label: 'Umbral', value: `${(threshold * 100).toFixed(0)}%`, color: [107, 114, 128] as [number, number, number] },
+        { label: 'Prediccion', value: result.churn_prediction === 'YES' ? 'SI' : 'NO', color: predictionColor as [number, number, number] },
+        { label: 'Alertas', value: `${redFlagCount}`, color: alertColor as [number, number, number] }
+      ];
+      
+      const metricBoxWidth = (pageWidth - 30) / 4;
+      metricsTop.forEach((metric, idx) => {
+        const x = 10 + idx * (metricBoxWidth + 2.5);
         doc.setFillColor(250, 250, 252);
-        doc.rect(x, y, pageWidth / 2 - 10, 12, 'F');
         doc.setDrawColor(220, 220, 220);
-        doc.rect(x, y, pageWidth / 2 - 10, 12);
-
+        doc.rect(x, currentY, metricBoxWidth, 24);
+        
+        doc.setFontSize(8);
         doc.setFont('Helvetica', 'bold');
         doc.setTextColor(100, 100, 100);
-        doc.setFontSize(8);
-        doc.text(`${metric.icon} ${metric.label}`, x + 2, y + 4);
-
+        doc.text(metric.label, x + 2, currentY + 5);
+        
+        doc.setFontSize(12);
         doc.setFont('Helvetica', 'bold');
-        doc.setTextColor(30, 41, 59);
-        doc.setFontSize(10);
-        doc.text(String(metric.value), x + 2, y + 10);
+        const [r, g, b] = metric.color;
+        doc.setTextColor(r, g, b);
+        doc.text(metric.value, x + 2, currentY + 16);
       });
+      
+      currentY += 30;
 
-      currentY += 35;
-
-      // SECCIÓN: COMPORTAMIENTO DE CREDITO Y ACTIVIDAD
-      const behaviorMetrics = [
-        {
-          label: 'Prestamos Solicitados',
-          value: String(metrics?.credit_behavior?.Prestamos_Solicitados || 0),
-          icon: '📋'
-        },
-        {
-          label: 'Prestamos Aprobados',
-          value: String(metrics?.credit_behavior?.Prestamos_Aprobados || 0),
-          icon: '✅'
-        },
-        {
-          label: 'Dias Activos (90d)',
-          value: `${metrics?.app_engagement?.Trimestre_Dias_Actividad || 0}d`,
-          icon: '⏱️'
-        },
-        {
-          label: 'Tasa Aprobacion',
-          value: `${this.calculateApprovalRate(metrics?.credit_behavior)}%`,
-          icon: '📊'
-        }
-      ];
-
-      doc.setFontSize(9);
+      // SECCION 3: INFORMACION DE LA EMPRESA
       doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(11);
       doc.setTextColor(30, 41, 59);
-      doc.text('COMPORTAMIENTO DE CREDITO', 15, currentY);
-      currentY += 5;
+      doc.text('INFORMACION DE LA EMPRESA', 10, currentY + 1);
+      currentY += 6;
+      
+      const companyData = [
+        { label: 'Nombre', value: result.NOMBRE_EMPRESA || profile?.Nombre_Empresa || 'N/A' },
+        { label: 'CUIT', value: result.CUIT || profile?.CUIT || 'N/A' },
+        { label: 'Sector', value: profile?.Sector || 'N/A' },
+        { label: 'Provincia', value: profile?.Provincia || 'N/A' }
+      ];
+      
+      const colWidth = (pageWidth - 20) / 2;
+      for (let i = 0; i < companyData.length; i += 2) {
+        const row = [companyData[i], companyData[i + 1]];
+        row.forEach((metric, colIdx) => {
+          const x = 10 + colIdx * (colWidth + 2.5);
+          doc.setFillColor(247, 250, 252);
+          doc.setDrawColor(200, 215, 230);
+          doc.setLineWidth(0.5);
+          doc.rect(x, currentY, colWidth, 16);
+          
+          doc.setFontSize(9);
+          doc.setFont('Helvetica', 'bold');
+          doc.setTextColor(71, 85, 105);
+          doc.text(metric.label, x + 3, currentY + 5);
+          
+          doc.setFontSize(10);
+          doc.setFont('Helvetica', 'bold');
+          doc.setTextColor(15, 23, 42);
+          const val = metric.value ? String(metric.value).substring(0, 25) : 'N/A';
+          doc.text(val, x + 3, currentY + 12);
+        });
+        currentY += 18;
+      }
+      
+      currentY += 2;
 
-      behaviorMetrics.forEach((metric, idx) => {
-        const row = Math.floor(idx / 2);
-        const col = idx % 2;
-        const x = 10 + col * (pageWidth / 2);
-        const y = currentY + row * 15;
-
-        doc.setFillColor(245, 250, 255);
-        doc.rect(x, y, pageWidth / 2 - 10, 12, 'F');
-        doc.setDrawColor(200, 220, 255);
-        doc.rect(x, y, pageWidth / 2 - 10, 12);
-
+      // SECCION 4: METRICAS DISPONIBLES
+      if (metrics && (metrics.credit_behavior || metrics.app_engagement)) {
         doc.setFont('Helvetica', 'bold');
-        doc.setTextColor(100, 100, 100);
-        doc.setFontSize(8);
-        doc.text(`${metric.icon} ${metric.label}`, x + 2, y + 4);
-
-        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(11);
         doc.setTextColor(30, 41, 59);
-        doc.setFontSize(10);
-        doc.text(String(metric.value), x + 2, y + 10);
-      });
+        doc.text('METRICAS OPERACIONALES', 10, currentY + 1);
+        currentY += 6;
+        
+        const operationalData = [
+          { label: 'Prestamos Solicitados', value: String(metrics?.credit_behavior?.Prestamos_Solicitados || 0) },
+          { label: 'Prestamos Aprobados', value: String(metrics?.credit_behavior?.Prestamos_Aprobados || 0) },
+          { label: 'Dias Activos (90d)', value: `${metrics?.app_engagement?.Trimestre_Dias_Actividad || 0}` },
+          { label: 'Logins Promedio/Dia', value: `${(metrics?.app_engagement?.Promedio_Login_Dia || 0).toFixed(1)}` }
+        ];
+        
+        for (let i = 0; i < operationalData.length; i += 2) {
+          const row = [operationalData[i], operationalData[i + 1]];
+          row.forEach((metric, colIdx) => {
+            const x = 10 + colIdx * (colWidth + 2.5);
+            doc.setFillColor(240, 248, 255);
+            doc.setDrawColor(176, 196, 222);
+            doc.setLineWidth(0.5);
+            doc.rect(x, currentY, colWidth, 16);
+            
+            doc.setFontSize(9);
+            doc.setFont('Helvetica', 'bold');
+            doc.setTextColor(70, 130, 180);
+            doc.text(metric.label, x + 3, currentY + 5);
+            
+            doc.setFontSize(10);
+            doc.setFont('Helvetica', 'bold');
+            doc.setTextColor(25, 25, 112);
+            doc.text(metric.value, x + 3, currentY + 12);
+          });
+          currentY += 18;
+        }
+      }
 
-      currentY += 35;
-
-      // ============================================================================
-      // GRÁFICAS EN LA PRIMERA PÁGINA O NUEVA PÁGINA
-      // ============================================================================
+      // GRÁFICAS
       if (charts.length > 0) {
         if (currentY > pageHeight - 100) {
           doc.addPage();
@@ -464,67 +393,60 @@ ${result.recomendaciones && result.recomendaciones.length > 0
         doc.setFontSize(14);
         doc.setFont('Helvetica', 'bold');
         doc.setTextColor(30, 41, 59);
-        doc.text('ANÁLISIS VISUAL', 15, currentY);
+        doc.text('ANALISIS VISUAL', 15, currentY);
         currentY += 8;
 
         const chartWidth = 170;
         const chartHeight = 70;
         const chartX = (pageWidth - chartWidth) / 2;
 
-        charts.forEach((chart, index) => {
+        charts.forEach((chart) => {
           if (currentY + chartHeight + 15 > pageHeight) {
             doc.addPage();
             currentY = 15;
           }
 
-          // Nombre del gráfico
           doc.setFontSize(11);
           doc.setFont('Helvetica', 'bold');
           doc.setTextColor(60, 80, 110);
           doc.text(chart.name, 15, currentY);
           currentY += 5;
 
-          // Marco del gráfico
           doc.setDrawColor(220, 220, 220);
           doc.rect(chartX - 5, currentY - 2, chartWidth + 10, chartHeight + 4);
 
-          // Insertar imagen del gráfico
           try {
             doc.addImage(chart.image, 'PNG', chartX, currentY, chartWidth, chartHeight);
           } catch (e) {
-            console.warn('No se pudo insertar gráfica:', chart.name);
+            console.warn('No se pudo insertar grafica');
           }
           currentY += chartHeight + 8;
         });
       }
 
-      // ============================================================================
-      // PÁGINA 2: ALERTAS Y RECOMENDACIONES
-      // ============================================================================
+      // PÁGINA 2: ALERTAS Y RECOMENDACIONES (si existen)
       if (result.red_flags?.length || result.recomendaciones?.length) {
         doc.addPage();
         currentY = 20;
 
-        // Seccion de Alertas (Red Flags)
         if (result.red_flags && result.red_flags.length > 0) {
           doc.setFontSize(14);
           doc.setFont('Helvetica', 'bold');
           doc.setTextColor(30, 41, 59);
-          doc.text('Senales de Alerta', 15, currentY);
+          doc.text('SENALES DE ALERTA DETECTADAS', 15, currentY);
           currentY += 8;
 
-          // Ordenar red flags por severidad (critical -> high -> medium -> low)
           const severityOrder = { 'critical': 0, 'high': 1, 'medium': 2, 'low': 3 };
-          const sortedFlags = [...(result.red_flags || [])].sort((a, b) => {
-            const severityA = typeof a === 'string' ? 'low' : (a.severity || 'low');
-            const severityB = typeof b === 'string' ? 'low' : (b.severity || 'low');
-            return (severityOrder[severityA] || 999) - (severityOrder[severityB] || 999);
+          const sorted = [...(result.red_flags || [])].sort((a, b) => {
+            const sA = typeof a === 'string' ? 'low' : (a.severity || 'low');
+            const sB = typeof b === 'string' ? 'low' : (b.severity || 'low');
+            return (severityOrder[sA] || 999) - (severityOrder[sB] || 999);
           });
 
-          sortedFlags.forEach(flag => {
-            const isString = typeof flag === 'string';
-            const description = isString ? flag : (flag.description || String(flag.flag));
-            const severity = isString ? 'low' : (flag.severity || 'low');
+          sorted.forEach(flag => {
+            const isStr = typeof flag === 'string';
+            const desc = isStr ? flag : (flag.description || String(flag.flag));
+            const sev = isStr ? 'low' : (flag.severity || 'low');
 
             const severityConfig: Record<string, { color: [number, number, number], label: string }> = {
               'critical': { color: [220, 38, 38], label: 'CRITICO' },
@@ -532,38 +454,35 @@ ${result.recomendaciones && result.recomendaciones.length > 0
               'medium': { color: [234, 179, 8], label: 'MEDIO' },
               'low': { color: [34, 197, 94], label: 'BAJO' }
             };
-            const config = severityConfig[severity] || { color: [100, 100, 100], label: 'INFO' };
+            const cfg = severityConfig[sev] || { color: [100, 100, 100], label: 'INFO' };
 
             if (currentY > pageHeight - 15) {
               doc.addPage();
               currentY = 15;
             }
 
-            // Barra de color
-            doc.setFillColor(...config.color);
+            const [cr, cg, cb] = cfg.color;
+            doc.setFillColor(cr, cg, cb);
             doc.rect(10, currentY - 2, 2, 5, 'F');
 
-            // Texto
             doc.setFont('Helvetica', 'normal');
             doc.setFontSize(9);
             doc.setTextColor(0, 0, 0);
-            const wrappedText = doc.splitTextToSize(description, pageWidth - 35);
-            doc.text(wrappedText, 15, currentY);
+            const wrapped = doc.splitTextToSize(desc, pageWidth - 35);
+            doc.text(wrapped, 15, currentY);
             
-            // Severity badge
-            doc.setFillColor(...config.color);
+            doc.setFillColor(cr, cg, cb);
             doc.setTextColor(255, 255, 255);
             doc.setFont('Helvetica', 'bold');
             doc.setFontSize(7);
-            doc.text(config.label, pageWidth - 20, currentY + 1);
+            doc.text(cfg.label, pageWidth - 20, currentY + 1);
             
-            currentY += wrappedText.length * 4 + 3;
+            currentY += wrapped.length * 4 + 3;
           });
         }
 
         currentY += 5;
 
-        // Seccion de Recomendaciones
         if (result.recomendaciones && result.recomendaciones.length > 0) {
           if (currentY > pageHeight - 30) {
             doc.addPage();
@@ -573,7 +492,7 @@ ${result.recomendaciones && result.recomendaciones.length > 0
           doc.setFontSize(14);
           doc.setFont('Helvetica', 'bold');
           doc.setTextColor(30, 41, 59);
-          doc.text('Recomendaciones', 15, currentY);
+          doc.text('RECOMENDACIONES PRIORITARIAS', 15, currentY);
           currentY += 8;
 
           result.recomendaciones.forEach((rec, idx) => {
@@ -582,7 +501,6 @@ ${result.recomendaciones && result.recomendaciones.length > 0
               currentY = 15;
             }
 
-            // Numero en circulo
             doc.setFillColor(59, 130, 246);
             doc.circle(16, currentY - 1, 1.5, 'F');
             doc.setTextColor(255, 255, 255);
@@ -590,34 +508,29 @@ ${result.recomendaciones && result.recomendaciones.length > 0
             doc.setFontSize(8);
             doc.text(String(idx + 1), 15.2, currentY + 0.5);
 
-            // Texto de recomendacion
             doc.setFont('Helvetica', 'normal');
             doc.setFontSize(9);
             doc.setTextColor(0, 0, 0);
-            const wrappedText = doc.splitTextToSize(rec, pageWidth - 30);
-            doc.text(wrappedText, 22, currentY);
-            currentY += wrappedText.length * 4 + 3;
+            const wrapped = doc.splitTextToSize(rec, pageWidth - 30);
+            doc.text(wrapped, 22, currentY);
+            currentY += wrapped.length * 4 + 3;
           });
         }
       }
 
-      // ============================================================================
-      // FOOTER EN TODAS LAS PÁGINAS
-      // ============================================================================
+      // FOOTER
       const totalPages = doc.getNumberOfPages();
       for (let i = 1; i <= totalPages; i++) {
         doc.setPage(i);
         
-        // Línea separadora
         doc.setDrawColor(220, 220, 220);
         doc.line(10, pageHeight - 12, pageWidth - 10, pageHeight - 12);
         
-        // Pie de página
         doc.setFontSize(8);
         doc.setTextColor(150, 150, 150);
         doc.setFont('Helvetica', 'italic');
         
-        const footerText = `ChurnInsight | Confianza: ${confidence.toFixed(0)}% | Fecha: ${new Date().toLocaleDateString('es-AR')}`;
+        const footerText = `ChurnInsight | Prediccion: ${result.churn_prediction} | ${now.toLocaleDateString('es-AR')}`;
         doc.text(footerText, pageWidth / 2, pageHeight - 8, { align: 'center' });
         
         doc.setFont('Helvetica', 'normal');
