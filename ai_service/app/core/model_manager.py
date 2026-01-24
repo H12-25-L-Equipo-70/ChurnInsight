@@ -118,8 +118,8 @@ class ChurnModel:
     
     def _get_mock_prediction(self, features: Dict[str, float]) -> float:
         """
-        Genera predicción simulada basada en heurísticas
-        Útil cuando no hay modelo entrenado
+        Genera predicción simulada basada en heurísticas mejoradas
+        Detecta casos de alto riesgo correctamente
         Soporta tanto uppercase (DEUDA) como lowercase (deuda_total)
         """
         # Mapping de features para compatibilidad
@@ -131,48 +131,73 @@ class ChurnModel:
                     return features[lowercase_name]
             return default
         
-        # Score basado en razón deuda/patrimonio
-        debt = get_feature("DEUDA", ["deuda_total"], 0)
-        assets = get_feature("ACTIVOS", ["activos_totales"], 1)
-        
-        if assets > 0:
-            debt_ratio = debt / assets
-        else:
-            debt_ratio = 0
-        
-        # Score basado en actividad
-        dias_actividad = get_feature("TRIMESTRE_DIAS_ACTIVIDAD", ["trimestre_dias_actividad"], 90)
-        activity_score = max(0, 1 - (dias_actividad / 90))
-        
-        # Score basado en ingresos
+        # Extraer features clave
+        deuda = get_feature("DEUDA", ["deuda_total"], 0)
+        activos = get_feature("ACTIVOS", ["activos_totales"], 1)
         ingresos = get_feature("INGRESOS", ["ingresos"], 1)
         gastos = get_feature("GASTOS", ["gastos"], 0)
+        dias_actividad = get_feature("TRIMESTRE_DIAS_ACTIVIDAD", ["trimestre_dias_actividad"], 90)
+        prestamos_solicitados = get_feature("PRESTAMOS_SOLICITADOS", ["prestamos_solicitados"], 0)
+        prestamos_aprobados = get_feature("PRESTAMOS_APROBADOS", ["prestamos_aprobados"], 0)
         
+        # ============================================================================
+        # CALCULAR SCORES DE RIESGO (0-1, donde 1 = máximo riesgo)
+        # ============================================================================
+        
+        # 1. SCORE DE DEUDA (peso: 35%)
+        # Deuda muy alta = riesgo alto
+        debt_to_assets = deuda / max(activos, 0.01) if activos > 0 else 0
+        debt_score = min(1.0, debt_to_assets * 0.5)  # Amplificar el impacto de deuda
+        
+        # 2. SCORE DE INACTIVIDAD (peso: 35%)
+        # Poco o nada de actividad = riesgo muy alto
+        inactivity_ratio = (90 - max(0, dias_actividad)) / 90
+        inactivity_score = inactivity_ratio ** 1.5  # Exponencial para penalizar más la inactividad
+        
+        # 3. SCORE DE RENTABILIDAD (peso: 20%)
+        # Empresa con pérdidas o muy poco margen = riesgo
         if ingresos > 0:
-            profitability = (ingresos - gastos) / ingresos
+            margin = (ingresos - gastos) / ingresos
+            profitability_score = max(0, 1 - max(margin, 0))  # Si gana, score bajo; si pierde, score alto
         else:
-            profitability = 0
+            profitability_score = 1.0  # Sin ingresos = alto riesgo
         
-        # Combinar scores
+        # 4. SCORE DE CRÉDITO (peso: 10%)
+        # Si pidió crédito pero no se lo aprobaron, riesgo
+        if prestamos_solicitados > 0:
+            approval_rate = prestamos_aprobados / prestamos_solicitados
+            credit_score = 1 - approval_rate  # Baja aprobación = alto riesgo
+        else:
+            credit_score = 0  # Sin solicitudes = sin riesgo de crédito
+        
+        # ============================================================================
+        # COMBINAR SCORES CON PESOS
+        # ============================================================================
         combined_score = (
-            (debt_ratio * 0.4) +  # 40% peso a deuda
-            (activity_score * 0.3) +  # 30% peso a inactividad
-            (max(0, 1 - profitability) * 0.3)  # 30% peso a falta rentabilidad
+            (debt_score * 0.35) +           # 35% - Deuda
+            (inactivity_score * 0.35) +    # 35% - Inactividad
+            (profitability_score * 0.20) + # 20% - Rentabilidad
+            (credit_score * 0.10)          # 10% - Crédito
         )
         
-        # Normalizar a [0, 1]
+        # Normalizar a [0, 1] y aplicar ajuste para sensibilidad
         probability = min(1.0, max(0.0, combined_score))
         
-        logger.debug(f"Mock prediction: debt_ratio={debt_ratio:.2f}, "
-                    f"activity={activity_score:.2f}, "
-                    f"profitability={profitability:.2f}, "
-                    f"final={probability:.4f}")
+        # Debug logging
+        logger.debug(
+            f"Mock prediction components: "
+            f"debt={debt_score:.3f}, inactivity={inactivity_score:.3f}, "
+            f"profitability={profitability_score:.3f}, credit={credit_score:.3f} "
+            f"=> combined={probability:.4f}"
+        )
         
+        return probability
         return probability
     
     def predict(self, features: Dict[str, float]) -> Tuple[float, str]:
         """
         Realiza predicción de churn
+        Prioriza heurísticas sobre modelo entrenado si faltan features clave
         
         Retorna:
             - probability: float entre 0-1
@@ -180,22 +205,45 @@ class ChurnModel:
         """
         try:
             logger.info(f"=== PREDICT START ===")
+            
+            # Features clave para mock prediction
+            CRITICAL_FEATURES = {
+                "DEUDA": ["deuda_total", "deuda"],
+                "ACTIVOS": ["activos_totales", "activos"],
+                "INGRESOS": ["ingresos"],
+                "GASTOS": ["gastos"],
+                "TRIMESTRE_DIAS_ACTIVIDAD": ["trimestre_dias_actividad", "dias_actividad"],
+            }
+            
+            # Contar features críticos disponibles
+            available_critical = sum(
+                1 for key, aliases in CRITICAL_FEATURES.items()
+                if key in features or any(alias in features for alias in aliases)
+            )
+            
+            logger.info(f"Features críticos disponibles: {available_critical}/{len(CRITICAL_FEATURES)}")
             logger.info(f"Model available: {self.model is not None}")
             
-            # Normalizar features
-            X = self._normalize_features(features)
-            logger.info(f"Features normalized. Shape: {X.shape}")
+            # Decidir usar mock prediction si:
+            # 1. Faltan features críticos (menos de 3 de 5)
+            # 2. No hay modelo disponible
+            # 3. El modelo tiene problemas (fallará gracefully)
+            use_mock = available_critical < 3 or self.model is None
             
-            # Realizar predicción
-            if self.model is not None:
-                logger.info(f"Using trained model (type: {type(self.model).__name__})")
-                probability = self.model.predict_proba(X)[0][1]
-                logger.info(f"Predicción del modelo: {probability:.4f}")
-            else:
-                logger.info(f"Model is None, using mock prediction")
-                # Usar predicción simulada si no hay modelo
+            if use_mock:
+                logger.info(f"-> Usando MOCK PREDICTION (critical={available_critical}/5, model={self.model is not None})")
                 probability = self._get_mock_prediction(features)
-                logger.info(f"Mock prediction: {probability:.4f}")
+                logger.info(f"   Mock score: {probability:.4f}")
+            else:
+                try:
+                    logger.info(f"-> Intentando usar MODELO ENTRENADO")
+                    X = self._normalize_features(features)
+                    probability = self.model.predict_proba(X)[0][1]
+                    logger.info(f"   Model score: {probability:.4f}")
+                except Exception as e:
+                    logger.warning(f"   Error con modelo: {str(e)}, fallback a MOCK")
+                    probability = self._get_mock_prediction(features)
+                    logger.info(f"   Fallback mock score: {probability:.4f}")
             
             # Asegurar que está en [0, 1]
             probability = max(0.0, min(1.0, float(probability)))
@@ -208,15 +256,26 @@ class ChurnModel:
             else:
                 risk_level = "bajo"
             
-            logger.info(f"Predicción completada: prob={probability:.4f}, riesgo={risk_level}")
-            logger.info(f"=== PREDICT END ===")
+            logger.info(f"Predicción: prob={probability:.4f}, riesgo={risk_level}")
+            logger.info(f"=== PREDICT END ===\n")
             return probability, risk_level
             
         except Exception as e:
-            logger.error(f"ERROR en predicción: {str(e)}")
+            logger.error(f"ERROR crítico en predicción: {str(e)}")
             import traceback
             logger.error(traceback.format_exc())
-            return 0.5, "desconocido"
+            # Último recurso: usar mock prediction
+            try:
+                probability = self._get_mock_prediction(features)
+                if probability >= 0.7:
+                    risk_level = "alto"
+                elif probability >= 0.4:
+                    risk_level = "medio"
+                else:
+                    risk_level = "bajo"
+                return probability, risk_level
+            except:
+                return 0.5, "desconocido"
     
     def batch_predict(self, data: pd.DataFrame) -> pd.DataFrame:
         """

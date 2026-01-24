@@ -147,50 +147,53 @@
       </div>
 
       <!-- TAB 2: GRÁFICAS -->
-      <div *ngIf="activeTab === 'charts' && predictionResult" class="p-3 sm:p-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div *ngIf="activeTab === 'charts' && predictionResult" class="p-4 sm:p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           
-          <!-- CHART 1 & 2: RIESGO Y CRÉDITO -->
-          <div class="bg-gradient-to-br from-slate-50 to-slate-100 p-4 rounded-lg border border-slate-200 flex flex-col">
-            <h3 class="font-bold text-slate-900 text-sm mb-2">🔴 Probabilidad de Churn</h3>
-            <div class="flex-1 flex items-center justify-center min-h-64 relative">
+          <!-- CHART 1: RIESGO (Doughnut) -->
+          <div class="bg-gradient-to-br from-slate-50 to-slate-100 p-4 rounded-lg border-2 border-slate-300 flex flex-col h-full">
+            <h3 class="font-bold text-slate-900 text-sm mb-3">🔴 Distribución de Riesgo</h3>
+            <div class="flex-1 flex items-center justify-center min-h-80 relative">
               <canvas 
                 #riskChart 
                 baseChart 
                 [type]="riskDistributionChart.type" 
                 [data]="riskDistributionChart.data" 
                 [options]="riskDistributionChart.options"
-                width="250"
-                height="250">
+                width="150"
+                height="150">
               </canvas>
             </div>
           </div>
 
-          <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200 flex flex-col">
-            <h3 class="font-bold text-slate-900 text-sm mb-2">💳 Comportamiento Clave</h3>
-            <div class="flex-1 flex items-center justify-center min-h-64 relative">
+          <!-- CHART 2: CRÉDITO (Radar) -->
+          <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border-2 border-blue-300 flex flex-col h-full">
+            <h3 class="font-bold text-slate-900 text-sm mb-3">💳 Comportamiento de Crédito</h3>
+            <div class="flex-1 flex items-center justify-center min-h-80 relative">
               <canvas 
                 #creditChart 
                 baseChart 
                 [type]="creditBehaviorChart.type" 
                 [data]="creditBehaviorChart.data" 
                 [options]="creditBehaviorChart.options"
-                width="250"
-                height="250">
+                width="150"
+                height="150">
               </canvas>
             </div>
           </div>
 
-          <!-- CHART 3: FINANCIERO (más grande) -->
-          <div class="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200 flex flex-col lg:col-span-2">
-            <h3 class="font-bold text-slate-900 text-sm mb-2">💰 Métricas Financieras (en Millones ARS)</h3>
-            <div class="flex-1 flex items-center justify-center min-h-64 relative">
+          <!-- CHART 3: FINANCIERO (Bar) -->
+          <div class="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border-2 border-green-300 flex flex-col h-full">
+            <h3 class="font-bold text-slate-900 text-sm mb-3">💰 Métricas Financieras</h3>
+            <div class="flex-1 flex items-center justify-center min-h-80 relative">
               <canvas 
                 #financialChart 
                 baseChart 
                 [type]="financialMetricsChart.type" 
                 [data]="financialMetricsChart.data" 
-                [options]="financialMetricsChart.options">
+                [options]="financialMetricsChart.options"
+                width="150"
+                height="150">
               </canvas>
             </div>
           </div>

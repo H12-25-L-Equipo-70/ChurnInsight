@@ -32,7 +32,7 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'prediction',
+        redirectTo: 'dashboard',
         pathMatch: 'full'
       }
     ]

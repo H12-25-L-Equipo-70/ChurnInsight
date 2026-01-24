@@ -17,15 +17,17 @@ class RedFlagAnalyzer:
     """
     
     @staticmethod
-    def calcular_red_flags(data: dict) -> List[str]:
+    def calcular_red_flags(data: dict) -> List[dict]:
         """
-        Calcula red flags (señales de alerta) basadas en datos de empresa
+        Calcula red flags (senales de alerta) basadas en datos de empresa
+        Retorna objetos con flag, descripcion y severidad (critical/high/medium/low)
+        Ordenados de mayor a menor severidad
         
         Args:
             data: Diccionario con campos de empresa (puede estar en uppercase o lowercase)
         
         Returns:
-            Lista de strings con flags detectadas
+            Lista de diccionarios con flags, descripciones y severidad
         """
         flags = []
         
@@ -33,116 +35,167 @@ class RedFlagAnalyzer:
         data_upper = {k.upper(): v for k, v in data.items()}
         
         try:
-            # === ENGAGEMENT (Actividad en plataforma) ===
+            # === CRITICAL FLAGS (Riesgo inmediato de abandono) ===
             
-            # Flag 1: Alta inactividad
             dias_actividad = data_upper.get('TRIMESTRE_DIAS_ACTIVIDAD', 90)
-            dias_inactividad = data_upper.get('TRIMESTRE_DIAS_INACTIVIDAD', 0)
+            ingresos = data_upper.get('INGRESOS', 0)
+            gastos = data_upper.get('GASTOS', 0)
+            deuda = data_upper.get('DEUDA', 0)
+            activos = data_upper.get('ACTIVOS', 1)
             
+            # CRITICAL 1: Inactividad extrema
+            if dias_actividad == 0:
+                flags.append({
+                    "flag": "COMPLETE_INACTIVITY",
+                    "description": "Empresa completamente inactiva en el trimestre",
+                    "severity": "critical"
+                })
+            
+            # CRITICAL 2: Sin movimiento transaccional
+            transferencias = data_upper.get('TRANSFERENCIAS', 0)
+            pagos = data_upper.get('PAGOS', 0)
+            creditos = data_upper.get('CREDITOS', 0)
+            total_ops = transferencias + pagos
+            
+            if total_ops == 0 and creditos == 0:
+                flags.append({
+                    "flag": "NO_TRANSACTIONS",
+                    "description": "Sin movimiento transaccional: empresa no opera",
+                    "severity": "critical"
+                })
+            
+            # CRITICAL 3: Margen negativo (perdidas)
+            margen = ingresos - gastos
+            if margen < 0:
+                flags.append({
+                    "flag": "NEGATIVE_MARGIN",
+                    "description": "Margen negativo: empresa opera con perdidas",
+                    "severity": "critical"
+                })
+            
+            # === HIGH SEVERITY FLAGS (Riesgo significativo) ===
+            
+            # HIGH 1: Alto endeudamiento
+            ratio_deuda = deuda / activos if activos > 0 else 0
+            if ratio_deuda > 0.7:
+                flags.append({
+                    "flag": "HIGH_DEBT",
+                    "description": "Ratio deuda/activos muy alto (>70%): sobreendeudamiento",
+                    "severity": "high"
+                })
+            
+            # HIGH 2: Solicitudes sin aprobacion
+            prestamos_solicitados = data_upper.get('PRESTAMOS_SOLICITADOS', 0)
+            prestamos_aprobados = data_upper.get('PRESTAMOS_APROBADOS', 0)
+            
+            if prestamos_solicitados > 0 and prestamos_aprobados == 0:
+                flags.append({
+                    "flag": "NO_APPROVAL",
+                    "description": "Solicitudes de credito rechazadas: sin aprobacion",
+                    "severity": "high"
+                })
+            
+            # HIGH 3: Inactividad severa (>50%)
+            dias_inactividad = data_upper.get('TRIMESTRE_DIAS_INACTIVIDAD', 0)
             total_dias = dias_actividad + dias_inactividad
             if total_dias > 0:
                 ratio_inactividad = dias_inactividad / total_dias
-            else:
-                ratio_inactividad = 0
-                
-            if ratio_inactividad > 0.5:
-                flags.append("Alta inactividad en la app")
+                if ratio_inactividad > 0.5 and dias_actividad > 0:
+                    flags.append({
+                        "flag": "HIGH_INACTIVITY",
+                        "description": "Inactividad severa: dias activos por debajo de esperado",
+                        "severity": "high"
+                    })
             
-            # Flag 2: Caída en logins
-            promedio_login = data_upper.get('PROMEDIO_LOGIN_DIA', 0)
-            if promedio_login < 3:
-                flags.append("Caída significativa en logins diarios")
-            
-            # Flag 3: Abandono de funcionalidades
-            servicios_utilizados = data_upper.get('SERVICIOS_UTILIZADOS', 0)
-            if servicios_utilizados <= 1:
-                flags.append("Abandono de funcionalidades: pocos servicios usados")
-            
-            # === LIQUIDEZ Y FINANZAS ===
-            
-            # Flag 4: Baja aprobación de préstamos
+            # HIGH 4: Baja tasa de aprobacion de prestamos
             monto_solicitado = data_upper.get('MONTO_SOLICITADO', 0)
             monto_aprobado = data_upper.get('MONTO_APROBADO', 0)
             
             if monto_solicitado > 0:
                 ratio_aprobacion = monto_aprobado / monto_solicitado
                 if ratio_aprobacion < 0.3:
-                    flags.append("Baja aprobación de préstamos")
+                    flags.append({
+                        "flag": "LOW_APPROVAL_RATE",
+                        "description": "Tasa de aprobacion muy baja (<30%): riesgo crediticio",
+                        "severity": "high"
+                    })
             
-            # Flag 5: Margen negativo
-            ingresos = data_upper.get('INGRESOS', 0)
-            gastos = data_upper.get('GASTOS', 0)
-            margen = ingresos - gastos
+            # === MEDIUM SEVERITY FLAGS (Advertencia moderada) ===
             
-            if margen < 0:
-                flags.append("Margen negativo persistente")
-            
-            # Flag 6: Rentabilidad muy baja
+            # MEDIUM 1: Rentabilidad muy baja
             if ingresos > 0:
                 rentabilidad = margen / ingresos
-                if rentabilidad < 0.1:  # Menos del 10% de margen
-                    flags.append("Rentabilidad muy baja (< 10%)")
+                if rentabilidad < 0.1 and margen > 0:
+                    flags.append({
+                        "flag": "LOW_PROFITABILITY",
+                        "description": "Rentabilidad muy baja (<10%): margenes muy estrechos",
+                        "severity": "medium"
+                    })
             
-            # === PRODUCTO Y CRÉDITO ===
+            # MEDIUM 2: Caida en logins
+            promedio_login = data_upper.get('PROMEDIO_LOGIN_DIA', 0)
+            if 0 < promedio_login < 3:
+                flags.append({
+                    "flag": "LOW_LOGIN_ACTIVITY",
+                    "description": "Caida significativa en logins diarios",
+                    "severity": "medium"
+                })
             
-            # Flag 7: Cancelación anticipada de préstamos
-            tiempo_cancelacion = data_upper.get('TIEMPO_CANCELACION_PRESTAMO', 0)
-            if 0 < tiempo_cancelacion < 30:
-                flags.append("Cancelación anticipada de préstamos")
+            # MEDIUM 3: Bajo volumen de operaciones
+            if 0 < total_ops < 5:
+                flags.append({
+                    "flag": "LOW_TRANSACTION_VOLUME",
+                    "description": "Disminucion en volumen de operaciones: poco movimiento",
+                    "severity": "medium"
+                })
             
-            # Flag 8: Disminución en volumen de operaciones
-            transferencias = data_upper.get('TRANSFERENCIAS', 0)
-            pagos = data_upper.get('PAGOS', 0)
-            total_ops = transferencias + pagos
-            
-            if total_ops < 5:
-                flags.append("Disminución en volumen de operaciones")
-            
-            # === FLAGS ADICIONALES (mejoras respecto a new_notebook.md) ===
-            
-            # Flag 9: Alto endeudamiento
-            deuda = data_upper.get('DEUDA', 0)
-            activos = data_upper.get('ACTIVOS', 1)
-            
-            ratio_deuda = deuda / activos if activos > 0 else 0
-            if ratio_deuda > 0.7:
-                flags.append("Alto ratio de endeudamiento (>70%)")
-            
-            # Flag 10: Solicitudes sin aprobación
-            prestamos_solicitados = data_upper.get('PRESTAMOS_SOLICITADOS', 0)
-            prestamos_aprobados = data_upper.get('PRESTAMOS_APROBADOS', 0)
-            
-            if prestamos_solicitados > 0 and prestamos_aprobados == 0:
-                flags.append("Solicitudes de crédito sin aprobación")
-            
-            # Flag 11: Bajo número de empleados
-            empleados = data_upper.get('EMPLEADOS', 0)
-            if empleados == 0:
-                flags.append("Información de empleados no registrada")
-            elif empleados < 2:
-                flags.append("Microempresa con muy pocos empleados")
-            
-            # Flag 12: Inactividad extrema
-            if dias_actividad == 0:
-                flags.append("Empresa completamente inactiva en el trimestre")
-            
-            # Flag 13: Sin movimiento transaccional
-            creditos = data_upper.get('CREDITOS', 0)
-            inversiones = data_upper.get('INVERSIONES', 0)
-            
-            if total_ops == 0 and creditos == 0 and inversiones == 0:
-                flags.append("Sin movimiento transaccional alguno")
-            
-            # Flag 14: Muchos préstamos vigentes sin cancelación
+            # MEDIUM 4: Muchos prestamos vigentes sin cancelacion
             prestamos_vigentes = data_upper.get('PRESTAMOS_VIGENTES', 0)
             prestamos_cancelados = data_upper.get('PRESTAMOS_CANCELADOS', 0)
             
             if prestamos_vigentes > 3 and prestamos_cancelados == 0:
-                flags.append("Múltiples préstamos vigentes sin historial de pago")
+                flags.append({
+                    "flag": "MULTIPLE_ACTIVE_LOANS",
+                    "description": "Multiples prestamos vigentes sin historial de pago",
+                    "severity": "medium"
+                })
+            
+            # === LOW SEVERITY FLAGS (Informativo) ===
+            
+            # LOW 1: Abandono de funcionalidades
+            servicios_utilizados = data_upper.get('SERVICIOS_UTILIZADOS', 0)
+            if servicios_utilizados <= 1:
+                flags.append({
+                    "flag": "LOW_SERVICES",
+                    "description": "Abandono de funcionalidades: pocos servicios usados",
+                    "severity": "low"
+                })
+            
+            # LOW 2: Cancelacion anticipada
+            tiempo_cancelacion = data_upper.get('TIEMPO_CANCELACION_PRESTAMO', 0)
+            if 0 < tiempo_cancelacion < 30:
+                flags.append({
+                    "flag": "EARLY_REPAYMENT",
+                    "description": "Cancelacion anticipada de prestamos: comportamiento atipico",
+                    "severity": "low"
+                })
+            
+            # LOW 3: Microempresa
+            empleados = data_upper.get('EMPLEADOS', 0)
+            if 0 < empleados < 2:
+                flags.append({
+                    "flag": "MICRO_BUSINESS",
+                    "description": "Microempresa con muy pocos empleados",
+                    "severity": "low"
+                })
+            
+            # Ordenar por severidad: critical -> high -> medium -> low
+            severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
+            flags.sort(key=lambda x: severity_order.get(x.get("severity"), 999))
             
             logger.info(f"Red flags calculadas: {len(flags)} detectadas")
             if flags:
-                logger.debug(f"Flags: {flags}")
+                logger.debug(f"Flags: {[f['flag'] for f in flags]}")
             
             return flags
             

@@ -29,22 +29,22 @@
     </app-kpi-card>
   </div>
 
-  <!-- Main Content Grid -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <!-- Main Content Grid - Balanced Layout -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     
-    <!-- Columna Izquierda (Gráfico) -->
-    <div class="lg:col-span-1 bg-white p-4 sm:p-6 rounded-lg shadow-lg border border-slate-200">
-      <h2 class="text-xl font-semibold text-slate-800 mb-4">Distribución de Riesgo</h2>
-      <div>
-        <app-churn-distribution-chart [data]="companies()"></app-churn-distribution-chart>
+    <!-- Columna 1: Tabla de Empresas (Primary) -->
+    <div class="lg:col-span-1 bg-white p-4 sm:p-6 rounded-lg shadow-lg border border-slate-200 order-2 lg:order-1">
+      <h2 class="text-xl font-semibold text-slate-800 mb-4">📊 Detalle de Empresas</h2>
+      <div class="h-96 overflow-y-auto">
+        <app-company-list [companies]="companies()"></app-company-list>
       </div>
     </div>
 
-    <!-- Columna Derecha (Lista de Empresas) -->
-    <div class="lg:col-span-2 bg-white p-4 sm:p-6 rounded-lg shadow-lg border border-slate-200">
-      <h2 class="text-xl font-semibold text-slate-800 mb-4">Detalle de Empresas</h2>
-      <div>
-        <app-company-list [companies]="companies()"></app-company-list>
+    <!-- Columna 2: Gráfico (Secondary, smaller) -->
+    <div class="lg:col-span-1 bg-white p-4 sm:p-6 rounded-lg shadow-lg border border-slate-200 order-1 lg:order-2">
+      <h2 class="text-xl font-semibold text-slate-800 mb-4">🔴 Distribución de Riesgo</h2>
+      <div class="h-80 flex items-center justify-center">
+        <app-churn-distribution-chart [data]="companies()"></app-churn-distribution-chart>
       </div>
     </div>
 
