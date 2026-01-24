@@ -244,6 +244,9 @@
                     class="w-full px-4 py-2 border rounded-lg"
                     [class.border-red-500]="hasFieldError('prestamos_solicitados')"
                     [class.border-slate-300]="!hasFieldError('prestamos_solicitados')">
+                  <p *ngIf="getFieldError('prestamos_solicitados')" class="text-red-600 text-sm mt-1">
+                    {{ getFieldError('prestamos_solicitados') }}
+                  </p>
                 </div>
 
                 <!-- Préstamos Aprobados -->
@@ -254,10 +257,14 @@
                   <input
                     type="number"
                     formControlName="prestamos_aprobados"
-                    placeholder="Ej: 5"
+                    placeholder="Ej: 3"
                     class="w-full px-4 py-2 border rounded-lg"
                     [class.border-red-500]="hasFieldError('prestamos_aprobados')"
                     [class.border-slate-300]="!hasFieldError('prestamos_aprobados')">
+                  <p *ngIf="getFieldError('prestamos_aprobados')" class="text-red-600 text-sm mt-1">
+                    {{ getFieldError('prestamos_aprobados') }}
+                  </p>
+                  <p class="text-xs text-slate-500 mt-1">Max: Solicitados</p>
                 </div>
 
                 <!-- Préstamos Cancelados -->
@@ -272,6 +279,10 @@
                     class="w-full px-4 py-2 border rounded-lg"
                     [class.border-red-500]="hasFieldError('prestamos_cancelados')"
                     [class.border-slate-300]="!hasFieldError('prestamos_cancelados')">
+                  <p *ngIf="getFieldError('prestamos_cancelados')" class="text-red-600 text-sm mt-1">
+                    {{ getFieldError('prestamos_cancelados') }}
+                  </p>
+                  <p class="text-xs text-slate-500 mt-1">Max: Aprobados</p>
                 </div>
 
                 <!-- Préstamos Vigentes -->
@@ -282,10 +293,14 @@
                   <input
                     type="number"
                     formControlName="prestamos_vigentes"
-                    placeholder="Ej: 3"
+                    placeholder="Ej: 1"
                     class="w-full px-4 py-2 border rounded-lg"
                     [class.border-red-500]="hasFieldError('prestamos_vigentes')"
                     [class.border-slate-300]="!hasFieldError('prestamos_vigentes')">
+                  <p *ngIf="getFieldError('prestamos_vigentes')" class="text-red-600 text-sm mt-1">
+                    {{ getFieldError('prestamos_vigentes') }}
+                  </p>
+                  <p class="text-xs text-slate-500 mt-1">Max: Aprobados</p>
                 </div>
               </div>
 
@@ -403,16 +418,23 @@
 
                 <!-- Días Inactivos -->
                 <div>
-                  <label class="block text-sm font-medium text-slate-700 mb-2">
-                    Días Inactivos en el Trimestre (0-90) <span class="text-red-500">*</span>
-                  </label>
+                  <div class="flex items-center justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">
+                      Días Inactivos en el Trimestre (0-90) <span class="text-red-500">*</span>
+                    </label>
+                    <span class="inline-block px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-800 rounded-full">
+                      ✓ Auto-calculado
+                    </span>
+                  </div>
                   <input
                     type="number"
                     formControlName="trimestre_dias_inactividad"
                     placeholder="0"
                     min="0"
                     max="90"
-                    class="w-full px-4 py-2 border rounded-lg">
+                    [disabled]="true"
+                    class="w-full px-4 py-2 border border-blue-200 rounded-lg bg-blue-50 text-slate-900 font-semibold cursor-not-allowed">
+                  <p class="text-xs text-blue-600 mt-1">📌 Se calcula automáticamente como: 90 - Días Activos</p>
                 </div>
               </div>
 
@@ -439,24 +461,6 @@
               </div>
 
               <div class="grid sm:grid-cols-2 gap-4">
-                <!-- Promedio de Logins -->
-                <div>
-                  <label class="block text-sm font-medium text-slate-700 mb-2">
-                    Promedio de Logins por Día <span class="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    formControlName="promedio_login_dia"
-                    placeholder="Ej: 2.5"
-                    step="0.1"
-                    class="w-full px-4 py-2 border rounded-lg"
-                    [class.border-red-500]="hasFieldError('promedio_login_dia')"
-                    [class.border-slate-300]="!hasFieldError('promedio_login_dia')">
-                  <p *ngIf="getFieldError('promedio_login_dia')" class="text-red-600 text-sm mt-1">
-                    {{ getFieldError('promedio_login_dia') }}
-                  </p>
-                </div>
-
                 <!-- Total de Logins -->
                 <div>
                   <label class="block text-sm font-medium text-slate-700 mb-2">
@@ -466,7 +470,37 @@
                     type="number"
                     formControlName="total_login_dia"
                     placeholder="Ej: 120"
-                    class="w-full px-4 py-2 border rounded-lg">
+                    class="w-full px-4 py-2 border rounded-lg"
+                    [class.border-red-500]="hasFieldError('total_login_dia')"
+                    [class.border-slate-300]="!hasFieldError('total_login_dia')">
+                  <p *ngIf="getFieldError('total_login_dia')" class="text-red-600 text-sm mt-1">
+                    {{ getFieldError('total_login_dia') }}
+                  </p>
+                </div>
+
+                <!-- Promedio de Logins (AUTO-CALCULADO) -->
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <label class="block text-sm font-medium text-slate-700">
+                      Promedio de Logins por Día <span class="text-red-500">*</span>
+                    </label>
+                    <span class="inline-block px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-800 rounded-full">
+                      ✓ Auto-calculado
+                    </span>
+                  </div>
+                  <input
+                    type="number"
+                    formControlName="promedio_login_dia"
+                    placeholder="Ej: 2.5"
+                    step="0.1"
+                    [disabled]="true"
+                    class="w-full px-4 py-2 border border-blue-200 rounded-lg bg-blue-50 text-slate-900 font-semibold cursor-not-allowed"
+                    [class.border-red-500]="hasFieldError('promedio_login_dia')"
+                    [class.border-slate-300]="!hasFieldError('promedio_login_dia')">
+                  <p class="text-xs text-blue-600 mt-1">📌 Se calcula automáticamente como: Total Logins ÷ 90</p>
+                  <p *ngIf="getFieldError('promedio_login_dia')" class="text-red-600 text-sm mt-1">
+                    {{ getFieldError('promedio_login_dia') }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -525,16 +559,16 @@
         </form>
 
         <!-- ========================================
-             RESULTADOS DE PREDICCIÓN
+             RESULTADOS DE PREDICCIÓN - MODAL
              ======================================== -->
-        <div *ngIf="showResults()" class="mt-8">
-          <app-results-panel 
-            [predictionResult]="predictionResult()"
-            [profile]="currentProfile()"
-            [metrics]="currentMetrics()"
-            (newPrediction)="resetForm()">
-          </app-results-panel>
-        </div>
+        <app-results-modal
+          [isOpen]="isResultsModalOpen()"
+          [predictionResult]="predictionResult()"
+          [profile]="currentProfile()"
+          [metrics]="currentMetrics()"
+          (closeModal)="closeResultsModal()"
+          (newPrediction)="startNewPredictionFromModal()">
+        </app-results-modal>
 
         <!-- ========================================
              BOTONES DE NAVEGACIÓN
@@ -550,19 +584,8 @@
           </button>
 
           <div class="flex gap-4 ml-auto">
-            <!-- Botón Nueva Predicción (si hay resultados) -->
-            <button
-              *ngIf="showResults()"
-              (click)="resetForm()"
-              type="button"
-              aria-label="Iniciar una nueva predicción"
-              class="px-6 py-2 border border-slate-300 rounded-lg font-medium text-slate-700 hover:bg-slate-50 transition">
-              Nueva Predicción
-            </button>
-
             <!-- Botón Siguiente / Predecir -->
             <button
-              *ngIf="!showResults()"
               (click)="currentSection() < 3 ? nextSection() : submitPrediction()"
               [disabled]="isLoading()"
               type="button"

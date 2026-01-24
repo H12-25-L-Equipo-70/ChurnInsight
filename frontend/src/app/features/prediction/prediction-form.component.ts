@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PredictionService } from '../../core/services/prediction.service';
 import { ResultsPanelComponent } from './results-panel.component';
+import { ResultsModalComponent } from './results-modal.component';
 import { 
   QuarterlyMetrics, 
   StaticProfile, 
@@ -24,11 +25,12 @@ import {
  * - Signals para estado reactivo
  * - Reactive Forms para validación
  * - Tailwind CSS para estilos
+ * - Modal de resultados reutilizable
  */
 @Component({
   selector: 'app-prediction-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ResultsPanelComponent],
+  imports: [CommonModule, ReactiveFormsModule, ResultsPanelComponent, ResultsModalComponent],
   templateUrl: './prediction-form.component.html'
 })
 export class PredictionFormComponent implements OnInit, OnDestroy {
@@ -47,6 +49,7 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
   companyForm!: FormGroup;
   isLoading = signal(false);
   showResults = signal(false);
+  isResultsModalOpen = signal(false);
 
   // Respuesta de predicción
   predictionResult = signal<PredictionResponse | null>(null);
@@ -57,6 +60,8 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
 
   // Errores
   formErrors = signal<Record<string, string>>({});
+  loanFieldErrors = signal<Record<string, string>>({}); // Errores de préstamos en tiempo real
+  engagementFieldErrors = signal<Record<string, string>>({}); // Errores de engagement en tiempo real
 
   // ============================================
   // SIGNALS: Valores reactivos que gatillan computed
@@ -132,16 +137,150 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Escucha cambios en el formulario y actualiza el signal reactivo
-   * Esto dispara re-evaluación de todos los computed()
+   * Escucha cambios en el formulario en TIEMPO REAL
+   * Aplica validación reactiva y auto-cálculos
    */
   private setupFormChangeListener(): void {
     this.companyForm.valueChanges
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        // Incrementar contador para disparar re-evaluación de computed
+      .subscribe((values) => {
+        // AUTO-CÁLCULO 1: Días de inactividad (90 - días activos)
+        if (values.trimestre_dias_actividad !== null && values.trimestre_dias_actividad !== undefined) {
+          const diasActividad = Number(values.trimestre_dias_actividad);
+          const diasInactividad = 90 - diasActividad;
+          const currentInactivity = this.companyForm.get('trimestre_dias_inactividad')?.value;
+          if (currentInactivity !== diasInactividad) {
+            this.companyForm.patchValue(
+              { trimestre_dias_inactividad: Math.max(0, diasInactividad) },
+              { emitEvent: false }
+            );
+          }
+        }
+
+        // AUTO-CÁLCULO 2: Promedio de login diario (total / 90)
+        if (values.total_login_dia !== null && values.total_login_dia !== undefined) {
+          const totalLogins = Number(values.total_login_dia);
+          const promedio = totalLogins / 90;
+          const currentPromedio = this.companyForm.get('promedio_login_dia')?.value;
+          if (Math.abs(currentPromedio - promedio) > 0.01) {
+            this.companyForm.patchValue(
+              { promedio_login_dia: Math.round(promedio * 100) / 100 },
+              { emitEvent: false }
+            );
+          }
+        }
+
+        // LÓGICA DE PRÉSTAMOS REACTIVA
+        // Fórmula: APROBADOS + CANCELADOS = SOLICITADOS
+        this.updateLoanFields(values);
+
+        // Validación REACTIVA de préstamos
+        this.updateLoanErrors(values);
+
+        // Validación REACTIVA de engagement (días activos)
+        this.updateEngagementErrors(values);
+
+        // Incrementar contador para re-evaluación
         this.formStateChangeCounter.update(c => c + 1);
       });
+  }
+
+  /**
+   * Auto-ajusta valores de préstamos SOLO lo necesario:
+   * Si APROBADOS cambia → CANCELADOS = SOLICITADOS - APROBADOS
+   * Otros campos NO afectan los préstamos
+   */
+  private updateLoanFields(values: any): void {
+    const solicitados = Number(values.prestamos_solicitados) || 0;
+    const aprobados = Number(values.prestamos_aprobados) || 0;
+    const cancelados = Number(values.prestamos_cancelados) || 0;
+
+    // ÚNICO auto-cálculo: Si APROBADOS cambió, recalcular CANCELADOS
+    if (aprobados !== null && aprobados !== undefined && solicitados > 0) {
+      const canceladosCalculado = Math.max(0, solicitados - aprobados);
+      if (Math.abs(cancelados - canceladosCalculado) > 0.01) {
+        this.companyForm.patchValue(
+          { prestamos_cancelados: canceladosCalculado },
+          { emitEvent: false }
+        );
+      }
+    }
+  }
+
+  /**
+   * Valida préstamos en TIEMPO REAL (mientras escribes)
+   * Reglas:
+   * 1. APROBADOS no puede ser > SOLICITADOS
+   * 2. CANCELADOS no puede ser > SOLICITADOS
+   * 3. VIGENTES no puede ser > APROBADOS
+   */
+  private updateLoanErrors(values: any): void {
+    const solicitados = Number(values.prestamos_solicitados) || 0;
+    const aprobados = Number(values.prestamos_aprobados) || 0;
+    const cancelados = Number(values.prestamos_cancelados) || 0;
+    const vigentes = Number(values.prestamos_vigentes) || 0;
+
+    const newErrors: Record<string, string> = {};
+
+    // Regla 1: APROBADOS <= SOLICITADOS
+    if (solicitados > 0 && aprobados > solicitados) {
+      newErrors['prestamos_aprobados'] = `❌ No puede ser mayor a Solicitados (${solicitados})`;
+    }
+
+    // Regla 2: CANCELADOS <= SOLICITADOS
+    if (solicitados > 0 && cancelados > solicitados) {
+      newErrors['prestamos_cancelados'] = `❌ No puede ser mayor a Solicitados (${solicitados})`;
+    }
+
+    // Regla 3: VIGENTES <= APROBADOS
+    if (aprobados > 0 && vigentes > aprobados) {
+      newErrors['prestamos_vigentes'] = `❌ No puede ser mayor a Aprobados (${aprobados})`;
+    }
+
+    // Validación de suma (informativo, no bloquea)
+    if (solicitados > 0 && aprobados > 0 && cancelados > 0) {
+      const suma = aprobados + cancelados;
+      if (suma !== solicitados) {
+        // Mostrar referencia pero no bloquear
+        // const diff = suma - solicitados;
+        // console.log(`Préstamos: ${aprobados} + ${cancelados} = ${suma} (diferencia: ${diff})`);
+      }
+    }
+
+    this.loanFieldErrors.set(newErrors);
+  }
+
+  /**
+   * Valida engagement en TIEMPO REAL (mientras escribes)
+   * Reglas:
+   * 1. DÍAS_ACTIVOS debe ser entre 0 y 90
+   * 2. DÍAS_ACTIVOS <= 90 (advertencia si son demasiados pocos)
+   */
+  private updateEngagementErrors(values: any): void {
+    const diasActivos = Number(values.trimestre_dias_actividad) || 0;
+    const totalLogins = Number(values.total_login_dia) || 0;
+
+    const newErrors: Record<string, string> = {};
+
+    // Regla 1: Días activos no puede exceder 90
+    if (diasActivos > 90) {
+      newErrors['trimestre_dias_actividad'] = `❌ No puede exceder 90 días`;
+    }
+
+    // Regla 2: Si está vacío y estamos en sección 3, es obligatorio
+    if (diasActivos === 0 && this.currentSection() === 3) {
+      const existingError = newErrors['trimestre_dias_actividad'];
+      if (!existingError) {
+        newErrors['trimestre_dias_actividad'] = `⚠️ Ingresa días activos en trimestre`;
+      }
+    }
+
+    // Regla 3: Total logins no puede ser negativo
+    if (totalLogins < 0) {
+      newErrors['total_login_dia'] = `❌ No puede ser negativo`;
+    }
+
+    this.engagementFieldErrors.set(newErrors);
   }
 
   /**
@@ -267,6 +406,10 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
         this.validateField('monto_solicitado', errors);
         this.validateField('monto_aprobado', errors);
         this.validateField('tiempo_cancelacion_prestamo', errors);
+        
+        // Agregar errores de préstamos en tiempo real
+        const loanErrors = this.loanFieldErrors();
+        Object.assign(errors, loanErrors);
         break;
       case 3: // Engagement
         this.validateField('trimestre_dias_actividad', errors);
@@ -282,7 +425,7 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
 
   /**
    * Valida un campo individual
-   * Valida incluso si no está dirty/touched (importante para validar steps)
+   * Valida aunque no esté dirty/touched (importante para validar steps)
    */
   private validateField(
     fieldName: string,
@@ -312,6 +455,47 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
       } else if (control.hasError('max')) {
         errors[fieldName] = `No puede ser mayor a ${control.errors?.['max'].max}`;
       }
+    }
+  }
+
+  /**
+   * Valida las relaciones lógicas entre campos de préstamos
+   * Estructura: SOLICITADOS >= APROBADOS y VIGENTES + CANCELADOS <= APROBADOS
+   * 
+   * NO hay auto-cálculo. El usuario ingresa todos los valores.
+   * Esta función SOLO valida que los valores ingresados sean coherentes.
+   */
+  private validateLoanRelationships(errors: Record<string, string>): void {
+    const solicitados = Number(this.companyForm.get('prestamos_solicitados')?.value) || 0;
+    const aprobados = Number(this.companyForm.get('prestamos_aprobados')?.value) || 0;
+    const vigentes = Number(this.companyForm.get('prestamos_vigentes')?.value) || 0;
+    const cancelados = Number(this.companyForm.get('prestamos_cancelados')?.value) || 0;
+
+    // Regla 1: APROBADOS no puede ser mayor que SOLICITADOS
+    if (solicitados > 0 && aprobados > solicitados) {
+      errors['prestamos_aprobados'] = `❌ No puede ser mayor a Solicitados (${solicitados})`;
+    }
+
+    // Regla 2: VIGENTES no puede ser mayor que APROBADOS
+    if (aprobados > 0 && vigentes > aprobados) {
+      errors['prestamos_vigentes'] = `❌ No puede ser mayor a Aprobados (${aprobados})`;
+    }
+
+    // Regla 3: CANCELADOS no puede ser mayor que APROBADOS
+    if (aprobados > 0 && cancelados > aprobados) {
+      errors['prestamos_cancelados'] = `❌ No puede ser mayor a Aprobados (${aprobados})`;
+    }
+
+    // Regla 4: VIGENTES + CANCELADOS debe ser <= APROBADOS
+    // En realidad: VIGENTES + CANCELADOS = APROBADOS (idealmente)
+    // Pero si el usuario ingresó algo incorrecto, avisamos
+    const suma = vigentes + cancelados;
+    if (aprobados > 0 && suma !== aprobados) {
+      // Mostrar advertencia (pero no bloquea)
+      console.warn(
+        `⚠️ Relación de préstamos: vigentes (${vigentes}) + cancelados (${cancelados}) = ${suma}, ` +
+        `pero aprobados = ${aprobados}. Idealmente deberían ser iguales.`
+      );
     }
   }
 
@@ -347,7 +531,7 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
       ).subscribe({
         next: (response) => {
           this.predictionResult.set(response);
-          this.showResults.set(true);
+          this.isResultsModalOpen.set(true);  // Abrir modal de resultados
           this.isLoading.set(false);
         },
         error: (error) => {
@@ -449,12 +633,43 @@ export class PredictionFormComponent implements OnInit, OnDestroy {
   }
 
   getFieldError(fieldName: string): string | null {
+    // Primero buscar en errores de préstamos (tiempo real)
+    const loanError = this.loanFieldErrors()[fieldName];
+    if (loanError) return loanError;
+
+    // Luego buscar en errores de engagement (tiempo real)
+    const engagementError = this.engagementFieldErrors()[fieldName];
+    if (engagementError) return engagementError;
+    
+    // Si no, buscar en errores del formulario
     return this.formErrors()[fieldName] || null;
   }
 
   hasFieldError(fieldName: string): boolean {
     const control = this.companyForm.get(fieldName);
     return !!(control && control.invalid && (control.dirty || control.touched));
+  }
+
+  /**
+   * Abre el modal de resultados
+   */
+  openResultsModal(): void {
+    this.isResultsModalOpen.set(true);
+  }
+
+  /**
+   * Cierra el modal de resultados
+   */
+  closeResultsModal(): void {
+    this.isResultsModalOpen.set(false);
+  }
+
+  /**
+   * Inicia una nueva predicción desde el modal
+   */
+  startNewPredictionFromModal(): void {
+    this.resetForm();
+    this.closeResultsModal();
   }
 }
 

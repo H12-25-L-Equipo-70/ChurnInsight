@@ -34,6 +34,7 @@ export class ResultsPanelComponent {
   private exportService = inject(ExportService);
   private predictionsService = inject(PredictionsDataService);
   exportStatus = { message: '', isError: false };
+  isExporting = false;
 
   constructor() {
     // Efecto: Guardar automáticamente cuando hay un resultado
@@ -187,6 +188,32 @@ export class ResultsPanelComponent {
     );
     
     this.showExportStatus('✅ Reporte JSON descargado correctamente', false);
+  }
+
+  /**
+   * Descarga reporte en PDF
+   */
+  async downloadPDF(): Promise<void> {
+    if (!this.profile || !this.metrics || !this.predictionResult) return;
+    
+    try {
+      this.isExporting = true;
+      this.showExportStatus('⏳ Generando PDF...', false);
+      
+      await this.exportService.exportToPDF(
+        this.profile,
+        this.metrics,
+        this.predictionResult,
+        `churn_${this.profile.CUIT}_${new Date().toISOString().split('T')[0]}.pdf`
+      );
+      
+      this.showExportStatus('✅ Reporte PDF descargado correctamente', false);
+    } catch (error) {
+      console.error('Error al generar PDF:', error);
+      this.showExportStatus('❌ Error al generar PDF', true);
+    } finally {
+      this.isExporting = false;
+    }
   }
 
   /**
