@@ -1,6 +1,8 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PredictionsDataService, SavedPrediction } from '../../core/services/predictions-data.service';
+import { ResultsModalComponent } from '../prediction/results-modal.component';
+import { QuarterlyMetrics, StaticProfile, PredictionResponse } from '../../core/models/churn.interface';
 
 /**
  * PredictionsHistoryComponent
@@ -9,7 +11,7 @@ import { PredictionsDataService, SavedPrediction } from '../../core/services/pre
 @Component({
   selector: 'app-predictions-history',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ResultsModalComponent],
   template: `
     <div class="space-y-6">
       <!-- Header -->
@@ -83,19 +85,15 @@ import { PredictionsDataService, SavedPrediction } from '../../core/services/pre
                 </td>
                 <td class="px-4 py-3 text-center">
                   <span class="inline-block px-2 py-1 bg-amber-100 text-amber-800 rounded text-xs font-semibold">
-                    {{ pred.red_flags?.length || 0 }}
+                    {{ pred.red_flags.length || 0 }}
                   </span>
                 </td>
                 <td class="px-4 py-3 text-slate-600 text-xs">
                   {{ formatDate(pred.saved_at || pred.timestamp) }}
                 </td>
                 <td class="px-4 py-3 text-center">
-                  <button
-                    (click)="deleteHistory(pred.id!)"
-                    *ngIf="pred.id"
-                    class="text-red-600 hover:text-red-800 transition text-lg"
-                    title="Eliminar">
-                    ✕
+                  <button (click)="showDetails(pred)" class="text-blue-600 hover:underline">
+                    Ver Detalles
                   </button>
                 </td>
               </tr>
@@ -129,6 +127,14 @@ import { PredictionsDataService, SavedPrediction } from '../../core/services/pre
         </p>
       </div>
     </div>
+    
+    <app-results-modal
+      [isOpen]="isModalOpen()"
+      [predictionResult]="selectedPrediction()"
+      [profile]="selectedProfile()"
+      [metrics]="selectedMetrics()"
+      (closeModal)="closeModal()">
+    </app-results-modal>
   `,
   styles: [`
     :host {
@@ -143,13 +149,15 @@ export class PredictionsHistoryComponent implements OnInit {
   isLoading = signal(false);
   storageStatus = signal<string>('');
 
+  selectedPrediction = signal<PredictionResponse | null>(null);
+  selectedProfile = signal<StaticProfile | null>(null);
+  selectedMetrics = signal<QuarterlyMetrics | null>(null);
+  isModalOpen = signal(false);
+
   ngOnInit(): void {
     this.loadHistory();
   }
 
-  /**
-   * Carga el historial de predicciones
-   */
   loadHistory(): void {
     this.isLoading.set(true);
     this.storageStatus.set('');
@@ -158,83 +166,86 @@ export class PredictionsHistoryComponent implements OnInit {
       next: (preds) => {
         this.predictions.set(preds);
         this.isLoading.set(false);
-        
-        if (preds.length === 0) {
-          this.storageStatus.set('ℹ️ No hay predicciones guardadas aún');
-        } else {
-          this.storageStatus.set('✅ Predicciones cargadas (BD o localStorage)');
-        }
+        this.storageStatus.set(preds.length > 0 ? '✅ Predicciones cargadas' : 'ℹ️ No hay predicciones guardadas');
       },
-      error: (error) => {
-        console.error('Error cargando historial:', error);
+      error: (err) => {
+        console.error('Error cargando historial:', err);
         this.isLoading.set(false);
-        this.storageStatus.set('⚠️ Error al cargar historial (localStorage disponible como fallback)');
+        this.storageStatus.set('⚠️ Error al cargar historial');
       }
     });
   }
 
-  /**
-   * Exporta historial a JSON
-   */
+  showDetails(prediction: SavedPrediction): void {
+    const predictionResponse: PredictionResponse = {
+      CUIT: prediction.cuit,
+      NOMBRE_EMPRESA: prediction.nombre_empresa,
+      churn_probability: prediction.churn_probability,
+      churn_prediction: typeof prediction.churn_prediction === 'number' ? (prediction.churn_prediction === 1 ? 'YES' : 'NO') : (prediction.churn_prediction as 'YES' | 'NO'),
+      threshold_used: prediction.threshold_used || 0,
+      red_flags: prediction.red_flags,
+      timestamp: prediction.timestamp,
+      confidence: prediction.confidence
+    };
+
+    this.selectedPrediction.set(predictionResponse);
+
+    this.selectedProfile.set({
+      CUIT: prediction.cuit,
+      Nombre_Empresa: prediction.nombre_empresa,
+      Sector: prediction.sector,
+      Provincia: prediction.provincia
+    });
+    this.selectedMetrics.set(this.createFallbackMetrics());
+    this.isModalOpen.set(true);
+  }
+
+  closeModal(): void {
+    this.isModalOpen.set(false);
+  }
+
   exportHistory(): void {
     const json = this.predictionsService.exportToJSON();
-    if (!json) {
-      alert('No hay predicciones para exportar');
-      return;
-    }
-
+    if (!json) return;
     const blob = new Blob([json], { type: 'application/json' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `churn_predictions_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   }
 
-  /**
-   * Elimina una predicción del historial
-   */
-  deleteHistory(id: string): void {
-    if (!confirm('¿Estás seguro de que quieres eliminar esta predicción?')) return;
-
-    this.predictionsService.deletePrediction(id).subscribe({
-      next: () => {
-        this.predictions.set(this.predictions().filter(p => p.id !== id));
-      },
-      error: (error) => {
-        console.error('Error eliminando predicción:', error);
-        alert('Error al eliminar la predicción');
-      }
-    });
-  }
-
-  /**
-   * Limpia todo el historial
-   */
   clearHistory(): void {
-    if (!confirm('⚠️ ¿Estás seguro? Esto eliminará TODAS las predicciones guardadas.')) return;
-
-    this.predictionsService.clearLocalCache();
-    this.predictions.set([]);
-    this.storageStatus.set('✅ Historial limpiado');
+    if (confirm('⚠️ ¿Estás seguro? Esto eliminará TODAS las predicciones guardadas.')) {
+      this.predictionsService.clearLocalCache();
+      this.predictions.set([]);
+      this.storageStatus.set('✅ Historial limpiado');
+    }
   }
 
-  /**
-   * Formatea fecha para mostrar
-   */
   formatDate(dateString: string): string {
+    if (!dateString) return 'N/A';
     try {
-      const date = new Date(dateString);
-      return date.toLocaleString('es-AR', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
+      return new Date(dateString).toLocaleString('es-AR', {
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit'
       });
     } catch {
       return dateString;
     }
   }
+  
+  private createFallbackMetrics(): QuarterlyMetrics {
+    return {
+      Periodo_Fiscal: '',
+      financials: { Ingresos: 0, Gastos: 0, Margen: 0, Deuda: 0, Activos: 0 },
+      credit_behavior: { Prestamos_Solicitados: 0, Prestamos_Aprobados: 0, Prestamos_Cancelados: 0, Prestamos_Vigentes: 0, Ticket_Promedio_Solicitado: 0, Ticket_Promedio_Aprobado: 0, Monto_Solicitado: 0, Monto_Aprobado: 0, Tiempo_Cancelacion_Prestamo: 0 },
+      app_engagement: { Trimestre_Dias_Actividad: 0, Trimestre_Dias_Inactividad: 0, Promedio_Login_Dia: 0, Total_Login_Dia: 0 },
+      services_flags: { Transferencias: false, Pagos: false, Creditos: false, Inversiones: false, Servicios_Utilizados: 0 }
+    };
+  }
 }
+

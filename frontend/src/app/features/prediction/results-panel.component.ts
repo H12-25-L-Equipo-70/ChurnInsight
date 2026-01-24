@@ -204,6 +204,7 @@ export class ResultsPanelComponent {
         this.profile,
         this.metrics,
         this.predictionResult,
+        [],
         `churn_${this.profile.CUIT}_${new Date().toISOString().split('T')[0]}.pdf`
       );
       

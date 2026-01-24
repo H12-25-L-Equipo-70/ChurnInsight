@@ -1,36 +1,52 @@
-<div class="container mx-auto p-4">
-  <h1 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="p-4 sm:p-6 space-y-6">
+
+  <!-- Header -->
+  <div class="pb-4 border-b border-slate-200">
+    <h1 class="text-3xl font-bold text-slate-900">Bienvenido a ChurnInsight</h1>
+    <p class="text-slate-600">Tu centro de control para el análisis de riesgo de abandono de clientes.</p>
+  </div>
+
+  <!-- KPIs -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
     <app-kpi-card 
-      title="Total Companies" 
+      title="Total de Empresas" 
       [value]="totalCompanies()" 
       icon="🏢" 
       color="text-emerald-600">
     </app-kpi-card>
     <app-kpi-card 
-      title="Avg. Churn Probability" 
+      title="Prob. Media de Churn" 
       [value]="avgChurnProbability()" 
       unit="%" 
       icon="⚠️" 
       color="text-amber-600">
     </app-kpi-card>
     <app-kpi-card 
-      title="High-Risk Companies" 
+      title="Empresas en Riesgo Alto" 
       [value]="highRiskCompanies()" 
       icon="🔥" 
       color="text-red-600">
     </app-kpi-card>
   </div>
 
-  <div class="mt-8">
-    <div class="bg-white p-6 rounded-lg shadow-md">
-      <h2 class="text-xl font-semibold text-gray-700 mb-4">Churn Risk Distribution</h2>
-      <app-churn-distribution-chart [data]="companies()"></app-churn-distribution-chart>
+  <!-- Main Content Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- Columna Izquierda (Gráfico) -->
+    <div class="lg:col-span-1 bg-white p-4 sm:p-6 rounded-lg shadow-lg border border-slate-200">
+      <h2 class="text-xl font-semibold text-slate-800 mb-4">Distribución de Riesgo</h2>
+      <div>
+        <app-churn-distribution-chart [data]="companies()"></app-churn-distribution-chart>
+      </div>
     </div>
-  </div>
 
-  <div class="mt-8">
-    <h2 class="text-2xl font-bold text-gray-800 mb-4">Company Details</h2>
-    <app-company-list [companies]="companies()"></app-company-list>
+    <!-- Columna Derecha (Lista de Empresas) -->
+    <div class="lg:col-span-2 bg-white p-4 sm:p-6 rounded-lg shadow-lg border border-slate-200">
+      <h2 class="text-xl font-semibold text-slate-800 mb-4">Detalle de Empresas</h2>
+      <div>
+        <app-company-list [companies]="companies()"></app-company-list>
+      </div>
+    </div>
+
   </div>
 </div>

@@ -30,7 +30,7 @@ import {
 @Component({
   selector: 'app-prediction-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ResultsPanelComponent, ResultsModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, ResultsModalComponent],
   templateUrl: './prediction-form.component.html'
 })
 export class PredictionFormComponent implements OnInit, OnDestroy {

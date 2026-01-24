@@ -193,6 +193,7 @@ ${result.recomendaciones && result.recomendaciones.length > 0
     profile: Partial<StaticProfile>,
     metrics: QuarterlyMetrics,
     result: PredictionResponse,
+    charts: { name: string, image: string }[] = [],
     filename: string = 'churn_prediction.pdf'
   ): Promise<void> {
     try {
@@ -219,16 +220,14 @@ ${result.recomendaciones && result.recomendaciones.length > 0
       doc.text('Reporte de Riesgo de Abandono', 15, 22);
       doc.text(new Date().toLocaleDateString('es-AR'), pageWidth - 15, 22, { align: 'right' });
 
-      currentY = 35;
+      currentY = 40;
       doc.setTextColor(0, 0, 0);
 
       // Sección 1: Perfil de Empresa
-      doc.setFillColor(240, 240, 245);
-      doc.rect(10, currentY - 5, pageWidth - 20, 8, 'F');
       doc.setFontSize(12);
       doc.setFont('Helvetica', 'bold');
-      doc.text('PERFIL DE EMPRESA', 15, currentY + 2);
-      currentY += 12;
+      doc.text('PERFIL DE EMPRESA', 15, currentY);
+      currentY += 8;
 
       doc.setFontSize(10);
       doc.setFont('Helvetica', 'normal');
@@ -244,7 +243,7 @@ ${result.recomendaciones && result.recomendaciones.length > 0
         doc.text(String(label), 15, currentY);
         doc.setFont('Helvetica', 'normal');
         doc.text(String(value), 50, currentY);
-        currentY += 6;
+        currentY += 7;
       });
 
       currentY += 5;
@@ -254,37 +253,35 @@ ${result.recomendaciones && result.recomendaciones.length > 0
       const probability = (result.probabilidad || 0) * 100;
       const confidence = (result.confidence || 0) * 100;
 
-      // Caja de riesgo de color
       const riskColors: Record<string, [number, number, number]> = {
-        'ALTO': [220, 38, 38],      // Rojo
-        'MEDIO': [245, 158, 11],    // Ámbar
-        'BAJO': [34, 197, 94]       // Verde
+        'ALTO': [220, 38, 38], 'MEDIO': [245, 158, 11], 'BAJO': [34, 197, 94]
       };
-
       const riskColor = riskColors[riskLevel] || [100, 100, 100];
-      doc.setFillColor(...riskColor);
-      doc.rect(10, currentY - 5, pageWidth - 20, 20, 'F');
-
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(14);
-      doc.setFont('Helvetica', 'bold');
-      doc.text(`Nivel de Riesgo: ${riskLevel}`, 15, currentY + 5);
-      doc.setFontSize(11);
-      doc.text(`Probabilidad de Churn: ${probability.toFixed(1)}%`, 15, currentY + 12);
       
-      currentY += 25;
+      doc.setFillColor(...riskColor);
+      doc.rect(10, currentY - 2, pageWidth - 20, 22, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(16);
+      doc.setFont('Helvetica', 'bold');
+      doc.text(`RIESGO ${riskLevel}`, 15, currentY + 8);
+      doc.setFontSize(12);
+      doc.text(`Probabilidad: ${probability.toFixed(1)}%`, 15, currentY + 16);
+      
+      currentY += 28;
       doc.setTextColor(0, 0, 0);
 
-      // Sección 3: Métricas Financieras
-      doc.setFillColor(240, 240, 245);
-      doc.rect(10, currentY - 5, pageWidth - 20, 8, 'F');
+      // Sección de métricas en dos columnas
+      const col1X = 15;
+      const col2X = 110;
+      let colY = currentY;
+
+      // Columna 1: Datos Financieros
       doc.setFontSize(12);
       doc.setFont('Helvetica', 'bold');
-      doc.text('DATOS FINANCIEROS', 15, currentY + 2);
-      currentY += 12;
-
+      doc.text('DATOS FINANCIEROS', col1X, colY);
+      colY += 8;
+      
       doc.setFontSize(9);
-      doc.setFont('Helvetica', 'normal');
       const financialData = [
         [`Ingresos:`, this.formatCurrency(metrics?.financials?.Ingresos)],
         [`Gastos:`, this.formatCurrency(metrics?.financials?.Gastos)],
@@ -292,114 +289,152 @@ ${result.recomendaciones && result.recomendaciones.length > 0
         [`Deuda Total:`, this.formatCurrency(metrics?.financials?.Deuda)],
         [`Activos:`, this.formatCurrency(metrics?.financials?.Activos)]
       ];
-
       financialData.forEach(([label, value]) => {
         doc.setFont('Helvetica', 'bold');
-        doc.text(String(label), 15, currentY);
+        doc.text(String(label), col1X, colY);
         doc.setFont('Helvetica', 'normal');
-        doc.text(String(value), 80, currentY);
-        currentY += 5;
+        doc.text(String(value), col1X + 35, colY);
+        colY += 6;
       });
 
-      currentY += 3;
-
-      // Sección 4: Comportamiento de Crédito
-      doc.setFillColor(240, 240, 245);
-      doc.rect(10, currentY - 5, pageWidth - 20, 8, 'F');
+      // Columna 2: Crédito y Engagement
+      colY = currentY; // Reset Y for second column
       doc.setFontSize(12);
       doc.setFont('Helvetica', 'bold');
-      doc.text('COMPORTAMIENTO DE CRÉDITO', 15, currentY + 2);
-      currentY += 12;
+      doc.text('MÉTRICAS CLAVE', col2X, colY);
+      colY += 8;
 
       doc.setFontSize(9);
       const creditData = [
-        [`Solicitados:`, String(metrics?.credit_behavior?.Prestamos_Solicitados || 0)],
-        [`Aprobados:`, String(metrics?.credit_behavior?.Prestamos_Aprobados || 0)],
+        [`Préstamos Aprobados:`, String(metrics?.credit_behavior?.Prestamos_Aprobados || 0)],
         [`Tasa Aprobación:`, `${this.calculateApprovalRate(metrics?.credit_behavior)}%`],
-        [`Monto Solicitado:`, this.formatCurrency(metrics?.credit_behavior?.Monto_Solicitado)],
-        [`Monto Aprobado:`, this.formatCurrency(metrics?.credit_behavior?.Monto_Aprobado)]
+        [`Días Activos (90d):`, `${metrics?.app_engagement?.Trimestre_Dias_Actividad || 0}`],
+        [`Servicios Activos:`, `${metrics?.services_flags?.Servicios_Utilizados || 0}/4`]
       ];
-
       creditData.forEach(([label, value]) => {
         doc.setFont('Helvetica', 'bold');
-        doc.text(String(label), 15, currentY);
+        doc.text(String(label), col2X, colY);
         doc.setFont('Helvetica', 'normal');
-        doc.text(String(value), 80, currentY);
-        currentY += 5;
+        doc.text(String(value), col2X + 40, colY);
+        colY += 6;
       });
 
-      currentY += 3;
+      // Actualizar Y a la columna más larga
+      currentY = Math.max(colY, currentY + financialData.length * 6 + 15);
 
-      // Sección 5: Engagement en Plataforma
-      doc.setFillColor(240, 240, 245);
-      doc.rect(10, currentY - 5, pageWidth - 20, 8, 'F');
-      doc.setFontSize(12);
-      doc.setFont('Helvetica', 'bold');
-      doc.text('ENGAGEMENT EN PLATAFORMA', 15, currentY + 2);
-      currentY += 12;
-
-      doc.setFontSize(9);
-      const engagementData = [
-        [`Días Activos (90):`, `${metrics?.app_engagement?.Trimestre_Dias_Actividad || 0} días`],
-        [`Tasa Actividad:`, `${this.calculateActivityRate(metrics?.app_engagement)}%`],
-        [`Promedio Logins/Día:`, `${(metrics?.app_engagement?.Promedio_Login_Dia || 0).toFixed(1)}`],
-        [`Total Logins:`, String(metrics?.app_engagement?.Total_Login_Dia || 0)]
-      ];
-
-      engagementData.forEach(([label, value]) => {
-        doc.setFont('Helvetica', 'bold');
-        doc.text(String(label), 15, currentY);
-        doc.setFont('Helvetica', 'normal');
-        doc.text(String(value), 80, currentY);
-        currentY += 5;
-      });
-
-      // Si queremos agregar más páginas, hacemos un salto
-      if (currentY > pageHeight - 40) {
+      // Salto de página para gráficos si es necesario
+      if (currentY > pageHeight - 120 || charts.length > 0) {
         doc.addPage();
-        currentY = 15;
-      } else {
-        currentY += 8;
+        currentY = 20;
       }
-
-      // Sección 6: Banderas Rojas / Recomendaciones
-      if (result.red_flags && result.red_flags.length > 0) {
-        doc.setFillColor(240, 240, 245);
-        doc.rect(10, currentY - 5, pageWidth - 20, 8, 'F');
-        doc.setFontSize(12);
+      
+      // Sección de Gráficos
+      if (charts.length > 0) {
+        doc.setFontSize(14);
         doc.setFont('Helvetica', 'bold');
-        doc.text('SEÑALES DE ALERTA', 15, currentY + 2);
-        currentY += 12;
+        doc.text('ANÁLISIS VISUAL', 15, currentY);
+        currentY += 10;
+        
+        const chartWidth = 140; 
+        const chartHeight = 80;
+        const chartX = (pageWidth - chartWidth) / 2;
 
-        doc.setFontSize(8.5);
-        doc.setFont('Helvetica', 'normal');
-        result.red_flags.forEach((flag: any) => {
-          doc.setTextColor(200, 0, 0);
-          doc.text('⚠', 15, currentY);
-          doc.setTextColor(0, 0, 0);
-          const wrapped = doc.splitTextToSize(String(flag), pageWidth - 25);
-          doc.text(wrapped, 22, currentY);
-          currentY += wrapped.length * 4 + 1;
-
-          if (currentY > pageHeight - 20) {
+        charts.forEach((chart, index) => {
+          if (currentY + chartHeight + 20 > pageHeight) {
             doc.addPage();
-            currentY = 15;
+            currentY = 20;
           }
-        });
+          
+          doc.setFontSize(11);
+          doc.setFont('Helvetica', 'bold');
+          doc.text(chart.name.toUpperCase(), 15, currentY);
+          currentY += 5;
 
-        currentY += 5;
+          doc.addImage(chart.image, 'PNG', chartX, currentY, chartWidth, chartHeight);
+          currentY += chartHeight + 15;
+        });
       }
 
-      // Footer con información de confianza
-      doc.setFontSize(8);
-      doc.setTextColor(100, 100, 100);
-      doc.setFont('Helvetica', 'italic');
-      doc.text(
-        `Confianza del Modelo: ${confidence.toFixed(0)}% | Generado: ${new Date().toLocaleString('es-AR')}`,
-        15,
-        pageHeight - 10
-      );
+      // --- PÁGINA 2: ALERTAS Y RECOMENDACIONES ---
+      if (result.red_flags?.length || result.recomendaciones?.length) {
+        doc.addPage();
+        currentY = 20;
 
+        // Sección de Alertas (Red Flags)
+        if (result.red_flags && result.red_flags.length > 0) {
+          doc.setFontSize(14);
+          doc.setFont('Helvetica', 'bold');
+          doc.text('SEÑALES DE ALERTA (RED FLAGS)', 15, currentY);
+          currentY += 10;
+
+          result.red_flags.forEach(flag => {
+            const isString = typeof flag === 'string';
+            const description = isString ? flag : (flag.description || String(flag.flag));
+            const severity = isString ? 'low' : (flag.severity || 'low');
+
+            const severityColors: Record<string, [number, number, number]> = {
+              'critical': [220, 38, 38], 'high': [245, 158, 11], 'medium': [234, 179, 8], 'low': [34, 197, 94]
+            };
+            const color = severityColors[severity];
+
+            if (currentY > pageHeight - 15) {
+              doc.addPage();
+              currentY = 20;
+            }
+
+            doc.setFillColor(...color);
+            doc.circle(18, currentY - 1.5, 2, 'F');
+            
+            doc.setFontSize(10);
+            doc.setFont('Helvetica', 'normal');
+            const wrappedText = doc.splitTextToSize(description, pageWidth - 35);
+            doc.text(wrappedText, 25, currentY);
+            currentY += wrappedText.length * 5 + 4;
+          });
+        }
+        
+        currentY += 5;
+
+        // Sección de Recomendaciones
+        if (result.recomendaciones && result.recomendaciones.length > 0) {
+          if (currentY > pageHeight - 30) {
+            doc.addPage();
+            currentY = 20;
+          }
+          
+          doc.setFontSize(14);
+          doc.setFont('Helvetica', 'bold');
+          doc.text('RECOMENDACIONES', 15, currentY);
+          currentY += 10;
+
+          result.recomendaciones.forEach(rec => {
+            if (currentY > pageHeight - 15) {
+              doc.addPage();
+              currentY = 20;
+            }
+            doc.setFillColor(59, 130, 246);
+            doc.rect(15, currentY - 3, 1.5, 5, 'F');
+
+            doc.setFontSize(10);
+            doc.setFont('Helvetica', 'normal');
+            const wrappedText = doc.splitTextToSize(rec, pageWidth - 30);
+            doc.text(wrappedText, 20, currentY);
+            currentY += wrappedText.length * 5 + 4;
+          });
+        }
+      }
+
+      // Footer en todas las páginas
+      for (let i = 1; i <= doc.getNumberOfPages(); i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.setFont('Helvetica', 'italic');
+        const footerText = `Confianza del Modelo: ${confidence.toFixed(0)}% | ChurnInsight - Reporte Interno`;
+        doc.text(footerText, pageWidth / 2, pageHeight - 10, { align: 'center' });
+        doc.text(`Página ${i}/${doc.getNumberOfPages()}`, pageWidth - 20, pageHeight - 10);
+      }
+      
       doc.save(filename);
     } catch (error) {
       console.error('Error generando PDF:', error);

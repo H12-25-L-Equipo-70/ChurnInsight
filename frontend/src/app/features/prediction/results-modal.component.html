@@ -75,27 +75,29 @@
         </div>
 
         <!-- RED FLAGS EN TABLA COMPACTA CON NIVEL -->
-        <div *ngIf="getRedFlags().length > 0" class="border-2 rounded-lg overflow-hidden">
+        <div *ngIf="getProcessedFlags().length > 0" class="border-2 rounded-lg overflow-hidden">
           <div class="bg-red-100 px-4 py-3 border-b-2">
-            <h3 class="text-sm font-bold text-red-900">⚠️ Alertas ({{ getRedFlags().length }})</h3>
+            <h3 class="text-sm font-bold text-red-900">⚠️ Alertas ({{ getProcessedFlags().length }})</h3>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-sm">
               <tbody>
-                <tr *ngFor="let flag of getUniqueFlagsList()" class="border-t hover:bg-slate-100">
+                <tr *ngFor="let flag of getProcessedFlags()" class="border-t hover:bg-slate-100">
                   <td class="px-4 py-3 font-semibold text-slate-900">
-                    {{ typeof flag === 'string' ? flag : (flag.flag || 'Alerta') }}
+                    {{ flag.flag }}
                   </td>
                   <td class="px-4 py-3 text-slate-700">
-                    {{ typeof flag === 'string' ? '-' : (flag.description || '-') }}
+                    {{ flag.description }}
                   </td>
                   <td class="px-4 py-3 text-right">
                     <span class="inline-block px-3 py-1 rounded text-xs font-bold"
-                          [ngClass]="(typeof flag === 'string' ? 'low' : (flag.severity || 'low')) === 'critical' ? 'bg-red-200 text-red-800' : 
-                                     (typeof flag === 'string' ? 'low' : (flag.severity || 'low')) === 'high' ? 'bg-orange-200 text-orange-800' :
-                                     (typeof flag === 'string' ? 'low' : (flag.severity || 'low')) === 'medium' ? 'bg-amber-200 text-amber-800' :
-                                     'bg-blue-200 text-blue-800'">
-                      {{ typeof flag === 'string' ? 'LOW' : ((flag.severity || 'low') | uppercase) }}
+                          [ngClass]="{
+                            'bg-red-200 text-red-800': flag.severity === 'critical',
+                            'bg-orange-200 text-orange-800': flag.severity === 'high',
+                            'bg-amber-200 text-amber-800': flag.severity === 'medium',
+                            'bg-blue-200 text-blue-800': flag.severity === 'low'
+                          }">
+                      {{ (flag.severity || 'low') | uppercase }}
                     </span>
                   </td>
                 </tr>
@@ -135,7 +137,6 @@
             📥 JSON
           </button>
           <button 
-            *ngIf="predictionResult && (predictionResult.confidence || 0) > 50"
             (click)="exportToPDF()" 
             type="button" 
             [disabled]="isExporting"
@@ -147,52 +148,49 @@
 
       <!-- TAB 2: GRÁFICAS -->
       <div *ngIf="activeTab === 'charts' && predictionResult" class="p-3 sm:p-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
           
-          <!-- CHART 1: RIESGO (Doughnut) -->
-          <div class="bg-gradient-to-br from-slate-50 to-slate-100 p-3 rounded-lg border border-slate-200 flex flex-col">
-            <h3 class="font-bold text-slate-900 text-xs mb-2">🔴 Riesgo</h3>
-            <div class="flex-1 flex items-center justify-center min-h-32 relative">
+          <!-- CHART 1 & 2: RIESGO Y CRÉDITO -->
+          <div class="bg-gradient-to-br from-slate-50 to-slate-100 p-4 rounded-lg border border-slate-200 flex flex-col">
+            <h3 class="font-bold text-slate-900 text-sm mb-2">🔴 Probabilidad de Churn</h3>
+            <div class="flex-1 flex items-center justify-center min-h-64 relative">
               <canvas 
                 #riskChart 
                 baseChart 
                 [type]="riskDistributionChart.type" 
                 [data]="riskDistributionChart.data" 
                 [options]="riskDistributionChart.options"
-                width="100"
-                height="100">
+                width="250"
+                height="250">
               </canvas>
             </div>
           </div>
 
-          <!-- CHART 2: CRÉDITO (Radar) -->
-          <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-3 rounded-lg border border-blue-200 flex flex-col">
-            <h3 class="font-bold text-slate-900 text-xs mb-2">💳 Crédito</h3>
-            <div class="flex-1 flex items-center justify-center min-h-32 relative">
+          <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200 flex flex-col">
+            <h3 class="font-bold text-slate-900 text-sm mb-2">💳 Comportamiento Clave</h3>
+            <div class="flex-1 flex items-center justify-center min-h-64 relative">
               <canvas 
                 #creditChart 
                 baseChart 
                 [type]="creditBehaviorChart.type" 
                 [data]="creditBehaviorChart.data" 
                 [options]="creditBehaviorChart.options"
-                width="100"
-                height="100">
+                width="250"
+                height="250">
               </canvas>
             </div>
           </div>
 
-          <!-- CHART 3: FINANCIERO (Bar) -->
-          <div class="bg-gradient-to-br from-green-50 to-green-100 p-3 rounded-lg border border-green-200 flex flex-col sm:col-span-2 lg:col-span-1">
-            <h3 class="font-bold text-slate-900 text-xs mb-2">💰 Financiero</h3>
-            <div class="flex-1 flex items-center justify-center min-h-32 relative">
+          <!-- CHART 3: FINANCIERO (más grande) -->
+          <div class="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200 flex flex-col lg:col-span-2">
+            <h3 class="font-bold text-slate-900 text-sm mb-2">💰 Métricas Financieras (en Millones ARS)</h3>
+            <div class="flex-1 flex items-center justify-center min-h-64 relative">
               <canvas 
                 #financialChart 
                 baseChart 
                 [type]="financialMetricsChart.type" 
                 [data]="financialMetricsChart.data" 
-                [options]="financialMetricsChart.options"
-                width="100"
-                height="100">
+                [options]="financialMetricsChart.options">
               </canvas>
             </div>
           </div>
