@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -60,11 +61,11 @@ public class OracleDataSourceConfig {
     @Bean
     @Primary
     public DataSource oracleDataSource(
-            @Value("${oracle.wallet.wallet-path:C:/Repositorios/ChurnInsight/backend/wallet_pymer}") String walletPath,
-            @Value("${oracle.wallet.tns-admin-path:C:/Repositorios/ChurnInsight/backend/wallet_pymer}") String tnsAdminPath,
+            @Value("${oracle.wallet.wallet-path:/media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/backend/wallet_pymer}") String walletPath,
+            @Value("${oracle.wallet.tns-admin-path:/media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/backend/wallet_pymer}") String tnsAdminPath,
             @Value("${oracle.wallet.database-name:pymerdb_high}") String databaseName,
-            @Value("${oracle.wallet.username:admin}") String username,
-            @Value("${oracle.wallet.password:dummy}") String password
+            @Value("${oracle.wallet.username:FINTECH_PYMER}") String username,
+            @Value("${oracle.wallet.password:FintechPymer123}") String password
     ) throws SQLException {
         
         log.info("=== Inicializando Oracle DataSource con Wallet ===");

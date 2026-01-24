@@ -60,7 +60,7 @@ python -m uvicorn main:app --reload --port 8000
 cd backend
 
 # Saltamos Oracle por ahora
-mvn spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=dev"
+mvn spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
 **Terminal 3 - Probar:**

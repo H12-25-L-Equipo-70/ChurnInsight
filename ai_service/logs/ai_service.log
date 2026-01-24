@@ -1,0 +1,45 @@
+2026-01-24 16:40:08,908 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-24 16:40:08,908 - config.settings - INFO - [settings.py:100] - Environment: development
+2026-01-24 16:40:08,908 - config.settings - INFO - [settings.py:101] - Debug mode: True
+2026-01-24 16:40:08,920 - main - INFO - [main.py:129] - ==================================================
+2026-01-24 16:40:08,921 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-24 16:40:08,921 - main - INFO - [main.py:131] - Environment: development
+2026-01-24 16:40:08,921 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-24 16:40:08,921 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-24 16:40:08,921 - main - INFO - [main.py:134] - Debug: True
+2026-01-24 16:40:08,921 - main - INFO - [main.py:135] - ==================================================
+2026-01-24 16:40:08,921 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-24 16:40:08,921 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-24 16:40:09,734 - app.core.model_manager - INFO - [model_manager.py:37] - ✅ Modelo cargado: ./models/churn_model.pkl
+2026-01-24 16:40:09,743 - app.core.model_manager - INFO - [model_manager.py:41] - ✅ Scaler cargado: ./models/scaler.pkl
+2026-01-24 16:40:09,743 - main - INFO - [main.py:159] - ✅ Model loaded: RandomForestClassifier (status: loaded)
+2026-01-24 17:17:52,958 - main - INFO - [main.py:44] - [1c4f10b1] OPTIONS /api/v1/predictions/predict_churn
+2026-01-24 17:17:52,967 - main - INFO - [main.py:48] - [1c4f10b1] Response: 200
+2026-01-24 17:17:52,976 - main - INFO - [main.py:44] - [d01240c6] POST /api/v1/predictions/predict_churn
+2026-01-24 17:17:53,018 - app.routes.predictions - INFO - [predictions.py:60] - [d0c1b3bc] Predicción churn para CUIT: 20123456789 (Tech Solutions S.A.)
+2026-01-24 17:17:53,020 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 4 detectadas
+2026-01-24 17:17:53,021 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 17:17:53,021 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 17:17:53,021 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 17:17:53,021 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 17:17:53,021 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.2486
+2026-01-24 17:17:53,022 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.2486, riesgo=bajo
+2026-01-24 17:17:53,022 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 17:17:53,022 - app.routes.predictions - INFO - [predictions.py:92] - [d0c1b3bc] Predicción: prob=0.2486, prediction=0, flags=4, threshold=0.500
+2026-01-24 17:17:53,025 - app.routes.predictions - INFO - [predictions.py:127] - [d0c1b3bc] ✅ Predicción completada exitosamente
+2026-01-24 17:17:53,026 - main - INFO - [main.py:48] - [d01240c6] Response: 200
+2026-01-24 17:19:13,377 - main - INFO - [main.py:44] - [74da5fd6] POST /api/v1/predictions/predict_churn
+2026-01-24 17:19:13,380 - app.routes.predictions - INFO - [predictions.py:60] - [b455a55b] Predicción churn para CUIT: 47563526478 (test)
+2026-01-24 17:19:13,380 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 5 detectadas
+2026-01-24 17:19:13,381 - app.core.model_manager - INFO - [model_manager.py:228] - === PREDICT START ===
+2026-01-24 17:19:13,381 - app.core.model_manager - INFO - [model_manager.py:245] - Features críticos disponibles: 5/5
+2026-01-24 17:19:13,381 - app.core.model_manager - INFO - [model_manager.py:246] - Model available: True
+2026-01-24 17:19:13,381 - app.core.model_manager - INFO - [model_manager.py:250] - -> Usando MOCK PREDICTION (confiable para heurísticas)
+2026-01-24 17:19:13,382 - app.core.model_manager - INFO - [model_manager.py:252] -    Mock score: 0.5978
+2026-01-24 17:19:13,382 - app.core.model_manager - INFO - [model_manager.py:265] - Predicción: prob=0.5978, riesgo=medio
+2026-01-24 17:19:13,382 - app.core.model_manager - INFO - [model_manager.py:266] - === PREDICT END ===
+
+2026-01-24 17:19:13,383 - app.routes.predictions - INFO - [predictions.py:92] - [b455a55b] Predicción: prob=0.5978, prediction=1, flags=5, threshold=0.500
+2026-01-24 17:19:13,383 - app.routes.predictions - INFO - [predictions.py:127] - [b455a55b] ✅ Predicción completada exitosamente
+2026-01-24 17:19:13,384 - main - INFO - [main.py:48] - [74da5fd6] Response: 200
