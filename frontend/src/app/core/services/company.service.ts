@@ -29,7 +29,7 @@ export interface CompanyDTO {
 })
 export class CompanyService {
   private readonly http = inject(HttpClient);
-  private readonly BACKEND_URL = 'http://localhost:8080/api/v1/companies';
+  private readonly BACKEND_URL = 'http://152.67.34.202:8080/api/v1/companies';
   private readonly REQUEST_TIMEOUT_MS = 10000; // 10 segundos
 
   /**
@@ -162,7 +162,7 @@ export class CompanyService {
 
     if (error instanceof HttpErrorResponse) {
       if (error.status === 0) {
-        errorMessage = '❌ No se puede conectar con el Backend. Verifica que esté corriendo en http://localhost:8080';
+        errorMessage = '❌ No se puede conectar con el Backend. Verifica que esté corriendo en http://152.67.34.202:8080';
       } else if (error.status === 404) {
         errorMessage = '❌ Empresa no encontrada. Verifica el CUIT ingresado';
       } else if (error.status === 400) {

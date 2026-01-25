@@ -31,7 +31,7 @@ export interface SavedPrediction {
 export class PredictionsDataService {
   private readonly http = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
-  private readonly BACKEND_URL = 'http://localhost:8080/api/v1';
+  private readonly BACKEND_URL = 'http://152.67.34.202:8080/api/v1';
   private readonly PREDICTIONS_ENDPOINT = `${this.BACKEND_URL}/predictions`;
   
   // Cache local como fallback

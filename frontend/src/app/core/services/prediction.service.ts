@@ -26,7 +26,7 @@ import { DebugService } from './debug.service';
 export class PredictionService {
   private readonly http = inject(HttpClient);
   private readonly debug = inject(DebugService);
-  private readonly AI_SERVICE_URL = 'http://localhost:8000/api/v1/predictions/predict_churn';
+  private readonly AI_SERVICE_URL = 'http://152.67.34.202:8000/api/v1/predictions/predict_churn';
   private readonly REQUEST_TIMEOUT_MS = 30000; // 30 segundos
 
   /**
@@ -115,7 +115,7 @@ export class PredictionService {
     );
 
     return this.http.post<PredictionResponse[]>(
-      'http://localhost:8000/api/v1/predictions/batch_predict_churn',
+      'http://152.67.34.202:8000/api/v1/predictions/batch_predict_churn',
       { data: empresaInputs }
     ).pipe(
       timeout(this.REQUEST_TIMEOUT_MS),
@@ -268,7 +268,7 @@ export class PredictionService {
 
     if (error instanceof HttpErrorResponse) {
       if (error.status === 0) {
-        errorMessage = '❌ No se puede conectar con el AI Service. Verifica que esté corriendo en http://localhost:8000';
+        errorMessage = '❌ No se puede conectar con el AI Service. Verifica que esté corriendo en http://152.67.34.202:8000';
       } else if (error.status === 400) {
         errorMessage = `❌ Datos inválidos: ${error.error?.detail || 'Por favor revisa los valores ingresados'}`;
       } else if (error.status === 500) {
