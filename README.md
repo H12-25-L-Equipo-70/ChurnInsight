@@ -33,10 +33,10 @@ ChurnInsight se compone de tres servicios principales interconectados, respaldad
 
 ```mermaid
 graph LR
-    A[Frontend (Angular)] -->|HTTP/REST| B["Backend: Spring Boot"];
-    B -->|SQL| C["Oracle DB"];
-    B -->|HTTP/REST| D["AI Service: FastAPI"];
-    D -->|DB Access (Optional)| C;
+    A[Frontend (Angular)] -->|"HTTP/REST"| B["Backend: Spring Boot"];
+    B -->|"SQL"| C["Oracle DB"];
+    B -->|"HTTP/REST"| D["AI Service: FastAPI"];
+    D -->|"DB Access (Optional)"| C;
 ```
 
 *   **Frontend (Angular):** La interfaz de usuario intuitiva donde los analistas y gerentes visualizan las predicciones, red flags y generan reportes.
