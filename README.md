@@ -35,6 +35,8 @@ Durante el análisis exploratorio se realizaron las siguientes tareas:
 3.1 Distribución del Churn
 
 Se observó una distribución relativamente balanceada entre clientes que churnean y los que no, lo cual es favorable para el entrenamiento de modelos supervisados.
+
+
 <img width="471" height="393" alt="image" src="https://github.com/user-attachments/assets/9c62ace6-ad24-4de2-bc97-9eb392cc11dd" />
 
 
@@ -44,9 +46,18 @@ Se analizaron los períodos fiscales (20**Q*) para detectar:
 
 Picos de churn en determinados trimestres
 
+<img width="988" height="490" alt="image" src="https://github.com/user-attachments/assets/5c3c90ee-b8c4-4d13-a61e-956a6899414e" />
+
 Tendencias temporales
 
+<img width="989" height="490" alt="image" src="https://github.com/user-attachments/assets/57211b04-a7be-42c5-ba1b-60593d3c8627" />
+
+
 Estacionalidad
+
+<img width="1019" height="553" alt="image" src="https://github.com/user-attachments/assets/f7e0058b-684d-4d63-97d9-9b2615ae4a6e" />
+
+
 
 3.3 Detección de valores faltantes
 
@@ -128,6 +139,10 @@ Se calculó un umbral óptimo por F1-score
 Se evaluaron métricas clave
 
 7. Métricas de Desempeño
+
+<img width="690" height="490" alt="image" src="https://github.com/user-attachments/assets/5290448f-2f07-4788-9a4f-752ac1edade6" />
+
+
 7.1 Resultados promedio (5 folds)
 Métrica	Valor
 ROC-AUC	0.93
@@ -166,6 +181,9 @@ Retorno neto del modelo
 
 Justificación financiera de su implementación
 
+<img width="1490" height="590" alt="image" src="https://github.com/user-attachments/assets/3b256225-3819-420f-b85e-77cf9f5fadac" />
+
+
 9. Serialización del Modelo
 
 El modelo final se entrenó sobre el dataset completo y se exportó junto con:
@@ -188,6 +206,11 @@ Inferencia en tiempo real
 
 Reentrenamiento futuro
 
+Ejemplo de resultados con matríz de confusión
+
+<img width="588" height="469" alt="image" src="https://github.com/user-attachments/assets/1d750762-1a50-46e9-a3cd-7aadb7bfa51d" />
+
+
 10. Conclusiones
 
 El modelo logra alto desempeño predictivo
@@ -199,6 +222,7 @@ El foco en recall y F1 es adecuado para el negocio
 El análisis económico demuestra viabilidad real
 
 El pipeline está listo para producción
-11. Enlace al notebook. 
+
+11. Enlace al notebook
 https://colab.research.google.com/drive/1NhPcf8Kc87TWgIsbQ3KmMblop_XDIcVm#scrollTo=bccf71c6
 
