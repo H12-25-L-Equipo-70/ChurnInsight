@@ -11,6 +11,9 @@ services:
       ENVIRONMENT: docker
       DEBUG: "false"
       LOG_LEVEL: INFO
+      # Configuración del nuevo modelo Pipeline
+      MODEL_PATH: /app/models/pymer_churn_pipeline.pkl
+      SCALER_PATH: ""
     volumes:
       - ./ai_service/logs:/app/logs
       - ./ai_service/models:/app/models

@@ -10,7 +10,7 @@ COPY backend/pom.xml .
 RUN mvn dependency:go-offline -B
 
 # Copiar código fuente
-COPY src ./src
+COPY backend/src ./src
 
 # Build
 RUN mvn clean package -DskipTests
