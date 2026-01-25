@@ -61,8 +61,8 @@ public class OracleDataSourceConfig {
     @Bean
     @Primary
     public DataSource oracleDataSource(
-            @Value("${oracle.wallet.wallet-path:/media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/backend/wallet_pymer}") String walletPath,
-            @Value("${oracle.wallet.tns-admin-path:/media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/backend/wallet_pymer}") String tnsAdminPath,
+            @Value("${oracle.wallet.wallet-path:/app/wallet_pymer}") String walletPath,
+            @Value("${oracle.wallet.tns-admin-path:/app/wallet_pymer}") String tnsAdminPath,
             @Value("${oracle.wallet.database-name:pymerdb_high}") String databaseName,
             @Value("${oracle.wallet.username:FINTECH_PYMER}") String username,
             @Value("${oracle.wallet.password:FintechPymer123}") String password

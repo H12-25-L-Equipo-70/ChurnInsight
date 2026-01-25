@@ -4,13 +4,13 @@ FROM maven:3.9-eclipse-temurin-17 AS builder
 WORKDIR /build
 
 # Copiar pom.xml
-COPY backend/pom.xml .
+COPY pom.xml .
 
 # Descargar dependencias (layer cacheado)
 RUN mvn dependency:go-offline -B
 
 # Copiar código fuente
-COPY backend/src ./src
+COPY src ./src
 
 # Build
 RUN mvn clean package -DskipTests
@@ -24,7 +24,7 @@ WORKDIR /app
 COPY --from=builder /build/target/churninsight-backend-*.jar app.jar
 
 # Copiar Wallet Oracle (si existe)
-COPY wallet_pymer /app/wallet_pymer
+COPY ./wallet_pymer /app/wallet_pymer
 
 # Configurar variables de entorno
 ENV SPRING_PROFILES_ACTIVE=docker

@@ -426,3 +426,511 @@
 2026-01-24 20:26:47,286 - app.routes.predictions - INFO - [predictions.py:92] - [7ccca47c] Predicción: prob=0.3915, prediction=0, flags=3, threshold=0.500
 2026-01-24 20:26:47,287 - app.routes.predictions - INFO - [predictions.py:127] - [7ccca47c] ✅ Predicción completada exitosamente
 2026-01-24 20:26:47,288 - main - INFO - [main.py:48] - [f2de55b3] Response: 200
+2026-01-25 05:44:38,050 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 05:44:38,066 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 05:44:38,066 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 05:44:38,066 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 05:44:38,066 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 05:44:38,067 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 05:44:38,067 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 05:44:38,067 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 05:44:38,067 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 05:44:38,069 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 05:44:38,069 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 05:44:38,069 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 05:44:38,078 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 05:44:38,078 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 05:44:38,078 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 05:44:38,078 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 05:44:38,078 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 05:44:38,078 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 05:44:38,079 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 05:44:38,079 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 05:44:38,079 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 05:44:38,080 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 05:44:38,080 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 05:44:38,080 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 05:44:38,080 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 05:44:38,080 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 05:44:38,080 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 05:44:38,080 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 05:44:38,080 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 05:44:38,080 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 05:44:38,082 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 05:44:38,082 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 05:44:38,082 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 05:44:38,082 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 05:44:38,082 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 05:44:38,082 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 05:44:38,082 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 05:44:38,082 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 05:44:38,082 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 05:44:38,082 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 05:44:38,082 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 05:44:38,082 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 05:44:38,082 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 05:44:38,082 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 05:44:38,083 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 05:44:38,083 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 05:44:38,083 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 05:44:38,083 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 05:44:38,150 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 05:44:38,150 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 05:44:38,152 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 05:44:38,152 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 05:44:38,156 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 05:44:38,157 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 05:44:38,163 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 05:44:38,163 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 05:44:40,087 - main - INFO - [main.py:44] - [74fe054c] GET /api/v1/health/check
+2026-01-25 05:44:40,088 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 05:44:40,089 - main - INFO - [main.py:48] - [74fe054c] Response: 200
+2026-01-25 05:45:10,174 - main - INFO - [main.py:44] - [8ec7da0c] GET /api/v1/health/check
+2026-01-25 05:45:10,176 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 05:45:10,177 - main - INFO - [main.py:48] - [8ec7da0c] Response: 200
+2026-01-25 05:45:40,235 - main - INFO - [main.py:44] - [ffb69b09] GET /api/v1/health/check
+2026-01-25 05:45:40,236 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 05:45:40,237 - main - INFO - [main.py:48] - [ffb69b09] Response: 200
+2026-01-25 05:46:10,296 - main - INFO - [main.py:44] - [74aa332f] GET /api/v1/health/check
+2026-01-25 05:46:10,296 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 05:46:10,297 - main - INFO - [main.py:48] - [74aa332f] Response: 200
+2026-01-25 05:46:40,359 - main - INFO - [main.py:44] - [9b319f5b] GET /api/v1/health/check
+2026-01-25 05:46:40,360 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 05:46:40,360 - main - INFO - [main.py:48] - [9b319f5b] Response: 200
+2026-01-25 05:47:10,420 - main - INFO - [main.py:44] - [26e84931] GET /api/v1/health/check
+2026-01-25 05:47:10,421 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 05:47:10,421 - main - INFO - [main.py:48] - [26e84931] Response: 200
+2026-01-25 05:47:40,491 - main - INFO - [main.py:44] - [ad5d1779] GET /api/v1/health/check
+2026-01-25 05:47:40,492 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 05:47:40,492 - main - INFO - [main.py:48] - [ad5d1779] Response: 200
+2026-01-25 05:48:10,548 - main - INFO - [main.py:44] - [df32811d] GET /api/v1/health/check
+2026-01-25 05:48:10,549 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 05:48:10,549 - main - INFO - [main.py:48] - [df32811d] Response: 200
+2026-01-25 05:48:40,605 - main - INFO - [main.py:44] - [63e29f2d] GET /api/v1/health/check
+2026-01-25 05:48:40,606 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 05:48:40,606 - main - INFO - [main.py:48] - [63e29f2d] Response: 200
+2026-01-25 05:49:10,678 - main - INFO - [main.py:44] - [bf295445] GET /api/v1/health/check
+2026-01-25 05:49:10,679 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 05:49:10,679 - main - INFO - [main.py:48] - [bf295445] Response: 200
+2026-01-25 05:49:40,752 - main - INFO - [main.py:44] - [7c0540ec] GET /api/v1/health/check
+2026-01-25 05:49:40,753 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 05:49:40,753 - main - INFO - [main.py:48] - [7c0540ec] Response: 200
+2026-01-25 05:50:08,961 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 05:50:08,961 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 05:50:08,961 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 05:50:08,961 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 05:50:09,364 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 05:50:09,365 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 05:50:09,365 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 05:50:09,366 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 05:50:09,766 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 05:50:09,766 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 05:50:09,767 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 05:50:09,768 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 05:50:10,165 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 05:50:10,166 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 05:50:10,167 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 05:50:10,168 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 15:11:34,873 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:11:34,873 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:11:34,873 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:11:34,874 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:11:34,875 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:11:34,875 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:11:34,883 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:11:34,883 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:11:34,883 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:11:34,883 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:11:34,884 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:11:34,884 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:11:34,884 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:11:34,884 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:11:34,884 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:11:34,886 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:11:34,886 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:11:34,887 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:11:34,887 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:11:34,887 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:11:34,887 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:11:34,887 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:11:34,887 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:11:34,887 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:11:34,892 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:11:34,892 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:11:34,892 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:11:34,900 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:11:34,900 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:11:34,900 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:11:34,900 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:11:34,901 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:11:34,901 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:11:34,901 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:11:34,901 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:11:34,901 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:11:34,929 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:11:34,929 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:11:34,929 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:11:34,943 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:11:34,943 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:11:34,943 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:11:34,943 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:11:34,944 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:11:34,944 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:11:34,944 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:11:34,944 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:11:34,945 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:11:34,958 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:11:34,958 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:11:34,976 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:11:34,976 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:11:34,979 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:11:34,979 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:11:35,017 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:11:35,018 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:11:36,596 - main - INFO - [main.py:44] - [a1b75120] GET /api/v1/health/check
+2026-01-25 15:11:36,597 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:11:36,597 - main - INFO - [main.py:48] - [a1b75120] Response: 200
+2026-01-25 15:12:06,665 - main - INFO - [main.py:44] - [d789c5d3] GET /api/v1/health/check
+2026-01-25 15:12:06,666 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:12:06,667 - main - INFO - [main.py:48] - [d789c5d3] Response: 200
+2026-01-25 15:12:36,726 - main - INFO - [main.py:44] - [b6d499a4] GET /api/v1/health/check
+2026-01-25 15:12:36,727 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:12:36,727 - main - INFO - [main.py:48] - [b6d499a4] Response: 200
+2026-01-25 15:13:06,804 - main - INFO - [main.py:44] - [e3c0f465] GET /api/v1/health/check
+2026-01-25 15:13:06,805 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:13:06,805 - main - INFO - [main.py:48] - [e3c0f465] Response: 200
+2026-01-25 15:13:36,858 - main - INFO - [main.py:44] - [bd51caf6] GET /api/v1/health/check
+2026-01-25 15:13:36,859 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:13:36,859 - main - INFO - [main.py:48] - [bd51caf6] Response: 200
+2026-01-25 15:14:06,941 - main - INFO - [main.py:44] - [127f87cf] GET /api/v1/health/check
+2026-01-25 15:14:06,943 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:14:06,943 - main - INFO - [main.py:48] - [127f87cf] Response: 200
+2026-01-25 15:14:36,999 - main - INFO - [main.py:44] - [a8f20367] GET /api/v1/health/check
+2026-01-25 15:14:37,000 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:14:37,001 - main - INFO - [main.py:48] - [a8f20367] Response: 200
+2026-01-25 15:15:07,054 - main - INFO - [main.py:44] - [5611375f] GET /api/v1/health/check
+2026-01-25 15:15:07,055 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:15:07,055 - main - INFO - [main.py:48] - [5611375f] Response: 200
+2026-01-25 15:15:28,184 - main - INFO - [main.py:44] - [35887593] GET /api/v1/health/check
+2026-01-25 15:15:28,185 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:15:28,185 - main - INFO - [main.py:48] - [35887593] Response: 200
+2026-01-25 15:15:37,116 - main - INFO - [main.py:44] - [89fa3317] GET /api/v1/health/check
+2026-01-25 15:15:37,116 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:15:37,117 - main - INFO - [main.py:48] - [89fa3317] Response: 200
+2026-01-25 15:16:07,167 - main - INFO - [main.py:44] - [099a8355] GET /api/v1/health/check
+2026-01-25 15:16:07,168 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:16:07,168 - main - INFO - [main.py:48] - [099a8355] Response: 200
+2026-01-25 15:16:37,223 - main - INFO - [main.py:44] - [1f8e52b1] GET /api/v1/health/check
+2026-01-25 15:16:37,223 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:16:37,224 - main - INFO - [main.py:48] - [1f8e52b1] Response: 200
+2026-01-25 15:17:07,281 - main - INFO - [main.py:44] - [86448958] GET /api/v1/health/check
+2026-01-25 15:17:07,282 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:17:07,283 - main - INFO - [main.py:48] - [86448958] Response: 200
+2026-01-25 15:17:37,344 - main - INFO - [main.py:44] - [2fb146f6] GET /api/v1/health/check
+2026-01-25 15:17:37,347 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:17:37,350 - main - INFO - [main.py:48] - [2fb146f6] Response: 200
+2026-01-25 15:18:07,442 - main - INFO - [main.py:44] - [87a1ed6b] GET /api/v1/health/check
+2026-01-25 15:18:07,444 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:18:07,444 - main - INFO - [main.py:48] - [87a1ed6b] Response: 200
+2026-01-25 15:18:37,494 - main - INFO - [main.py:44] - [7f46a169] GET /api/v1/health/check
+2026-01-25 15:18:37,495 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:18:37,495 - main - INFO - [main.py:48] - [7f46a169] Response: 200
+2026-01-25 15:19:07,550 - main - INFO - [main.py:44] - [06f5e564] GET /api/v1/health/check
+2026-01-25 15:19:07,550 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:19:07,551 - main - INFO - [main.py:48] - [06f5e564] Response: 200
+2026-01-25 15:19:37,630 - main - INFO - [main.py:44] - [242fd2cd] GET /api/v1/health/check
+2026-01-25 15:19:37,631 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:19:37,631 - main - INFO - [main.py:48] - [242fd2cd] Response: 200
+2026-01-25 15:20:07,689 - main - INFO - [main.py:44] - [eef8c69c] GET /api/v1/health/check
+2026-01-25 15:20:07,689 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:20:07,689 - main - INFO - [main.py:48] - [eef8c69c] Response: 200
+2026-01-25 15:20:37,747 - main - INFO - [main.py:44] - [10dc8fe8] GET /api/v1/health/check
+2026-01-25 15:20:37,755 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:20:37,755 - main - INFO - [main.py:48] - [10dc8fe8] Response: 200
+2026-01-25 15:21:07,807 - main - INFO - [main.py:44] - [71ab6413] GET /api/v1/health/check
+2026-01-25 15:21:07,808 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:21:07,815 - main - INFO - [main.py:48] - [71ab6413] Response: 200
+2026-01-25 15:21:37,875 - main - INFO - [main.py:44] - [305cc5df] GET /api/v1/health/check
+2026-01-25 15:21:37,876 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:21:37,876 - main - INFO - [main.py:48] - [305cc5df] Response: 200
+2026-01-25 15:22:07,938 - main - INFO - [main.py:44] - [c36fa7b1] GET /api/v1/health/check
+2026-01-25 15:22:07,938 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:22:07,938 - main - INFO - [main.py:48] - [c36fa7b1] Response: 200
+2026-01-25 15:22:37,991 - main - INFO - [main.py:44] - [f5c1e982] GET /api/v1/health/check
+2026-01-25 15:22:37,992 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:22:37,992 - main - INFO - [main.py:48] - [f5c1e982] Response: 200
+2026-01-25 15:23:08,050 - main - INFO - [main.py:44] - [18395811] GET /api/v1/health/check
+2026-01-25 15:23:08,051 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:23:08,051 - main - INFO - [main.py:48] - [18395811] Response: 200
+2026-01-25 15:23:38,110 - main - INFO - [main.py:44] - [f2b59417] GET /api/v1/health/check
+2026-01-25 15:23:38,111 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:23:38,111 - main - INFO - [main.py:48] - [f2b59417] Response: 200
+2026-01-25 15:24:08,165 - main - INFO - [main.py:44] - [6312c4af] GET /api/v1/health/check
+2026-01-25 15:24:08,165 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:24:08,166 - main - INFO - [main.py:48] - [6312c4af] Response: 200
+2026-01-25 15:24:38,222 - main - INFO - [main.py:44] - [37949ae0] GET /api/v1/health/check
+2026-01-25 15:24:38,223 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:24:38,223 - main - INFO - [main.py:48] - [37949ae0] Response: 200
+2026-01-25 15:25:07,715 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 15:25:07,715 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 15:25:07,715 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 15:25:07,715 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 15:25:08,155 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 15:25:08,156 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 15:25:08,157 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 15:25:08,157 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 15:25:08,298 - main - INFO - [main.py:44] - [15ae73a7] GET /api/v1/health/check
+2026-01-25 15:25:08,299 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:25:08,299 - main - INFO - [main.py:48] - [15ae73a7] Response: 200
+2026-01-25 15:25:08,518 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 15:25:08,518 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 15:25:08,519 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 15:25:08,520 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 15:25:08,919 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 15:25:08,920 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 15:25:08,921 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 15:25:08,921 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 15:25:23,505 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:25:23,505 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:25:23,505 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:25:23,506 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:25:23,506 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:25:23,506 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:25:23,514 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:25:23,514 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:25:23,514 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:25:23,514 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:25:23,514 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:25:23,514 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:25:23,514 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:25:23,514 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:25:23,515 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:25:23,515 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:25:23,515 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:25:23,515 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:25:23,515 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:25:23,515 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:25:23,515 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:25:23,515 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:25:23,515 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:25:23,515 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:25:23,515 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:25:23,515 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:25:23,515 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:25:23,527 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:25:23,528 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:25:23,528 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:25:23,528 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:25:23,528 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:25:23,528 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:25:23,528 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:25:23,528 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:25:23,529 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:25:23,534 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:25:23,534 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:25:23,534 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:25:23,552 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:25:23,552 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:25:23,552 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:25:23,552 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:25:23,552 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:25:23,552 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:25:23,552 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:25:23,553 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:25:23,553 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:25:23,588 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:25:23,588 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:25:23,600 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:25:23,600 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:25:23,601 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:25:23,601 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:25:23,629 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:25:23,629 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:25:25,568 - main - INFO - [main.py:44] - [c4dfb3ea] GET /api/v1/health/check
+2026-01-25 15:25:25,569 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:25:25,569 - main - INFO - [main.py:48] - [c4dfb3ea] Response: 200
+2026-01-25 15:25:55,645 - main - INFO - [main.py:44] - [a914c2ff] GET /api/v1/health/check
+2026-01-25 15:25:55,646 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:25:55,647 - main - INFO - [main.py:48] - [a914c2ff] Response: 200
+2026-01-25 15:26:00,232 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 15:26:00,233 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 15:26:00,233 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 15:26:00,233 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 15:26:00,596 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 15:26:00,596 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 15:26:00,597 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 15:26:00,597 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 15:26:01,002 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 15:26:01,003 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 15:26:01,004 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 15:26:01,004 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 15:26:01,404 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 15:26:01,405 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 15:26:01,406 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 15:26:01,406 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 15:32:03,778 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:03,778 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:32:03,778 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:32:03,779 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:03,779 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:32:03,779 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:32:03,782 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:03,782 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:32:03,782 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:32:03,787 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:32:03,787 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:03,787 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:32:03,787 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:32:03,787 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:32:03,787 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:03,787 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:32:03,788 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:32:03,788 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:32:03,788 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:32:03,788 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:32:03,788 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:32:03,788 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:32:03,788 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:32:03,788 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:32:03,788 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:32:03,788 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:32:03,788 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:32:03,790 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:03,790 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:32:03,790 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:32:03,791 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:32:03,791 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:03,791 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:32:03,792 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:32:03,792 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:32:03,792 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:32:03,792 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:32:03,792 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:32:03,792 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:32:03,803 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:32:03,803 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:03,803 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:32:03,803 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:32:03,803 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:32:03,803 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:32:03,803 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:32:03,803 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:32:03,804 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:32:03,870 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:32:03,871 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:32:03,871 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:32:03,871 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:32:03,873 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:32:03,873 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:32:03,879 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:32:03,879 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:32:05,693 - main - INFO - [main.py:44] - [aa373f27] GET /api/v1/health/check
+2026-01-25 15:32:05,695 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:32:05,695 - main - INFO - [main.py:48] - [aa373f27] Response: 200
+2026-01-25 15:32:35,760 - main - INFO - [main.py:44] - [81f5fc5a] GET /api/v1/health/check
+2026-01-25 15:32:35,761 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:32:35,761 - main - INFO - [main.py:48] - [81f5fc5a] Response: 200
+2026-01-25 15:32:42,924 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 15:32:42,925 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 15:32:42,926 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 15:32:42,926 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 15:32:43,327 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 15:32:43,327 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 15:32:43,328 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 15:32:43,329 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 15:32:43,727 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 15:32:43,728 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 15:32:43,729 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 15:32:43,730 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 15:32:44,129 - main - INFO - [main.py:170] - ==================================================
+2026-01-25 15:32:44,129 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-25 15:32:44,130 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-25 15:32:44,131 - main - INFO - [main.py:182] - ==================================================
+2026-01-25 15:32:56,216 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:56,216 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:56,216 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:56,216 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:32:56,216 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:32:56,216 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:32:56,216 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:32:56,216 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:32:56,216 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:32:56,216 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:56,217 - config.settings - INFO - [settings.py:100] - Environment: docker
+2026-01-25 15:32:56,217 - config.settings - INFO - [settings.py:101] - Debug mode: False
+2026-01-25 15:32:56,224 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:32:56,225 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:32:56,225 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:32:56,225 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:56,225 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:56,225 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:56,225 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:32:56,225 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:32:56,225 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:32:56,225 - main - INFO - [main.py:129] - ==================================================
+2026-01-25 15:32:56,225 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:32:56,225 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:32:56,225 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:32:56,225 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:32:56,225 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-25 15:32:56,225 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:32:56,225 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:32:56,225 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:32:56,225 - main - INFO - [main.py:131] - Environment: docker
+2026-01-25 15:32:56,225 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:32:56,225 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:32:56,226 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:32:56,226 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-25 15:32:56,226 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:32:56,226 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:32:56,226 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:32:56,226 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-25 15:32:56,226 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:32:56,226 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:32:56,226 - main - INFO - [main.py:134] - Debug: False
+2026-01-25 15:32:56,226 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:32:56,226 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:32:56,226 - main - INFO - [main.py:135] - ==================================================
+2026-01-25 15:32:56,226 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:32:56,226 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-25 15:32:56,226 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-25 15:32:56,294 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:32:56,294 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:32:56,295 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:32:56,295 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:32:56,310 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:32:56,310 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-25 15:32:56,310 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:32:56,310 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-25 15:32:58,030 - main - INFO - [main.py:44] - [9174c204] GET /api/v1/health/check
+2026-01-25 15:32:58,030 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:32:58,031 - main - INFO - [main.py:48] - [9174c204] Response: 200
+2026-01-25 15:33:28,097 - main - INFO - [main.py:44] - [09aa46e9] GET /api/v1/health/check
+2026-01-25 15:33:28,098 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:33:28,098 - main - INFO - [main.py:48] - [09aa46e9] Response: 200
+2026-01-25 15:33:57,965 - main - INFO - [main.py:44] - [9dd179a3] GET /api/v1/health/check
+2026-01-25 15:33:57,966 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:33:57,967 - main - INFO - [main.py:48] - [9dd179a3] Response: 200
+2026-01-25 15:33:58,115 - main - INFO - [main.py:44] - [3bc2c4ea] GET /favicon.ico
+2026-01-25 15:33:58,116 - main - INFO - [main.py:48] - [3bc2c4ea] Response: 404
+2026-01-25 15:33:58,159 - main - INFO - [main.py:44] - [9b5befe7] GET /api/v1/health/check
+2026-01-25 15:33:58,160 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:33:58,160 - main - INFO - [main.py:48] - [9b5befe7] Response: 200
+2026-01-25 15:34:18,640 - main - INFO - [main.py:44] - [2c9de7df] OPTIONS /api/v1/predictions/predict_churn
+2026-01-25 15:34:18,642 - main - INFO - [main.py:48] - [2c9de7df] Response: 200
+2026-01-25 15:34:18,668 - main - INFO - [main.py:44] - [12372a9e] POST /api/v1/predictions/predict_churn
+2026-01-25 15:34:18,671 - app.routes.predictions - INFO - [predictions.py:60] - [9a95d203] Predicción churn para CUIT: 30061030064 (Empresa Industria 4 S.A.)
+2026-01-25 15:34:18,672 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 2 detectadas
+2026-01-25 15:34:18,672 - app.core.model_manager - INFO - [model_manager.py:281] - === PREDICT START ===
+2026-01-25 15:34:18,672 - app.core.model_manager - INFO - [model_manager.py:298] - Features críticos disponibles: 5/5
+2026-01-25 15:34:18,672 - app.core.model_manager - INFO - [model_manager.py:299] - Model available: False
+2026-01-25 15:34:18,672 - app.core.model_manager - INFO - [model_manager.py:314] - -> Usando MOCK PREDICTION (Modelo no disponible)
+2026-01-25 15:34:18,672 - app.core.model_manager - INFO - [model_manager.py:328] - Predicción: prob=0.3794, riesgo=bajo
+2026-01-25 15:34:18,672 - app.core.model_manager - INFO - [model_manager.py:329] - === PREDICT END ===
+
+2026-01-25 15:34:18,673 - app.routes.predictions - INFO - [predictions.py:92] - [9a95d203] Predicción: prob=0.3794, prediction=0, flags=2, threshold=0.500
+2026-01-25 15:34:18,673 - app.routes.predictions - INFO - [predictions.py:127] - [9a95d203] ✅ Predicción completada exitosamente
+2026-01-25 15:34:18,673 - main - INFO - [main.py:48] - [12372a9e] Response: 200
+2026-01-25 15:34:28,227 - main - INFO - [main.py:44] - [fb3d899c] GET /api/v1/health/check
+2026-01-25 15:34:28,227 - app.routes.health - INFO - [health.py:73] - Health check: healthy
+2026-01-25 15:34:28,228 - main - INFO - [main.py:48] - [fb3d899c] Response: 200

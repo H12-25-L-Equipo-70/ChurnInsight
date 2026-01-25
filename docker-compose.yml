@@ -42,6 +42,12 @@ services:
       - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      TNS_ADMIN: /app/wallet_pymer
+      ORACLE_NET_TNS_ADMIN: /app/wallet_pymer
+      ORACLE_WALLET_WALLET_PATH: /app/wallet_pymer
+      ORACLE_WALLET_TNS_ADMIN_PATH: /app/wallet_pymer
+      ORACLE_WALLET_DATABASE_NAME: pymerdb_high
+      FEIGN_CLIENT_CONFIG_AISERVICE_URL: http://churninsight-ai:8000
     volumes:
       - ./backend/wallet_pymer:/app/wallet_pymer:ro
     depends_on:
@@ -50,7 +56,7 @@ services:
     networks:
       - churninsight-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1/companies/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/api/v1/companies/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -62,7 +68,23 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  # Frontend Service (Angular/Nginx)
+  churninsight-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: churninsight-frontend
+    ports:
+      - "80:80" # Nginx expone el puerto 80
+    networks:
+      - churninsight-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
 networks:
   churninsight-network:
     driver: bridge
-
