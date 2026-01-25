@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copiar requirements
-COPY requirements.txt .
+COPY ai_service/requirements.txt .
 
 # Instalar dependencias Python
 RUN pip install --no-cache-dir --user -r requirements.txt

@@ -4,7 +4,7 @@ FROM maven:3.9-eclipse-temurin-17 AS builder
 WORKDIR /build
 
 # Copiar pom.xml
-COPY pom.xml .
+COPY backend/pom.xml .
 
 # Descargar dependencias (layer cacheado)
 RUN mvn dependency:go-offline -B

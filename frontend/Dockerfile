@@ -6,7 +6,7 @@ FROM node:20-alpine AS build
 WORKDIR /app
 
 # Copiamos los archivos que dicen qué librerías necesitas
-COPY package*.json ./
+COPY frontend/package*.json ./
 
 # Instalamos las librerías (esto crea la carpeta node_modules dentro del contenedor)
 RUN npm install
