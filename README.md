@@ -197,3 +197,6 @@ El foco en recall y F1 es adecuado para el negocio
 El análisis económico demuestra viabilidad real
 
 El pipeline está listo para producción
+11. Enlace al notebook. 
+https://colab.research.google.com/drive/1NhPcf8Kc87TWgIsbQ3KmMblop_XDIcVm#scrollTo=bccf71c6
+
