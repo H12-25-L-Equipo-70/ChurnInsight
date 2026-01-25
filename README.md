@@ -1,3 +1,4 @@
+
 # ChurnInsight: Predicción Inteligente de Abandono para Pymer (Fintech)
 
 **ChurnInsight** es una plataforma avanzada que utiliza Inteligencia Artificial y análisis financiero para predecir proactivamente el riesgo de abandono (churn) de clientes Pymes en el sector Fintech. Diseñado para optimizar las estrategias de retención y maximizar el valor del cliente por parte de la plataforma Pymer, una app dedicada a proveer soluciones financieras a Pymes.
@@ -95,6 +96,76 @@ ChurnInsight se basa en un modelo analítico que evalúa una combinación de fac
 3.  **Patrones de Uso:** Nivel de actividad en la plataforma, número de transacciones, días de inactividad.
 
 Estos indicadores se procesan para calcular una **puntuación de riesgo** y generar alertas específicas, indicando no solo la probabilidad de abandono, sino también las razones subyacentes.
+
+📊 Validación del Modelo y Resultados Clave
+
+Para garantizar la robustez del motor de predicción, se realizaron pruebas con un dataset histórico de PYMES argentinas:
+
+Dataset: Incluye CUIT, períodos fiscales, variables financieras (ingresos, gastos, deuda, activos), historial crediticio y uso de la plataforma.
+
+Estructura temporal: Cada empresa aparece en múltiples períodos, lo que introduce una jerarquía temporal que se respetó en el entrenamiento.
+
+Ingeniería de Features:
+
+Salud financiera = ingresos − gastos.
+
+Ratio crediticio = préstamos aprobados / préstamos solicitados.
+
+Variables de actividad: logins, días activos/inactivos, uso de servicios.
+
+🔎 Validación Cruzada
+
+Se utilizó GroupKFold con CUIT como grupo, evitando fuga de información entre train y test.
+
+En cada fold se aplicó early stopping y se ajustó un umbral óptimo por F1-score.
+
+📈 Métricas de Desempeño
+
+ROC-AUC promedio: 0.93
+
+F1-score promedio: 0.87
+
+Recall alto y estable: minimiza falsos negativos (clientes que churnean sin ser detectados).
+
+F1-score alto: equilibrio entre precisión y recall.
+
+💰 Impacto de Negocio
+
+El análisis económico demuestra que optimizar el recall genera un impacto positivo:
+
+Clientes churn detectados → mayor retención.
+
+Costo de acciones de retención → asumido en el modelo.
+
+Beneficio neto → positivo incluso considerando costos operativos.
+
+Un gráfico de impacto económico mostró claramente el retorno neto del modelo, justificando su implementación en producción.
+
+🛠️ Serialización y Despliegue
+
+El modelo final se entrenó sobre el dataset completo y se exportó junto con:
+
+Pipeline completo (features + modelo).
+
+Umbral promedio óptimo.
+
+Artefacto serializado con joblib.dump, listo para:
+
+Despliegue en la API de predicción.
+
+Inferencia en tiempo real.
+
+Reentrenamiento futuro.
+
+✅ Conclusiones Técnicas
+
+El modelo logra alto desempeño predictivo en datos reales.
+
+La validación con GroupKFold evita leakage y asegura realismo.
+
+El foco en recall y F1-score es adecuado para el negocio fintech.
+
+El pipeline está listo para producción e integrado en ChurnInsight.
 
 **Para detalles técnicos sobre el modelo y las variables de entrada, consulte:**
 [docs/01_Project_Overview.md](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/01_Project_Overview.md) y [docs/04_AI_Service_API.md](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/04_AI_Service_API.md)
