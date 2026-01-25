@@ -1,6 +1,6 @@
-# ChurnInsight: Predicción Inteligente de Abandono para Pymes Fintech
+# ChurnInsight: Predicción Inteligente de Abandono para Pymer (Fintech)
 
-**ChurnInsight** es una plataforma avanzada que utiliza Inteligencia Artificial y análisis financiero para predecir proactivamente el riesgo de abandono (churn) de clientes Pymes en el sector Fintech. Diseñado para optimizar las estrategias de retención y maximizar el valor del cliente.
+**ChurnInsight** es una plataforma avanzada que utiliza Inteligencia Artificial y análisis financiero para predecir proactivamente el riesgo de abandono (churn) de clientes Pymes en el sector Fintech. Diseñado para optimizar las estrategias de retención y maximizar el valor del cliente por parte de la plataforma Pymer, una app dedicada a proveer soluciones financieras a Pymes.
 
 ---
 
@@ -165,6 +165,7 @@ Desarrollado como parte del **Hackathon Team 70**.
 *   **Backend:** Java Spring Boot 3.1.8 + Oracle DB Autonomus Database
 *   **AI Service:** Python FastAPI + ML Model
 *   **Orquestación:** Docker & Docker Compose
+*   **Machine Learning:** LightGBM model + Pipeline (Notebook Google Colab)
 
 ---
 
