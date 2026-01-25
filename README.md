@@ -162,7 +162,7 @@ Este proyecto está licenciado bajo la Licencia Pymer - ChurnInsight Project.
 Desarrollado como parte del **Hackathon Team 70**.
 
 *   **Frontend:** Angular 21 + Tailwind CSS
-*   **Backend:** Java Spring Boot 3.x + Oracle DB
+*   **Backend:** Java Spring Boot 3.1.8 + Oracle DB Autonomus Database
 *   **AI Service:** Python FastAPI + ML Model
 *   **Orquestación:** Docker & Docker Compose
 
@@ -180,8 +180,8 @@ Para obtener ayuda o discutir el proyecto:
 ## 🎯 Roadmap de Desarrollo
 
 *   ✅ **v1.0.0:** Core functionality, AI Service & Backend Integration, Local Docker Setup.
-*   🔲 **v1.1.0:** Frontend Angular Dashboard & Reporting Integration.
-*   🔲 **v1.2.0:** Deployment Strategy for Oracle Cloud Infrastructure (OCI).
+*   ✅ **v1.1.0:** Frontend Angular Dashboard & Reporting Integration.
+*   ✅ **v1.2.0:** Deployment Strategy for Oracle Cloud Infrastructure (OCI).
 *   🔲 **v1.3.0:** Advanced Monitoring & Logging setup.
 *   🔲 **v2.0.0:** CI/CD pipeline automation.
 
