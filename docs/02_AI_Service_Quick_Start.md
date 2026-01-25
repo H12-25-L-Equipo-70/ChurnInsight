@@ -1,201 +1,94 @@
 # ⚡ Quick Start - FastAPI AI Service
 
-## 5 Minutos de Setup
+This guide provides essential steps to get the AI service running locally. For detailed setup and deployment, refer to the main documentation.
 
-### Paso 1: Instalación (2 minutos)
+---
+
+## 🚀 Local Setup
+
+### 1. Navigate and Install Dependencies
 
 ```bash
+# Navigate to the AI service directory
 cd ai_service/
 
-# Virtual environment
+# Create and activate a Python virtual environment (recommended)
 python -m venv venv
-python3 -m venv venv  # En Windows usar: python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Dependencias
+# Install project dependencies
 pip install -r requirements.txt
 ```
 
-### Paso 2: Configuración (1 minuto)
+### 2. Configure Environment Variables
 
+Copy the example environment file and edit it with your specific configurations.
 ```bash
-# Copiar variables de entorno
 cp .env.example .env
-
-# Editar .env (cambiar ORACLE_PASSWORD)
-nano .env
+# Edit the .env file, e.g., with your Oracle DB password
+# nano .env
 ```
 
-### Paso 3: Entrenar Modelo (1 minuto)
+### 3. Train the Model
 
+Before running the service, ensure the ML model is trained and saved.
 ```bash
-# Crear modelo (con datos reales o de demostración)
 python train_model.py
-
-# Salida esperada:
-# ✅ Modelo guardado: ./models/churn_model.pkl
-# ✅ Scaler guardado: ./models/scaler.pkl
 ```
+This command trains the model and saves it to the `./models/` directory.
 
-### Paso 4: Ejecutar (1 minuto)
+### 4. Start the AI Service
 
+Run the FastAPI application using Uvicorn.
 ```bash
-# Iniciar servidor
 python -m uvicorn main:app --reload --port 8000
-
-# Output:
-# INFO:     Uvicorn running on http://0.0.0.0:8000
 ```
-
-### Paso 5: Verificar
-
-```bash
-# En otra terminal
-curl http://localhost:8000/api/v1/health/check
-```
-
-**✅ App corriendo si ves un JSON con status "healthy"**
+The service will be accessible at `http://localhost:8000`.
 
 ---
 
-## 🧪 Test Rápido
+## 🧪 Quick Testing
 
 ### Health Check
+
 ```bash
 curl http://localhost:8000/api/v1/health/check
 ```
+*Expected Output: A JSON response indicating the service is "healthy".*
 
-### Predicción Individual
+### Single Prediction
+
 ```bash
 curl -X POST http://localhost:8000/api/v1/predictions/predict \
   -H "Content-Type: application/json" \
-  -d '{
+  -d 
+  {
     "cuit": "20748123114",
-    "ingresos": 1500000,
-    "gastos": 1000000,
-    "deuda_total": 500000,
-    "activos_totales": 2000000,
-    "trimestre_dias_actividad": 85
-  }'
+    "ingresos": 1500000.00,
+    "gastos": 1000000.00,
+    "margen_operativo": 33.33,
+    "deuda_total": 500000.00,
+    "activos_totales": 2000000.00,
+    "prestamos_solicitados": 3,
+    "prestamos_aprobados": 2,
+    "trimestre_dias_actividad": 85,
+    "trimestre_logins_promedio": 12.5,
+    "transferencias_trimestre": 45,
+    "pagos_trimestre": 30,
+    "creditos_trimestre": 15
+  }
 ```
-
-### Documentación
-```
-http://localhost:8000/api/v1/docs
-```
+*Expected Output: A JSON response with prediction details.*
 
 ---
 
-## 🐳 Docker Quick Start
+## 📚 Related Documentation
 
-```bash
-# Build
-docker build -t churninsight-ai:1.0.0 .
-
-# Run
-docker run -d \
-  --name churninsight-ai \
-  -p 8000:8000 \
-  -e ORACLE_PASSWORD=tu_password \
-  churninsight-ai:1.0.0
-
-# Verificar
-docker logs churninsight-ai
-docker exec churninsight-ai curl http://localhost:8000/api/v1/health/check
-```
+*   **[AI Service API Reference](04_AI_Service_API.md):** Detailed information on all API endpoints.
+*   **[Project Overview](01_Project_Overview.md):** General project information and architecture.
+*   **[Docker Guide](DOCKER_GUIDE.md):** Instructions for running the AI service with Docker.
+*   **[Quick Start Guide](00_Quick_Start.md):** Comprehensive local setup guide for the entire project.
 
 ---
 
-## 📁 Estructura de Carpetas
-
-```
-ai_service/
-├── main.py                 # Aplicación principal
-├── train_model.py         # Entrenar modelo
-├── requirements.txt       # Dependencias Python
-├── Dockerfile            # Para Docker
-├── .env.example          # Variables de entorno
-├── test_endpoints.sh     # Tests
-│
-├── app/
-│   ├── __init__.py
-│   ├── routes/
-│   │   ├── health.py     # Health endpoints
-│   │   └── predictions.py # Prediction endpoints
-│   ├── core/
-│   │   ├── oracle_connection.py  # DB connection
-│   │   └── model_manager.py      # Model handling
-│   └── schemas/
-│       └── prediction.py  # Request/Response models
-│
-├── config/
-│   ├── __init__.py
-│   └── settings.py        # Configuration
-│
-├── models/
-│   ├── churn_model.pkl   # Trained model
-│   └── scaler.pkl        # Feature scaler
-│
-├── logs/
-│   └── ai_service.log    # Application logs
-│
-└── data/
-    └── dataset_empresas_fintech_v2.7.csv
-```
-
----
-
-## 🚀 Próximos Pasos
-
-1. **Entrenar con datos reales**
-   ```bash
-   # Copiar dataset real a ./data/
-   cp /path/to/dataset.csv ./data/dataset_empresas_fintech_v2.7.csv
-   python train_model.py
-   ```
-
-2. **Integrar con Backend Spring Boot**
-   - Backend llama a `/api/v1/predictions/predict`
-   - Ambos servicios en Docker
-   - `docker-compose.yml` ya está configurado
-
-3. **Deploy a Oracle Cloud**
-   ```bash
-   docker-compose up -d
-   ```
-
----
-
-## 🆘 Troubleshooting
-
-| Problema | Solución |
-|----------|----------|
-| Port 8000 ocupado | Cambiar a otro puerto: `--port 8001` |
-| Oracle no conecta | Verificar `ORACLE_PASSWORD` en `.env` |
-| Modelo no existe | Ejecutar `python train_model.py` |
-| Import error | Reinstalar: `pip install -r requirements.txt` |
-
----
-
-## 📊 Endpoints Disponibles
-
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| `GET` | `/api/v1/health/check` | Health status |
-| `GET` | `/api/v1/health/model-info` | Model info |
-| `POST` | `/api/v1/predictions/predict` | Single prediction |
-| `POST` | `/api/v1/predictions/batch` | Batch predictions |
-| `GET` | `/api/v1/docs` | Swagger UI |
-
----
-
-## 📞 Contacto
-
-Preguntas? Ver:
-- 📖 [Project Overview](01_Project_Overview.md) - Documentación completa
-- 📚 [AI Service API](04_AI_Service_API.md) - API Reference
-- 🐛 [test_endpoints.sh](../ai_service/test_endpoints.sh) - Ejemplos de requests
-
----
-
-**¡Listo! Ahora tienes un servicio de predicción de churn completamente funcional. 🚀**
+**Note:** For production deployment and advanced configurations, please consult the main deployment documentation.

@@ -1,188 +1,148 @@
 # 🚀 Deployment and Commands Guide
 
-This guide provides a consolidated overview of commands for local development, deployment to Oracle Cloud Infrastructure (OCI), and general project management.
-
----
-
-## ⚡ Quick Start (Local Development)
-
-### Option 1: With Docker (Recommended)
-This is the fastest and most reliable way to run the entire application stack locally.
-
-```bash
-# 1. Build the Docker images for both services
-docker-compose build
-
-# 2. Start all services in the background
-docker-compose up -d
-
-# 3. Verify that the services are running
-docker-compose ps
-# Expected output should show 'backend' and 'ai_service' with status 'Up' or 'healthy'
-
-# 4. View real-time logs from all services
-docker-compose logs -f
-
-# 5. Stop all services when you are finished
-docker-compose down
-```
-
-### Option 2: Native Local Execution (Without Docker)
-
-#### Backend (Java/Spring Boot)
-```bash
-# Navigate to the backend directory
-cd backend
-
-# Compile the application and package it
-mvn clean package -DskipTests
-
-# Run the application
-java -jar target/churninsight-*.jar
-
-# Alternatively, run directly with Maven
-mvn spring-boot:run
-```
-
-#### AI Service (Python/FastAPI)
-```bash
-# Navigate to the AI service directory
-cd ai_service
-
-# Create a Python virtual environment (only the first time)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install required dependencies
-pip install -r requirements.txt
-
-# Train the machine learning model (required before first run)
-python train_model.py
-
-# Start the FastAPI server
-python -m uvicorn main:app --reload --port 8000
-```
+This guide provides instructions for deploying ChurnInsight to Oracle Cloud Infrastructure (OCI) and general commands for managing and testing the application.
 
 ---
 
 ## ☁️ Oracle Cloud Infrastructure (OCI) Deployment
 
-This project is ready for deployment on an OCI instance with Docker pre-installed.
+This project is designed for deployment on an OCI instance. The deployment process involves setting up the instance, configuring credentials, and running the application using Docker.
 
 ### Step 1: Prepare the OCI Instance
 
-```bash
-# 1. SSH into your OCI instance
-ssh -i your-key.pem ubuntu@your-instance-ip
+1.  **SSH into your OCI instance:**
+    ```bash
+    ssh -i your-key.pem ubuntu@your-instance-ip
+    ```
+    *(Replace `your-key.pem` and `your-instance-ip` with your actual SSH key and instance IP address.)*
 
-# 2. Clone the project repository
-git clone https://github.com/YOUR-REPO/ChurnInsight.git
-cd ChurnInsight
+2.  **Clone the Project Repository:**
+    ```bash
+    git clone https://github.com/YOUR-REPO/ChurnInsight.git
+    cd ChurnInsight
+    ```
+    *(Replace `https://github.com/YOUR-REPO/ChurnInsight.git` with the actual repository URL.)*
 
-# 3. Set up the Oracle Wallet
-# Ensure your wallet files are in `backend/wallet_pymer/`.
-# If it's a zip file, unzip it.
-cd backend/wallet_pymer
-unzip wallet_pymer.zip # If needed
-cd ../..
+3.  **Set up the Oracle Wallet:**
+    Ensure your Oracle Wallet files are placed in the `backend/wallet_pymer/` directory. If the wallet is provided as a zip file, unzip it:
+    ```bash
+    cd backend/wallet_pymer
+    unzip wallet_pymer.zip # If needed
+    cd ../..
+    ```
 
-# 4. Configure environment variables for production
-# Create a .env file from the example
-cp .env.example .env
+4.  **Configure Environment Variables for Production:**
+    Create a `.env` file in the project root or relevant service directories from the provided `.env.example` files. Edit this file to include your production credentials and configurations.
+    ```bash
+    # Example for AI Service
+    echo "ENVIRONMENT=production" > ai_service/.env
 
-# Edit the .env file with your production credentials
-# Make sure to set passwords and correct paths.
-nano .env
-```
+    # Example for Backend (ensure secure handling of passwords)
+    echo "ORACLE_DB_PASSWORD=your_production_db_password" > backend/.env
+    echo "ORACLE_WALLET_PATH=./wallet_pymer" >> backend/.env
+    ```
+    *(Refer to specific service documentation for all required environment variables.)*
 
-### Step 2: Build and Deploy
+### Step 2: Build and Deploy Services
 
-```bash
-# 1. Build the Docker images on the OCI instance
-docker-compose build
+1.  **Build Docker Images:** On the OCI instance, build the Docker images for all services:
+    ```bash
+    docker-compose build
+    ```
+    *(Use `docker-compose build --no-cache` if you encounter issues with stale image layers.)*
 
-# 2. Start the services in detached mode
-docker-compose up -d
+2.  **Start Services in Detached Mode:**
+    ```bash
+    docker-compose up -d
+    ```
 
-# 3. Verify the deployment
-docker-compose ps
-```
+### Step 3: Verify Deployment and Test
 
-### Step 3: Verify and Test
+1.  **Check Service Status:**
+    ```bash
+    docker-compose ps
+    ```
+    Verify that all services (e.g., `backend`, `ai_service`) are running (`Up` or `healthy`).
 
-```bash
-# Test Backend Health (port 8080)
-curl -s http://localhost:8080/api/v1/companies/health | jq
+2.  **Test API Endpoints:** Use `curl` to test the health and basic functionality of the services.
 
-# Test AI Service Health (port 8000)
-curl -s http://localhost:8000/api/v1/health/check | jq
+    *   **Backend API (typically port 8080):**
+        ```bash
+        curl -s http://localhost:8080/api/v1/companies/health | jq
+        ```
 
-# Run a test prediction
-curl -X POST http://localhost:8000/api/v1/predictions/predict \
-  -H "Content-Type: application/json" \
-  -d {
-    "cuit": "20123456789",
-    "ingresos": 150000,
-    "gastos": 100000,
-    "margen_operacional": 0.30,
-    "deuda": 50000
-    # ... add other features as required
-  \}
- | jq
-```
+    *   **AI Service API (typically port 8000):**
+        ```bash
+        curl -s http://localhost:8000/api/v1/health/check | jq
+        ```
+
+    *   **Run a Test Prediction:**
+        ```bash
+        curl -X POST http://localhost:8000/api/v1/predictions/predict \
+          -H "Content-Type: application/json" \
+          -d 
+          {
+            "cuit": "20123456789",
+            "ingresos": 150000,
+            "gastos": 100000,
+            "margen_operacional": 0.30,
+            "deuda": 50000
+            // ... add other required features based on the API schema
+          }
+           | jq
+        ```
 
 ---
 
 ## 🛠️ Management, Debugging, and Testing Commands
 
-### Docker Commands
-```bash
-# View status of all services
-docker-compose ps
-
-# View logs for all services in real-time
-docker-compose logs -f
-
-# View logs for a specific service (e.g., ai_service)
-docker-compose logs ai
-
-# Restart a specific service
-docker-compose restart backend
-
-# Enter a running container for debugging
-docker exec -it churninsight-ai bash
-
-# View resource usage (CPU, Memory)
-docker stats
-```
+This section covers general commands for managing the application, debugging issues, and testing APIs.
 
 ### API Testing
-```bash
-# ---- Backend API (Port 8080) ----
 
-# Health check
-curl http://localhost:8080/api/v1/companies/health
+*   **Backend API (Port 8080):**
+    ```bash
+    # Health check endpoint
+    curl http://localhost:8080/api/v1/companies/health
 
-# Get all companies
-curl http://localhost:8080/api/v1/companies
+    # Example: Get all companies (replace with actual endpoint if different)
+    curl http://localhost:8080/api/v1/companies
+    ```
 
+*   **AI Service API (Port 8000):**
+    ```bash
+    # Health check endpoint
+    curl http://localhost:8000/api/v1/health/check
 
-# ---- AI Service API (Port 8000) ----
+    # Get model information
+    curl http://localhost:8000/api/v1/health/model-info
 
-# Health check
-curl http://localhost:8000/api/v1/health/check
+    # Access interactive API documentation (Swagger UI)
+    # http://localhost:8000/api/v1/docs
 
-# Get model information
-curl http://localhost:8000/api/v1/health/model-info
-
-# Interactive API documentation
-# Swagger UI: http://localhost:8000/api/v1/docs
-# ReDoc: http://localhost:8000/api/v1/redoc
-```
+    # Access ReDoc documentation
+    # http://localhost:8000/api/v1/redoc
+    ```
 
 ### Troubleshooting
-*   **Port in use:** If you get an error that port 8080 or 8000 is already in use, stop the process using it or change the port mapping in the `docker-compose.yml` file.
-*   **Oracle DB connection issues:** Double-check your `.env` file for correct credentials. Verify the wallet path and ensure the OCI instance has network access to the database.
-*   **Image build fails:** Run `docker-compose build --no-cache` to force a clean build. Check for any errors during the dependency installation steps.
-*   **Health check failing:** Use `docker-compose logs <service_name>` to inspect the logs of the failing service for specific error messages.
-```
+
+*   **Oracle DB Connection Issues:**
+    *   Verify your `.env` file for correct database credentials (username, password, connection string/SID).
+    *   Ensure the Oracle Wallet path in your environment variables is correct and the wallet files are accessible.
+    *   Confirm that the OCI instance has network connectivity to the Oracle Database.
+
+*   **Health Check Failing:**
+    *   Check the logs for the specific service using `docker-compose logs <service_name>` (e.g., `docker-compose logs ai_service`) to identify the root cause of the failure.
+    *   Verify that the service is running and accessible on its expected port.
+
+---
+
+## 📞 Support
+
+For detailed documentation and further assistance, please refer to:
+*   [README.md](README.md) - Project overview and high-level information.
+*   [docs/00_Quick_Start.md](docs/00_Quick_Start.md) - Step-by-step guide for local setup.
+*   [docs/DOCKER_GUIDE.md](docs/DOCKER_GUIDE.md) - Detailed instructions for Docker management.
+*   [docs/08_Testing_Local_Complete.md](docs/08_Testing_Local_Complete.md) - Comprehensive testing guide.
+*   [docs/04_AI_Service_API.md](docs/04_AI_Service_API.md) - AI Service API documentation.
+*   [docs/06_Backend_Architecture.md](docs/06_Backend_Architecture.md) - Backend architecture details.

@@ -1,243 +1,74 @@
-# ⚡ QUICK START - ChurnInsight Backend
+# ⚡ Quick Start - ChurnInsight Backend
 
-## 🚀 Setup en 5 minutos
+This guide provides the essential steps to get the Backend service running locally. For detailed setup and deployment instructions, refer to the main documentation.
 
-### 1. Configurar Variables de Entorno
-```bash
-# Linux/Mac
-export ORACLE_DB_PASSWORD="tu_contraseña"
-export ORACLE_WALLET_PATH="$(pwd)/backend/wallet_pymer"
-export ORACLE_NET_TNS_ADMIN="$(pwd)/backend/wallet_pymer"
+---
 
-# Windows PowerShell
-$env:ORACLE_DB_PASSWORD = "tu_contraseña"
-$env:ORACLE_WALLET_PATH = "C:\Repositorios\ChurnInsight\backend\wallet_pymer"
-$env:ORACLE_NET_TNS_ADMIN = "C:\Repositorios\ChurnInsight\backend\wallet_pymer"
-```
+## 🚀 Local Setup
 
-### 2. Copiar .env.example
+### 1. Set Environment Variables
+
+Configure necessary environment variables. For local development, you can set them directly in your terminal or use a `.env` file.
+
+*   **Linux/Mac:**
+    ```bash
+    export ORACLE_DB_PASSWORD="your_local_db_password"
+    export ORACLE_WALLET_PATH="$(pwd)/backend/wallet_pymer"
+    export ORACLE_NET_TNS_ADMIN="$(pwd)/backend/wallet_pymer"
+    ```
+
+*   **Windows PowerShell:**
+    ```powershell
+    $env:ORACLE_DB_PASSWORD = "your_local_db_password"
+    $env:ORACLE_WALLET_PATH = "C:\path\to\your\project\backend\wallet_pymer"
+    $env:ORACLE_NET_TNS_ADMIN = "C:\path\to\your\project\backend\wallet_pymer"
+    ```
+    *(Ensure the `ORACLE_WALLET_PATH` correctly points to your wallet directory.)*
+
+### 2. Copy Environment File
+
+Copy the example environment file and edit it with your specific configurations.
 ```bash
 cp backend/.env.example backend/.env
-# Editar backend/.env con tus valores
+# Edit backend/.env with your values
 ```
 
-### 3. Compilar
+### 3. Compile the Backend
+
+Navigate to the backend directory and compile the project.
 ```bash
 cd backend/
 mvn clean install
 ```
 
-### 4. Ejecutar
+### 4. Run the Backend Service
+
+Start the Spring Boot application. Using the `dev` profile is recommended for local development.
 ```bash
 mvn spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=dev"
 ```
+The backend service will typically be available at `http://localhost:8080`.
 
-### 5. Validar
+---
+
+## 🧪 Quick Testing
+
+### Health Check
+
 ```bash
 curl http://localhost:8080/api/v1/companies/health
 ```
+*Expected Output: A JSON response indicating the service is healthy.*
 
 ---
 
-## 📚 Comandos Rápidos
+## 📚 Related Documentation
 
-```bash
-# Limpiar y compilar
-mvn clean install
-
-# Ejecutar en modo debug
-mvn -X spring-boot:run
-
-# Ejecutar tests
-mvn test
-
-# Generar JAR
-mvn package
-
-# Ejecutar JAR
-java -jar target/churninsight-backend-1.0.0-RELEASE.jar
-
-# Revisar dependencias
-mvn dependency:tree
-```
+*   **[Backend Architecture](06_Backend_Architecture.md):** Detailed explanation of the backend's design and components.
+*   **[Deployment and Commands Guide](05_Deployment_and_Commands.md):** Instructions for OCI deployment and general commands.
+*   **[Project Overview](01_Project_Overview.md):** General project information.
+*   **[Quick Start Guide](00_Quick_Start.md):** Comprehensive local setup guide for the entire project.
 
 ---
 
-## 🔌 API Endpoints Rápidos
-
-```bash
-# Health
-curl http://localhost:8080/api/v1/companies/health
-
-# Sectores
-curl http://localhost:8080/api/v1/companies/segments/sectors
-
-# Empresas activas
-curl http://localhost:8080/api/v1/companies/churn/active
-
-# Empresas abandonadas
-curl http://localhost:8080/api/v1/companies/churn/churned
-
-# Empresa por CUIT
-curl http://localhost:8080/api/v1/companies/20748123114
-
-# Estadísticas por sector
-curl http://localhost:8080/api/v1/companies/churn/statistics/Tecnología
-
-# Empresas de alto riesgo
-curl http://localhost:8080/api/v1/companies/churn/high-risk?periodoFiscal=2024-Q4
-```
-
----
-
-## 🏗️ Estructura de Carpetas
-
-```
-backend/
-├── src/main/java/com/pymer/churninsight/
-│   ├── ChurnInsightApplication.java
-│   ├── config/
-│   │   └── OracleDataSourceConfig.java
-│   ├── domain/
-│   │   ├── entity/
-│   │   │   └── Company.java
-│   │   └── repository/
-│   │       └── CompanyRepository.java
-│   ├── application/
-│   │   ├── service/
-│   │   │   └── CompanyService.java
-│   │   └── dto/
-│   │       └── CompanyResponseDTO.java
-│   └── presentation/
-│       └── controller/
-│           └── CompanyController.java
-├── src/main/resources/
-│   ├── application.properties
-│   └── logback-spring.xml
-├── src/test/java/...
-├── pom.xml
-├── .env.example
-├── .gitignore
-└── QUICK_START.md (este archivo)
-```
-
----
-
-## 🔐 Archivos Críticos
-
-| Archivo | Propósito |
-|---------|-----------|
-| `pom.xml` | Dependencias Maven (OJDBC, Spring Boot, etc.) |
-| `OracleDataSourceConfig.java` | Configuración del DataSource con Wallet |
-| `Company.java` | Entidad JPA que mapea tabla EMPRESAS |
-| `CompanyRepository.java` | Acceso a datos (JPA) |
-| `CompanyService.java` | Lógica de negocio |
-| `CompanyController.java` | REST API endpoints |
-| `application.properties` | Configuración de la aplicación |
-| `.env.example` | Variables de entorno requeridas |
-
----
-
-## 🛠️ Troubleshooting Rápido
-
-| Problema | Solución |
-|----------|----------|
-| "tnsnames.ora no encontrado" | Verificar `oracle.wallet.tns-admin-path` en application.properties |
-| "Connection Pool Timeout" | Aumentar `CONNECTION_POOL_MAX_SIZE` en OracleDataSourceConfig |
-| Maven BUILD FAILURE | Ejecutar `mvn clean install -U` para actualizar dependencias |
-| Puerto 8080 en uso | `lsof -i :8080` (Linux/Mac) o cambiar `server.port` en application.properties |
-| Acceso denegado a Wallet | `chmod 644 backend/wallet_pymer/*` |
-
----
-
-## 🎯 Arquitectura (Clean Architecture)
-
-```
-Presentation (REST)
-    ↓
-Application (Business Logic)
-    ↓
-Domain (Entities & Rules)
-    ↓
-Infrastructure (Database)
-```
-
----
-
-## 🔄 Flujo de Datos
-
-```
-HTTP Request
-    ↓
-CompanyController (Presentation)
-    ↓
-CompanyService (Application)
-    ↓
-CompanyRepository (Domain → Infrastructure)
-    ↓
-Oracle Database (via Wallet)
-    ↓
-DTO Response
-    ↓
-HTTP Response (JSON)
-```
-
----
-
-## 📖 Convenciones de Código
-
-- **Packages**: `com.pymer.churninsight.*`
-- **Entity names**: `Company` (singular)
-- **DTOs**: `CompanyResponseDTO`
-- **Repositories**: `CompanyRepository`
-- **Services**: `CompanyService`
-- **Controllers**: `CompanyController`
-- **Database schema**: UPPERCASE (EMPRESAS)
-
----
-
-## ✨ Características Implementadas
-
-✅ Spring Boot 3.2.1  
-✅ Java 17  
-✅ Oracle Autonomous Database con Wallet  
-✅ Oracle UCP (Connection Pooling)  
-✅ Hibernate JPA  
-✅ REST API con Spring Web  
-✅ DTO Pattern (Clean Architecture)  
-✅ Transaction Management  
-✅ Comprehensive Logging  
-✅ Health Checks  
-✅ Paginación  
-✅ Búsquedas avanzadas  
-
----
-
-## 📊 Base de Datos
-
-**Tabla**: EMPRESAS  
-**Esquema**: PYMERDB  
-**PK**: CUIT (VARCHAR2)  
-**Registros esperados**: ~1000 Pymes argentinas  
-**Período**: 2022-Q1 a 2025-Q4 (datos históricos)
-
----
-
-## 🚀 Próximas Misiones
-
-1. **Misión 2**: FastAPI Service (Python) para AI predictions
-2. **Misión 3**: Frontend Angular 19 con Signals
-3. **Misión 4**: Docker Compose + Deployment
-
----
-
-## 📞 Contacto
-
-**Rol**: Senior Full-Stack Cloud Architect & DevOps Engineer  
-**Especialidad**: Oracle + Fintech + DevOps  
-**Proyecto**: ChurnInsight v1.0.0  
-**Stack**: Spring Boot 3.x | Oracle ADB | Docker | Kubernetes (futuro)
-
----
-
-**¡Listo para desarrollar! 🎉**
+**Note:** For production deployment and advanced configurations, please consult the main deployment documentation.

@@ -1,786 +1,188 @@
-# ChurnInsight - Predicción de Abandono Crediticio en Fintech
+# ChurnInsight: Predicción Inteligente de Abandono para Pymes Fintech
 
-> Sistema de IA que predice en tiempo real qué empresas están en riesgo de abandonar una plataforma fintech. Utilizado durante el Hackathon Fintech 2025.
-
----
-
-## 🎯 Problema y Solución
-
-### El Desafío
-Más del 30% de empresas fintech experimenta abandono de usuarios, generando pérdidas significativas. ¿Cómo identificar qué empresas están en riesgo **antes** de que sea demasiado tarde?
-
-### Nuestra Solución
-ChurnInsight analiza **4 variables financieras clave** en tiempo real para:
-- ✅ Predecir probabilidad de abandono (0-100%)
-- ✅ Generar alertas ordenadas por severidad
-- ✅ Proveer recomendaciones automáticas
-- ✅ Exportar reportes profesionales (PDF/CSV)
+**ChurnInsight** es una plataforma avanzada que utiliza Inteligencia Artificial y análisis financiero para predecir proactivamente el riesgo de abandono (churn) de clientes Pymes en el sector Fintech. Diseñado para optimizar las estrategias de retención y maximizar el valor del cliente.
 
 ---
 
-## 🚀 Características Principales
+## 🎯 El Problema: El Costo del Abandono en Fintech
 
-| Característica | Descripción |
-|---|---|
-| **Predicción en Tiempo Real** | Análisis instantáneo basado en heurísticas validadas |
-| **Señales de Alerta** | Red flags ordenadas por severidad (CRÍTICA → BAJA) |
-| **Reportes Profesionales** | PDFs con métricas, gráficos y recomendaciones |
-| **API REST Completa** | Endpoints para predicción, datos y exportación |
-| **Dashboard Interactivo** | Visualización clara del estado de riesgo |
-| **Integrable** | CSV, JSON, webhooks para terceros |
+En el dinámico sector Fintech, la **retención de clientes Pymes** es crítica. Las altas tasas de abandono no solo representan una pérdida directa de ingresos, sino que también implican un costo mayor en la adquisición de nuevos clientes. Las empresas necesitan identificar de antemano qué Pymes están en riesgo de abandonar la plataforma para poder implementar acciones de retención efectivas y rentables.
+
+*   **Impacto Financiero:** Pérdida directa de ingresos recurrentes y aumento de costos de adquisición.
+*   **Desafío Operativo:** Dificultad para predecir el comportamiento del cliente y asignar recursos de retención de manera eficiente.
+*   **Oportunidad:** Empresas que implementan estrategias de retención basadas en datos pueden reducir significativamente sus tasas de abandono y mejorar la lealtad del cliente.
 
 ---
 
-## 🏗️ Arquitectura
+## 💡 Nuestra Solución: ChurnInsight
 
-```
-┌─────────────────────────────────────────┐
-│    Frontend (Angular 21 + Tailwind)     │
-│    Dashboard │ Análisis │ Exportación    │
-└──────────────────┬──────────────────────┘
-                   │ HTTP/REST
-┌──────────────────▼──────────────────────┐
-│   Backend (FastAPI + Python 3.14)       │
-│   Predicción │ Alertas │ Recomendaciones│
-└──────────────────┬──────────────────────┘
-                   │ SQL
-┌──────────────────▼──────────────────────┐
-│  Oracle Database (Wallet SSH Seguro)    │
-│  Empresas │ Métricas │ Comportamiento   │
-└─────────────────────────────────────────┘
+ChurnInsight proporciona una **solución integral y basada en datos** para predecir y mitigar el abandono de clientes. A través de un análisis inteligente de variables financieras y de comportamiento, ChurnInsight:
+
+*   **Predice la probabilidad de abandono** para cada Pyme cliente.
+*   **Identifica las "Red Flags"** críticas que indican un riesgo inminente.
+*   **Genera recomendaciones personalizadas** para acciones de retención.
+*   **Ofrece reportes claros y ejecutivos** que facilitan la toma de decisiones estratégicas.
+
+Construido con tecnologías de vanguardia, ChurnInsight actúa como un **sistema de alerta temprana y un motor de inteligencia de negocio**, permitiendo a las empresas Fintech enfocarse en retener a sus clientes más valiosos.
+
+---
+
+## ⚙️ Arquitectura del Sistema
+
+ChurnInsight se compone de tres servicios principales interconectados, respaldados por una base de datos robusta:
+
+```mermaid
+graph LR
+    A[Frontend (Angular)] -->|HTTP/REST| B(Backend: Spring Boot);
+    B -->|SQL| C(Oracle DB);
+    B -->|HTTP/REST| D(AI Service: FastAPI);
+    D -->|DB Access (Optional)| C;
 ```
 
-**Documentación Completa**: [docs_organized/ARCHITECTURE.md](docs_organized/ARCHITECTURE.md)
+*   **Frontend (Angular):** La interfaz de usuario intuitiva donde los analistas y gerentes visualizan las predicciones, red flags y generan reportes.
+*   **Backend (Spring Boot):** Orquesta la lógica de negocio, gestiona las interacciones con la base de datos y se comunica con el AI Service para obtener predicciones.
+*   **AI Service (FastAPI):** El motor de predicción que utiliza modelos de Machine Learning y análisis heurístico para calcular el riesgo de churn y generar alertas.
+*   **Oracle Database:** Almacena los datos de las empresas, métricas financieras, predicciones y otra información relevante.
+
+**Para una comprensión detallada de la arquitectura, consulte:**
+[docs/01_Project_Overview.md](docs/01_Project_Overview.md) y [docs/06_Backend_Architecture.md](docs/06_Backend_Architecture.md)
 
 ---
 
-## 📊 Cómo Funciona el Modelo
+## 🚀 Componentes Clave
 
-ChurnInsight utiliza un **modelo heurístico validado** que combina:
+### 🤖 AI Service (FastAPI)
+El cerebro analítico de ChurnInsight. Se encarga de:
+*   **Modelado Predictivo:** Implementa modelos de Machine Learning y análisis heurístico (basado en datos financieros y de comportamiento) para predecir la probabilidad de churn.
+*   **Generación de Red Flags:** Identifica y clasifica hasta 14 tipos de señales de alerta (ej. baja actividad, endeudamiento, historial crediticio) según su severidad.
+*   **Procesamiento Batch:** Permite realizar predicciones masivas sobre grandes volúmenes de datos.
+*   **API de Predicción:** Expone endpoints REST para recibir datos de empresas y devolver predicciones, probabilidades y alertas.
 
-1. **Inactividad** (40%) - Días sin usar la plataforma
-2. **Rentabilidad** (35%) - Margen operativo de la empresa
-3. **Endeudamiento** (20%) - Ratio deuda/activos
-4. **Historial Crediticio** (5%) - Aprobaciones vs solicitudes
+*   **Tecnologías:** Python, FastAPI, Pydantic, Scikit-learn, Pandas.
+*   **Documentación Detallada:** [docs/02_AI_Service_Quick_Start.md](docs/02_AI_Service_Quick_Start.md) y [docs/04_AI_Service_API.md](docs/04_AI_Service_API.md)
 
-**Resultado**: Probabilidad de churn 0.0-1.0
+### ⚙️ Backend Service (Spring Boot)
+El orquestador de ChurnInsight. Sus funciones incluyen:
+*   **Orquestación y Lógica de Negocio:** Gestiona el flujo de datos entre el Frontend, la Base de Datos y el AI Service.
+*   **Persistencia de Datos:** Se comunica con Oracle Database para almacenar y recuperar información de clientes, métricas y predicciones.
+*   **Exposición de API:** Proporciona endpoints REST para que el Frontend acceda a datos y funcionalidades.
+*   **Gestión de Seguridad:** Implementa mecanismos de seguridad robustos, incluyendo el uso de Oracle Wallet para credenciales.
 
-```python
-risk_score = inactivity × 0.40 + profitability × 0.35 + debt × 0.20 + credit × 0.05
+*   **Tecnologías:** Java, Spring Boot 3.x, JPA, Oracle Database.
+*   **Documentación Detallada:** [docs/03_Backend_Quick_Start.md](docs/03_Backend_Quick_Start.md) y [docs/06_Backend_Architecture.md](docs/06_Backend_Architecture.md)
 
-# Clasificación
-if risk_score >= 0.7:
-    return "ALTO"    # Abandono inminente
-elif risk_score >= 0.4:
-    return "MEDIO"   # Vigilancia recomendada
-else:
-    return "BAJO"    # Relación estable
-```
+### 🖥️ Frontend (Angular)
+La interfaz de usuario que permite la interacción:
+*   **Dashboard Interactivo:** Visualiza el estado de riesgo de las Pymes, alertas y métricas clave.
+*   **Formulario de Entrada:** Permite ingresar o consultar datos detallados de las empresas para predicción individual.
+*   **Visualización de Resultados:** Muestra la probabilidad de churn, red flags contextualizadas, recomendaciones y reportes.
+*   **Integración con Backend:** Consume los endpoints del Backend para obtener y enviar datos.
 
-**Para más detalles**: [docs_organized/MODEL_DETAILS.md](docs_organized/MODEL_DETAILS.md)
-
----
-
-## 🚀 Quick Start (5 minutos)
-
-### 1. Requisitos
-
-- Docker & Docker Compose
-- Node.js v20+
-- Git
-
-### 2. Clonar y Configurar
-
-```bash
-git clone <repo-url>
-cd ChurnInsight
-
-# Crear archivo .env con credenciales Oracle
-echo "ORACLE_USER=admin" > .env
-echo "ORACLE_PASSWORD=tu_password" >> .env
-```
-
-### 3. Iniciar Servicios
-
-```bash
-# Backend + Database (Docker)
-docker-compose up -d
-
-# Esperar a que Oracle esté listo (~60 segundos)
-sleep 60
-
-# Frontend
-cd frontend
-npm install
-ng serve
-```
-
-### 4. Acceder
-
-- **App**: http://localhost:4200
-- **API Docs**: http://localhost:8000/docs
-
-**Guía Completa**: [docs_organized/INSTALLATION.md](docs_organized/INSTALLATION.md)
+*   **Tecnologías:** Angular 21, Tailwind CSS, jsPDF.
+*   **Documentación Detallada:** [docs/09_Frontend_Integration_Guide.md](docs/09_Frontend_Integration_Guide.md)
 
 ---
 
-## 📡 API Endpoints
+## 📊 Cómo Funciona la Predicción (Simplificado)
 
-### Predicción
+ChurnInsight se basa en un modelo analítico que evalúa una combinación de factores críticos de cada Pyme:
 
-```bash
-POST /predict
-{
-  "company": { "CUIT": "20123456789", ... },
-  "metrics": { "financials": {...}, "credit_behavior": {...} }
-}
+1.  **Indicadores Financieros:** Rentabilidad (margen operativo), endeudamiento (ratio deuda/activos).
+2.  **Comportamiento Crediticio:** Historial de préstamos solicitados, aprobados y cancelados.
+3.  **Patrones de Uso:** Nivel de actividad en la plataforma, número de transacciones, días de inactividad.
 
-Response:
-{
-  "churn_probability": 0.75,
-  "prevision": "ALTO",
-  "confidence": 0.95,
-  "red_flags": [
-    { "flag": "no_activity", "description": "...", "severity": "CRITICAL" }
-  ],
-  "recomendaciones": ["Contactar cliente inmediatamente", ...]
-}
-```
+Estos indicadores se procesan para calcular una **puntuación de riesgo** y generar alertas específicas, indicando no solo la probabilidad de abandono, sino también las razones subyacentes.
 
-### Datos de Empresa
-
-```bash
-GET /company/{cuit}
-GET /metrics/{cuit}
-POST /export/pdf
-```
-
-**Documentación Completa**: [docs_organized/API_REFERENCE.md](docs_organized/API_REFERENCE.md)
+**Para detalles técnicos sobre el modelo y las variables de entrada, consulte:**
+[docs/01_Project_Overview.md](docs/01_Project_Overview.md) y [docs/04_AI_Service_API.md](docs/04_AI_Service_API.md)
 
 ---
 
-## 📈 Resultados Validados
+## 🚀 Despliegue y Operaciones
 
-### Test 1: Empresa de ALTO Riesgo
-- **Datos**: 0 días activos, -15% margen, 85% endeudamiento
-- **Predicción**: 96% riesgo (ALTO) ✅
-- **Red Flags**: 4 alertas CRÍTICAS
+### Objetivo de Despliegue: Oracle Cloud Infrastructure (OCI)
+El objetivo final es desplegar ChurnInsight en una instancia de Oracle Cloud Infrastructure, utilizando Docker para la contenerización y orquestación de los servicios. Esto garantizará escalabilidad, robustez y un entorno de producción seguro.
 
-### Test 2: Empresa de BAJO Riesgo
-- **Datos**: 89 días activos, +22% margen, 35% endeudamiento
-- **Predicción**: 24.75% riesgo (BAJO) ✅
-- **Red Flags**: 0 alertas
+La documentación detallada para el despliegue en OCI se encuentra en:
+[docs/05_Deployment_and_Commands.md](docs/05_Deployment_and_Commands.md)
 
 ---
 
-## 📁 Estructura del Proyecto
+## ⚡ Inicio Rápido (Desarrollo Local)
 
-```
-ChurnInsight/
-├── frontend/                    # Angular 21 app
-│   ├── src/app/                 # Componentes y servicios
-│   ├── tsconfig.json            # TypeScript config
-│   └── tailwind.config.js        # Estilos
-├── ai_service/                  # FastAPI backend
-│   ├── app/                      # Aplicación
-│   │   ├── routes/               # Endpoints
-│   │   ├── core/                 # Lógica de negocio
-│   │   ├── schemas/              # Modelos Pydantic
-│   │   └── utils/                # Utilidades
-│   ├── main.py                   # Punto de entrada
-│   └── requirements.txt          # Dependencias Python
-├── docker-compose.yml           # Stack completo
-├── docs_organized/              # Documentación técnica
-│   ├── ARCHITECTURE.md           # Arquitectura del sistema
-│   ├── API_REFERENCE.md          # Endpoints disponibles
-│   ├── INSTALLATION.md           # Guía de instalación
-│   ├── MODEL_DETAILS.md          # Detalles del modelo
-│   └── DEVELOPMENT.md            # Guía para desarrolladores
-└── README.md                    # Este archivo
-```
+Para configurar y ejecutar ChurnInsight localmente, consulte la guía detallada:
+[docs/00_Quick_Start.md](docs/00_Quick_Start.md)
+
+Esta guía cubre los requisitos previos, configuración del entorno y las diferentes opciones para iniciar los servicios (Docker Compose o ejecución nativa).
 
 ---
 
-## 🛠️ Stack Tecnológico
+## 📖 Documentación Técnica Detallada
 
-| Layer | Tecnología | Versión |
-|-------|-----------|---------|
-| Frontend | Angular | 21 |
-| Estilos | Tailwind CSS | 3.4 |
-| Exportación | jsPDF | 2.5+ |
-| Backend | FastAPI | 0.104 |
-| Lenguaje | Python | 3.14 |
-| Validación | Pydantic | 2.12 |
-| Base de Datos | Oracle | 23c |
-| Containerización | Docker | 20.10+ |
+Acceda a la documentación completa de ChurnInsight a través de los siguientes enlaces:
 
----
-
-## 📖 Documentación
-
-- **[Architecture](docs_organized/ARCHITECTURE.md)** - Diseño del sistema
-- **[API Reference](docs_organized/API_REFERENCE.md)** - Endpoints disponibles
-- **[Installation](docs_organized/INSTALLATION.md)** - Pasos para instalar
-- **[Model Details](docs_organized/MODEL_DETAILS.md)** - Cómo funciona la predicción
-- **[Development](docs_organized/DEVELOPMENT.md)** - Guía para desarrolladores
-
----
-
-## 🔒 Seguridad
-
-- ✅ Wallet Oracle para credenciales seguras
-- ✅ Variables de entorno para secrets
-- ✅ Validación de inputs con Pydantic
-- ✅ Rate limiting en API
-- ✅ CORS configurado
-
----
-
-## 🚀 Deployment
-
-### Docker (Recomendado)
-
-```bash
-docker-compose up -d
-docker-compose ps
-```
-
-### Kubernetes (Future)
-
-Incluye manifiestos en `k8s/` (próximamente)
+| Documento                                    | Descripción                                                                                                |
+| :------------------------------------------- | :--------------------------------------------------------------------------------------------------------- |
+| [01_Project_Overview.md](docs/01_Project_Overview.md) | Visión general del proyecto, sus objetivos y la arquitectura general.                                        |
+| [02_AI_Service_Quick_Start.md](docs/02_AI_Service_Quick_Start.md) | Guía rápida para configurar y ejecutar el servicio de IA.                                                  |
+| [03_Backend_Quick_Start.md](docs/03_Backend_Quick_Start.md)   | Guía rápida para configurar y ejecutar el servicio de Backend.                                             |
+| [04_AI_Service_API.md](docs/04_AI_Service_API.md)     | Documentación detallada de los endpoints del AI Service, incluyendo esquemas de solicitud y respuesta.      |
+| [05_Deployment_and_Commands.md](docs/05_Deployment_and_Commands.md) | Instrucciones para el despliegue en OCI y comandos de gestión.                                              |
+| [06_Backend_Architecture.md](docs/06_Backend_Architecture.md) | Descripción detallada de la arquitectura del Backend, patrones de diseño y tecnologías empleadas.         |
+| [07_Integration_NewNotebook.md](docs/07_Integration_NewNotebook.md) | Guía específica sobre la integración de nuevos modelos o notebooks de Data Science en el AI Service.        |
+| [08_Testing_Local_Complete.md](docs/08_Testing_Local_Complete.md) | Guía exhaustiva para la ejecución de pruebas unitarias, de integración y de extremo a extremo localmente. |
+| [09_Frontend_Integration_Guide.md](docs/09_Frontend_Integration_Guide.md) | Explica la integración del Frontend Angular con el Backend y el AI Service.                               |
+| [DOCKER_GUIDE.md](docs/DOCKER_GUIDE.md)             | Guía detallada sobre el uso de Docker y Docker Compose para gestionar los servicios de ChurnInsight.        |
+| [00_Quick_Start.md](docs/00_Quick_Start.md)       | Guía rápida para configurar y ejecutar ChurnInsight localmente (Docker y nativo).                           |
 
 ---
 
 ## 🤝 Contribuciones
 
-1. Fork el repositorio
-2. Crea un branch (`git checkout -b feature/amazing`)
-3. Commit cambios (`git commit -m 'Add amazing feature'`)
-4. Push al branch (`git push origin feature/amazing`)
-5. Abre un Pull Request
+Invitamos a la comunidad a contribuir con mejoras y nuevas funcionalidades.
+1.  Haga un "fork" del repositorio.
+2.  Cree una nueva rama para sus cambios (`git checkout -b feature/su-feature`).
+3.  Realice sus modificaciones y haga "commit" (`git commit -m 'Add some feature'`).
+4.  Envíe sus cambios a la rama (`git push origin feature/su-feature`).
+5.  Abra un "Pull Request" para que podamos revisar sus contribuciones.
 
 ---
 
 ## 📝 Licencia
 
-Propietario - Hackathon Fintech 2025
+Este proyecto está licenciado bajo la Licencia Pymer - ChurnInsight Project.
 
 ---
 
 ## 👥 Equipo
 
-Desarrollado durante el **Hackathon Fintech 2025**
+Desarrollado como parte del **Hackathon Team 70**.
 
-**Componentes**:
-- 🎨 Frontend: Angular 21 + Tailwind CSS
-- ⚙️ Backend: FastAPI + Python + Heurísticas ML
-- 📊 Datos: Oracle Database
-- 🚀 DevOps: Docker & Docker Compose
-
----
-
-## 💬 Soporte
-
-- **Documentación**: [docs_organized/](docs_organized/)
-- **Issues**: Abre un issue en GitHub
-- **Preguntas**: Ver [Documentación Completa](docs_organized/ARCHITECTURE.md)
+*   **Frontend:** Angular 21 + Tailwind CSS
+*   **Backend:** Java Spring Boot 3.x + Oracle DB
+*   **AI Service:** Python FastAPI + ML Model
+*   **Orquestación:** Docker & Docker Compose
 
 ---
 
-## 🎓 Casos de Uso
+## 📞 Soporte y Comunidad
 
-1. **Monitoreo Proactivo**: Analistas revisan alertas diarias
-2. **Decisiones de Crédito**: Automatizar evaluación de solicitudes
-3. **Reportería Ejecutiva**: Generar informes de cartera
-4. **Alertas Tempranas**: Notificaciones automáticas de cambios
-
----
-
-## 🗂️ Próximos Pasos
-
-1. ✅ Core features implementados
-2. ⏳ Integración con ML avanzado
-3. ⏳ Dashboard mejorado con gráficos avanzados
-4. ⏳ Mobile app (React Native)
-5. ⏳ Webhooks para integraciones
+Para obtener ayuda o discutir el proyecto:
+*   **Documentación Completa:** Diríjase a la carpeta `docs/`.
+*   **Reporte de Problemas:** Abra un "Issue" en el repositorio de GitHub.
+*   **Preguntas Técnicas:** Consulte la documentación detallada o cree un "Issue" para discutir.
 
 ---
 
-**ChurnInsight** - Reduciendo riesgo, aumentando ingresos. 📈
+## 🎯 Roadmap de Desarrollo
 
-# Necesidad del cliente (explicación no técnica)
-Toda empresa que vende por suscripción o contrato recurrente sufre con cancelaciones. Mantener clientes fieles es más barato que conquistar nuevos. El cliente (empresa) quiere predecir con anticipación quién está a punto de cancelar, para poder actuar y retener a esas personas. La solución esperada debe ayudar a:
-
-identificar clientes con riesgo de churn (cancelación);
-
-priorizar acciones de retención (ofertas, contactos, bonos);
-
-medir el impacto de estas acciones a lo largo del tiempo.
-
-# Validación de mercado
-La predicción de churn es una de las aplicaciones más comunes y valiosas de la ciencia de datos en negocios modernos. Empresas de telecomunicaciones, bancos digitales, gimnasios, plataformas de streaming y proveedores de software utilizan modelos de churn para: reducir pérdidas financieras; entender patrones de comportamiento de clientes; aumentar el tiempo promedio de relación (lifetime value). Incluso modelos simples ya aportan valor, pues ayudan a las empresas a dirigir esfuerzos donde hay mayor riesgo de pérdida.
-
-# Expectativa para este hackathon
-Público: estudiantes principiantes en tecnología, sin experiencia profesional en el área, pero que ya estudiaron Back-end con Java (APIs REST, persistencia, pruebas) y Data Science (Python, Pandas, scikit-learn, ML supervisado). Objetivo: construir, en grupo, un MVP (producto mínimo viable) capaz de predecir si un cliente va a cancelar y disponibilizar esa predicción a través de una API funcional. Alcance ideal: clasificación binaria ("va a cancelar" / "va a continuar") con base en un dataset pequeño y limpio.
-
-# Entregables deseados:
-Notebook (Jupyter/Colab) del equipo de Data Science, que contenga: Exploración y limpieza de los datos (EDA); Ingeniería de features (ej.: tiempo de uso, frecuencia de login, historial de pago); Entrenamiento de modelo supervisado (ej.: Logistic Regression, Random Forest); Métricas de desempeño (Accuracy, Precision, Recall, F1-score); Serialización del modelo (joblib/pickle). Aplicación Back-End (API REST) del equipo de Java: Endpoint que recibe información de un cliente y devuelve la predicción del modelo (Ej.: "Va a cancelar" / "Va a continuar"); Integración con el modelo de DS (directa o vía microservicio Python); Logs y manejo de errores.
-
-# Documentación mínima (README):
-Cómo ejecutar el modelo y la API; Ejemplos de petición y respuesta (JSON); Dependencias y versiones de las herramientas. Demostración funcional (Presentación corta): Mostrar la API en acción (a través de Postman, cURL o interfaz simple); Explicar cómo el modelo llega a la predicción. Funcionalidades exigidas (MVP)
-
-El servicio debe exponer un endpoint que devuelve una predicción sobre el cliente y la probabilidad asociada a esa predicción. Ejemplo: POST /predict: recibe JSON con datos del cliente y devuelve: { "prevision": "Va a cancelar", "probabilidad": 0.76 }
-
-Carga de modelo predictivo: el back-end debe ser capaz de acceder al modelo de churn (localmente o vía servicio DS). Validación de entrada: verificar si todos los campos obligatorios están llenos. Respuesta estructurada: incluir predicción y probabilidad numérica.
-
-Ejemplos de uso: 3 peticiones de prueba (clientes con y sin cancelación). Documentación simple: un README explicando cómo ejecutar el proyecto y reproducir las pruebas. Funcionalidades opcionales Endpoint GET /stats: devuelve estadísticas básicas, como: { "total_evaluados": 500, "tasa_churn": 0.23 } Persistencia de predicciones: almacenar clientes y resultados en base de datos (H2 o PostgreSQL). Dashboard simple (Streamlit o HTML): visualiza clientes con mayor riesgo. Explicabilidad básica: incluir en el retorno las 3 variables más relevantes para el resultado (ej.: "tiempo de contrato", "retrasos en pagos", "uso de la app"). Batch Prediction: endpoint que acepta lista de clientes (archivo CSV). Contenerización: ejecutar el sistema completo con Docker/Docker Compose. Pruebas automatizadas: unitarias y de integración simples (JUnit, pytest). Orientaciones técnicas para estudiantes Controlar el volumen de datos y el uso de OCI, teniendo en cuenta la cantidad de memoria que OCI soporta, cuidando los datos utilizados para no extrapolar el Free-Tier de OCI.
-
-# Equipo de Data Science:
-Arme o elija un dataset propio con información de clientes (ejemplo: tiempo de contrato, retrasos en pago, uso del servicio, tipo de plan, etc.). Utilizar Python, Pandas y scikit-learn para análisis y modelado. Elegir modelo simple de clasificación (LogisticRegression, RandomForest); Crear features intuitivas (ej.: tiempo de cliente, número de compras recientes, promedio de gastos); Guardar modelo y pipeline (joblib.dump) y garantizar que pueda ser cargado fuera del notebook.
-
-# Equipo de Back-end:
-Construir una API REST (Java + Spring Boot); Recibir JSON con datos de cliente y devolver la predicción; Conectarse al modelo de DS: vía microservicio Python (FastAPI/Flask), o cargando modelo exportado en formato ONNX (opción más avanzada); Validar entradas y devolver errores claros cuando falte información. Contrato de integración (JSON)
-
-Recomendamos definir el contrato de integración justo al inicio del hackathon. Sigue un ejemplo:
-Entrada: { "tiempo_contrato_meses": 12, "retrasos_pago": 2, "uso_mensual": 14.5, "plan": "Premium" }
-
-Salida:
-
-{ "prevision": "Va a cancelar", "probabilidad": 0.81 }
-
-
-# 🎯 ChurnInsight - Predicción de Churn para Pymes Argentinas
-
-Plataforma B2B de **predicción inteligente de abandono de clientes** para Pymes argentinas usando **IA, Machine Learning y análisis financiero**.
+*   ✅ **v1.0.0:** Core functionality, AI Service & Backend Integration, Local Docker Setup.
+*   🔲 **v1.1.0:** Frontend Angular Dashboard & Reporting Integration.
+*   🔲 **v1.2.0:** Deployment Strategy for Oracle Cloud Infrastructure (OCI).
+*   🔲 **v1.3.0:** Advanced Monitoring & Logging setup.
+*   🔲 **v2.0.0:** CI/CD pipeline automation.
 
 ---
 
-## ⚡ Quick Start (5 minutos)
-
-### Terminal 1: AI Service
-```bash
-cd ai_service
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-cp .env.example .env
-python train_model.py
-python -m uvicorn main:app --reload --port 8000
-# ✅ http://localhost:8000/api/v1/docs
-```
-
-### Terminal 2: Backend
-```bash
-cd backend
-mvn clean install
-mvn spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=dev"
-# ✅ http://localhost:8080/api/v1/companies/health
-```
-
-### Terminal 3: Test
-```bash
-curl -X POST http://localhost:8000/api/v1/predictions/predict_churn \
-  -H "Content-Type: application/json" \
-  -d '{
-    "CUIT": "20748123114",
-    "NOMBRE_EMPRESA": "TechStart SRL",
-    "PERIODO_FISCAL": "2024-Q4",
-    "EMPLEADOS": 15,
-    "INGRESOS": 1500000,
-    "GASTOS": 1000000,
-    "DEUDA": 500000,
-    "ACTIVOS": 2000000,
-    "PRESTAMOS_SOLICITADOS": 3,
-    "PRESTAMOS_APROBADOS": 2,
-    "MONTO_SOLICITADO": 300000,
-    "MONTO_APROBADO": 200000,
-    "TICKET_PROMEDIO_SOLICITADO": 100000,
-    "TICKET_PROMEDIO_APROBADO": 100000,
-    "PRESTAMOS_CANCELADOS": 1,
-    "PRESTAMOS_VIGENTES": 1,
-    "TIEMPO_CANCELACION_PRESTAMO": 45,
-    "SERVICIOS_UTILIZADOS": 5,
-    "TRANSFERENCIAS": 45,
-    "PAGOS": 30,
-    "CREDITOS": 15,
-    "INVERSIONES": 5,
-    "TRIMESTRE_DIAS_ACTIVIDAD": 85,
-    "TRIMESTRE_DIAS_INACTIVIDAD": 5,
-    "PROMEDIO_LOGIN_DIA": 3.5,
-    "TOTAL_LOGIN_DIA": 255
-  }'
-```
-
----
-
-## � Docker (Alternativa - Testing/Producción)
-
-**Requisitos**: Docker Desktop instalado y corriendo
-
-```bash
-# Build imágenes
-docker-compose build
-
-# Ejecutar servicios
-docker-compose up -d
-
-# Verificar
-docker-compose ps
-
-# Test
-curl http://localhost:8000/api/v1/health/check
-curl http://localhost:8080/api/v1/companies/health
-
-# Detener
-docker-compose down
-```
-
-**⚠️ Problema**: Si Docker no está corriendo:
-- Abrir aplicación "Docker Desktop"
-- Esperar a ver ✓ "Docker is running"
-- Ver: [DOCKER_GUIDE.md](DOCKER_GUIDE.md) para más ayuda
-
----
-
-## �📚 Documentación
-
-| Documento | Descripción |
-|-----------|------------|
-| [01_Project_Overview.md](docs/01_Project_Overview.md) | Visión general y arquitectura |
-| [02_AI_Service_Quick_Start.md](docs/02_AI_Service_Quick_Start.md) | Setup rápido del AI Service |
-| [03_Backend_Quick_Start.md](docs/03_Backend_Quick_Start.md) | Setup rápido del Backend |
-| [04_AI_Service_API.md](docs/04_AI_Service_API.md) | Documentación de endpoints |
-| [05_Deployment_and_Commands.md](docs/05_Deployment_and_Commands.md) | Despliegue y comandos útiles |
-| [06_Backend_Architecture.md](docs/06_Backend_Architecture.md) | Arquitectura técnica backend |
-| **[07_Integration_NewNotebook.md](docs/07_Integration_NewNotebook.md)** | **✅ NUEVA: Integración new_notebook.md** |
-| **[08_Testing_Local_Complete.md](docs/08_Testing_Local_Complete.md)** | **✅ NUEVA: Guía completa de testing** |
-| **[DOCKER_GUIDE.md](DOCKER_GUIDE.md)** | **✅ NUEVA: Guía completa de Docker** |
-
----
-
-## 🏗️ Arquitectura
-
-```
-┌─────────────┐      ┌──────────────┐      ┌─────────────────┐
-│   Frontend  │      │   Backend    │      │   AI Service    │
-│  (Angular)  │◄────►│(Spring Boot) │◄────►│   (FastAPI)     │
-│             │      │              │      │                 │
-└─────────────┘      └──────────────┘      └────────┬────────┘
-                            ▲                        │
-                            │                        ▼
-                            │           ┌─────────────────────┐
-                            └──────────►│  Oracle Database    │
-                                        │  (Predictions)      │
-                                        └─────────────────────┘
-```
-
----
-
-## 🎯 Características Principales
-
-### ✅ AI Service (FastAPI)
-- 🔮 **Predicción de Churn**: ML model con Random Forest
-- 🚩 **Red Flags**: 14 tipos de señales de alerta
-- 📊 **Análisis Financiero**: 30+ campos de entrada
-- 🏃 **Batch Processing**: Predicciones masivas
-- 🏥 **Health Checks**: Liveness, readiness, model info
-- 📖 **Swagger UI**: Documentación automática
-
-### ✅ Backend (Spring Boot 3.x)
-- 🔐 **Seguridad**: Wallet Oracle, environment vars
-- 💾 **Persistencia**: JPA + Oracle Autonomous DB
-- 🏘️ **Clean Architecture**: Layers bien separadas
-- 🔗 **12+ Endpoints**: Consultas avanzadas
-- ⚙️ **Configuration**: Properties-based setup
-
-### ✅ Integración
-- 🔄 **Sincronización**: AI ↔ Backend ↔ Oracle
-- 🎪 **Endpoint Principal**: `/api/v1/predictions/predict_churn`
-- 📝 **Esquema Unificado**: `EmpresaInput` (30 campos)
-- 🔙 **Backwards Compatible**: Legacy endpoints funcionales
-
----
-
-## 📋 Cambios Recientes (v1.0.0)
-
-### 🆕 Integración del new_notebook.md
-
-```python
-# ANTES: Esquema simple
-@router.post("/predict")
-async def predict(cuit, ingresos, gastos, ...):
-    ...
-
-# AHORA: Esquema completo con red flags
-@router.post("/predict_churn")
-async def predict_churn(empresa_input: EmpresaInput):
-    - Calcula 14 tipos de red flags
-    - Retorna probabilidad + predicción binaria
-    - Registra en Oracle automáticamente
-    - Respuesta enriquecida con análisis
-```
-
-### Mejoras:
-1. ✅ Schema `EmpresaInput` con 30+ campos
-2. ✅ Módulo `RedFlagAnalyzer` con 14 tipos de alertas
-3. ✅ Endpoint `/predict_churn` mejorado
-4. ✅ Endpoint `/batch_predict_churn` para análisis masivos
-5. ✅ Compatibilidad backwards con `/predict`
-6. ✅ Documentación técnica completa
-7. ✅ Guía de testing local paso a paso
-
----
-
-## 🧪 Testing
-
-### Test Rápido (30 segundos):
-```bash
-# Terminal dedicada
-cd ai_service
-python -m uvicorn main:app --port 8000
-
-# En otra terminal
-curl http://localhost:8000/api/v1/health/check
-```
-
-### Testing Completo:
-Ver: [docs/08_Testing_Local_Complete.md](docs/08_Testing_Local_Complete.md)
-
-Incluye:
-- ✅ 6 test cases del AI Service
-- ✅ Testing de red flags
-- ✅ Batch predictions
-- ✅ Integración Backend
-- ✅ Docker testing
-- ✅ Troubleshooting
-
----
-
-## 🚀 Despliegue
-
-### Desarrollo:
-```bash
-# AI Service
-cd ai_service && python -m uvicorn main:app --reload
-
-# Backend
-cd backend && mvn spring-boot:run
-```
-
-### Producción (Oracle Cloud):
-```bash
-# Ver documentación en docs/05_Deployment_and_Commands.md
-docker build -t churninsight-ai:1.0.0 ai_service/
-docker push <registry>/churninsight-ai:1.0.0
-```
-
----
-
-## 📁 Estructura del Proyecto
-
-```
-ChurnInsight/
-├── README.md                    # Este archivo
-├── docker-compose.yml          # Stack completo (futuro)
-├── docs/                       # Documentación
-│   ├── 01_Project_Overview.md
-│   ├── 02_AI_Service_Quick_Start.md
-│   ├── 03_Backend_Quick_Start.md
-│   ├── 04_AI_Service_API.md
-│   ├── 05_Deployment_and_Commands.md
-│   ├── 06_Backend_Architecture.md
-│   ├── 07_Integration_NewNotebook.md      # ✅ NUEVO
-│   └── 08_Testing_Local_Complete.md       # ✅ NUEVO
-├── ai_service/                 # FastAPI + ML
-│   ├── main.py
-│   ├── requirements.txt
-│   ├── app/
-│   │   ├── core/
-│   │   │   ├── model_manager.py
-│   │   │   ├── oracle_connection.py
-│   │   │   └── red_flags.py                # ✅ NUEVO
-│   │   ├── routes/
-│   │   │   ├── health.py
-│   │   │   └── predictions.py              # ✅ ACTUALIZADO
-│   │   └── schemas/
-│   │       └── prediction.py               # ✅ ACTUALIZADO
-│   └── config/settings.py                 # ✅ ACTUALIZADO
-├── backend/                    # Spring Boot 3.x
-│   ├── pom.xml
-│   ├── src/main/java/...
-│   └── wallet_pymer/          # Oracle Wallet
-└── data/
-    └── dataset_empresas_fintech_v2.7.csv
-```
-
----
-
-## 🔑 Variables de Entorno
-
-### AI Service (.env)
-```bash
-ENVIRONMENT=development
-MODEL_PATH=./models/churn_model.pkl
-MODEL_THRESHOLD=0.5
-LOG_LEVEL=INFO
-```
-
-### Backend (.env)
-```bash
-ORACLE_DB_PASSWORD=tu_password
-ORACLE_WALLET_PATH=./backend/wallet_pymer
-SPRING_JPA_HIBERNATE_DDL_AUTO=validate
-```
-
----
-
-## 🎓 Ejemplos de Uso
-
-### Predicción Individual:
-Ver: [docs/08_Testing_Local_Complete.md#test-3-predicción-individual---caso-bajo-riesgo](docs/08_Testing_Local_Complete.md)
-
-### Predicción Batch:
-Ver: [docs/08_Testing_Local_Complete.md#test-5-predicción-batch](docs/08_Testing_Local_Complete.md)
-
-### Desde Frontend (futuro):
-```javascript
-// Llamar a Backend
-const response = await fetch('/api/v1/companies/20748123114/predict', {
-  method: 'POST',
-  body: JSON.stringify(empresaData)
-});
-
-// Backend internamente llama a AI Service
-// AI Service retorna red_flags + probabilidad
-// Frontend muestra dashboard con análisis
-```
-
----
-
-## 🤝 Flujo de Integración
-
-```
-1. Frontend (Angular)
-   ↓ POST /api/v1/companies/{cuit}/predict
-   
-2. Backend (Spring Boot)
-   ├─ Obtener datos de empresa de Oracle
-   ├─ Construir EmpresaInput (30 campos)
-   └─ ↓ POST /api/v1/predictions/predict_churn
-   
-3. AI Service (FastAPI)
-   ├─ Calcular 14 red flags
-   ├─ Ejecutar modelo ML
-   ├─ Retornar probabilidad + prediction + red_flags
-   └─ Guardar en Oracle PREDICCIONES table
-   
-4. Backend recibe respuesta
-   ├─ Procesar red_flags
-   ├─ Guardar localmente
-   └─ Retornar al Frontend
-   
-5. Frontend
-   └─ Mostrar dashboard con análisis
-```
-
----
-
-## 📊 Monitoreo
-
-### Health Status:
-```bash
-curl http://localhost:8000/api/v1/health/check
-curl http://localhost:8080/api/v1/companies/health
-```
-
-### Logs:
-```bash
-# AI Service
-tail -f ai_service/logs/ai_service.log
-
-# Backend
-tail -f backend/target/*.log
-```
-
----
-
-## �️ Frontend Integration ✨ NUEVO
-
-El Frontend Angular 21 ahora está **completamente integrado** con Backend + AI Service.
-
-### Terminal 4: Frontend (ng serve)
-```bash
-cd frontend
-npm install
-ng serve
-# ✅ http://localhost:4200
-```
-
-### Características Implementadas
-- ✅ HTTP real a `/api/v1/predictions/predict_churn` (AI Service)
-- ✅ Integración con `/api/v1/companies/{cuit}` (Backend)
-- ✅ 30+ campos de EmpresaInput mapeados desde formulario
-- ✅ Red flags contextualizados con severidad
-- ✅ Recomendaciones inteligentes automáticas
-- ✅ Error handling comprehensivo
-- ✅ Exportación CSV/JSON
-
-### Flujo Completo
-```
-Angular Form (30 campos)
-    ↓
-QuarterlyMetrics
-    ↓
-PredictionService (HTTP POST)
-    ↓
-AI Service (predict_churn)
-    ↓
-PredictionResponse (con red_flags)
-    ↓
-ResultsPanel (muestra red flags + timestamp)
-```
-
-**Documentación detallada**: [docs/09_Frontend_Integration_Guide.md](docs/09_Frontend_Integration_Guide.md)
-
----
-
-## �🐛 Troubleshooting
-
-| Problema | Solución |
-|----------|----------|
-| Puerto 8000 en uso | Cambiar: `--port 8001` |
-| Modelo no cargado | Ejecutar: `python train_model.py` |
-| Error Oracle | Normal en dev. Verificar ENVIRONMENT=development |
-| 404 Not Found | Revisar path: `/api/v1/...` (no `/api/...`) |
-
-Ver troubleshooting completo: [docs/08_Testing_Local_Complete.md#-troubleshooting](docs/08_Testing_Local_Complete.md#-troubleshooting)
-
----
-
-## 📞 Soporte
-
-- 📖 **Documentación**: Ver carpeta `docs/`
-- 🧪 **Testing**: [docs/08_Testing_Local_Complete.md](docs/08_Testing_Local_Complete.md)
-- 🏗️ **Integración**: [docs/07_Integration_NewNotebook.md](docs/07_Integration_NewNotebook.md)
-- ⚙️ **API**: [docs/04_AI_Service_API.md](docs/04_AI_Service_API.md)
-
----
-
-## 📝 Licencia
-
-Propiedad de Pymer - ChurnInsight Project
-
----
-
-## 🎯 Roadmap
-
-- ✅ v1.0.0: Integración new_notebook.md
-- 🔲 v1.1.0: Frontend Angular (dashboard)
-- 🔲 v1.2.0: Métricas de performance
-- 🔲 v2.0.0: CI/CD automatizado
-- 🔲 v2.1.0: Monitoring con Prometheus/Grafana
-
----
-
-**Última actualización**: 21 de Enero, 2025  
-**Versión**: 1.1.0 - Frontend Angular integrado ✅ | Backend integrado ✅ | AI Service operacional ✅
+**Última Actualización:** 24 de Enero, 2026
+**Versión:** 1.1.0 - Frontend Integrado ✅ | Backend Integrado ✅ | AI Service Operacional ✅
