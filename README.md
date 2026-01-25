@@ -35,6 +35,8 @@ Durante el análisis exploratorio se realizaron las siguientes tareas:
 3.1 Distribución del Churn
 
 Se observó una distribución relativamente balanceada entre clientes que churnean y los que no, lo cual es favorable para el entrenamiento de modelos supervisados.
+<img width="471" height="393" alt="image" src="https://github.com/user-attachments/assets/9c62ace6-ad24-4de2-bc97-9eb392cc11dd" />
+
 
 3.2 Análisis temporal
 
