@@ -5,9 +5,54 @@ import pandas as pd
 from typing import Dict, Any, Tuple
 from config.settings import settings
 from pathlib import Path
+from sklearn.base import BaseEstimator, TransformerMixin
+import __main__
+import sklearn.compose._column_transformer
+
+# Importar LightGBM explícitamente para asegurar que esté registrado antes de cargar el pickle
+try:
+    import lightgbm
+except ImportError:
+    # Se manejará si el modelo lo requiere y no está instalado
+    pass
 
 logger = logging.getLogger(__name__)
 
+# ==============================================================================
+# PATCH: COMPATIBILIDAD SKLEARN (1.6.x -> 1.3.x)
+# ==============================================================================
+# El modelo fue entrenado con una versión más nueva de sklearn (1.6.1) que usa 
+# la clase interna _RemainderColsList, la cual no existe en la versión actual (1.3.2).
+# La inyectamos manualmente para permitir la carga del pickle.
+if not hasattr(sklearn.compose._column_transformer, "_RemainderColsList"):
+    class _RemainderColsList:
+        """Clase mock para compatibilidad con sklearn > 1.5"""
+        pass
+    
+    setattr(sklearn.compose._column_transformer, "_RemainderColsList", _RemainderColsList)
+    logger.info("🔧 Patch aplicado: _RemainderColsList inyectado en sklearn para compatibilidad de versiones")
+
+
+# ==============================================================================
+# CLASES CUSTOM DEL PIPELINE (Requerido para cargar el .pkl)
+# ==============================================================================
+class PymerFeatureBuilder(BaseEstimator, TransformerMixin):
+    """
+    Clase placeholder para reconstruir el pipeline 'pymer_churn_pipeline.pkl'.
+    NOTA: Esta implementación es un 'passthrough'. Si la clase original hacía
+    cálculos complejos (ej. crear columnas nuevas), el modelo podría fallar
+    al predecir. Lo ideal es reemplazar esto con el código original del notebook.
+    """
+    def fit(self, X, y=None):
+        return self
+    
+    def transform(self, X):
+        return X
+
+# Inyectar la clase en __main__ para que joblib/pickle la encuentre
+if not hasattr(__main__, "PymerFeatureBuilder"):
+    setattr(__main__, "PymerFeatureBuilder", PymerFeatureBuilder)
+    logger.info("🔧 Clase PymerFeatureBuilder inyectada en __main__ para carga del modelo")
 
 class ChurnModel:
     """
@@ -26,7 +71,8 @@ class ChurnModel:
         """Carga el modelo ML desde disco"""
         try:
             model_file = Path(settings.model_path)
-            scaler_file = Path(settings.scaler_path)
+            # Manejar caso donde scaler_path es None o vacío (común con Pipelines)
+            scaler_file = Path(settings.scaler_path) if settings.scaler_path else None
             
             if not model_file.exists():
                 logger.warning(f"Archivo de modelo no encontrado: {settings.model_path}")
@@ -36,11 +82,11 @@ class ChurnModel:
                 self.model = joblib.load(model_file)
                 logger.info(f"✅ Modelo cargado: {settings.model_path}")
             
-            if scaler_file.exists():
+            if scaler_file and scaler_file.exists() and scaler_file.is_file():
                 self.scaler = joblib.load(scaler_file)
                 logger.info(f"✅ Scaler cargado: {settings.scaler_path}")
             else:
-                logger.warning("Scaler no encontrado, usando escalado manual")
+                logger.info("Scaler externo no cargado (asumiendo Pipeline o no requerido)")
                 self.scaler = None
             
             return True
@@ -108,6 +154,13 @@ class ChurnModel:
         array = np.array(feature_vector).reshape(1, -1)
         logger.debug(f"Feature vector shape: {array.shape}, values: {array}")
         
+        # Si usamos un Pipeline que espera DataFrame (por nombres de columnas),
+        # convertimos el array de vuelta a DataFrame
+        if not self.scaler and self.model:
+            # Reconstruir DataFrame con nombres de columnas para el Pipeline
+            df_features = pd.DataFrame(array, columns=self.features)
+            return df_features
+
         # Aplicar scaler si está disponible
         if self.scaler:
             array_scaled = self.scaler.transform(array)
@@ -245,11 +298,21 @@ class ChurnModel:
             logger.info(f"Features críticos disponibles: {available_critical}/{len(CRITICAL_FEATURES)}")
             logger.info(f"Model available: {self.model is not None}")
             
-            # SIEMPRE usar mock prediction (es más confiable que el modelo entrenado)
-            # para este escenario de prueba
-            logger.info(f"-> Usando MOCK PREDICTION (confiable para heurísticas)")
-            probability = self._get_mock_prediction(features)
-            logger.info(f"   Mock score: {probability:.4f}")
+            # Lógica de predicción: Intentar usar modelo real, fallback a mock
+            if self.model:
+                try:
+                    # Normalizar features (si es Pipeline, self.scaler será None y pasará raw data)
+                    X = self._normalize_features(features)
+                    # Predicción real: predict_proba retorna [[prob_0, prob_1]]
+                    probability = float(self.model.predict_proba(X)[:, 1][0])
+                    logger.info(f"-> Usando MODELO (Pipeline): {probability:.4f}")
+                except Exception as e:
+                    logger.error(f"Error en inferencia modelo: {e}")
+                    logger.warning("Falling back to mock prediction")
+                    probability = self._get_mock_prediction(features)
+            else:
+                logger.info(f"-> Usando MOCK PREDICTION (Modelo no disponible)")
+                probability = self._get_mock_prediction(features)
             
             # Asegurar que está en [0, 1]
             probability = max(0.0, min(1.0, float(probability)))

@@ -291,3 +291,138 @@
 2026-01-24 18:26:52,122 - app.routes.predictions - INFO - [predictions.py:92] - [b39efb0c] Predicción: prob=0.5647, prediction=1, flags=3, threshold=0.500
 2026-01-24 18:26:52,122 - app.routes.predictions - INFO - [predictions.py:127] - [b39efb0c] ✅ Predicción completada exitosamente
 2026-01-24 18:26:52,124 - main - INFO - [main.py:48] - [c2e2a09f] Response: 200
+2026-01-24 20:20:23,300 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-24 20:20:23,300 - config.settings - INFO - [settings.py:100] - Environment: development
+2026-01-24 20:20:23,301 - config.settings - INFO - [settings.py:101] - Debug mode: True
+2026-01-24 20:20:23,309 - main - INFO - [main.py:129] - ==================================================
+2026-01-24 20:20:23,309 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-24 20:20:23,309 - main - INFO - [main.py:131] - Environment: development
+2026-01-24 20:20:23,310 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-24 20:20:23,310 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-24 20:20:23,310 - main - INFO - [main.py:134] - Debug: True
+2026-01-24 20:20:23,310 - main - INFO - [main.py:135] - ==================================================
+2026-01-24 20:20:23,310 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-24 20:20:23,310 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-24 20:20:23,794 - app.core.model_manager - ERROR - [model_manager.py:50] - Error cargando modelo: Can't get attribute 'PymerFeatureBuilder' on <module '__main__' (<class '_frozen_importlib.BuiltinImporter'>)>
+2026-01-24 20:20:23,794 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-24 20:20:33,438 - main - INFO - [main.py:170] - ==================================================
+2026-01-24 20:20:33,438 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-24 20:20:33,439 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-24 20:20:33,439 - main - INFO - [main.py:182] - ==================================================
+2026-01-24 20:22:13,016 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-24 20:22:13,016 - config.settings - INFO - [settings.py:100] - Environment: development
+2026-01-24 20:22:13,016 - config.settings - INFO - [settings.py:101] - Debug mode: True
+2026-01-24 20:22:13,024 - main - INFO - [main.py:129] - ==================================================
+2026-01-24 20:22:13,024 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-24 20:22:13,024 - main - INFO - [main.py:131] - Environment: development
+2026-01-24 20:22:13,024 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-24 20:22:13,025 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-24 20:22:13,025 - main - INFO - [main.py:134] - Debug: True
+2026-01-24 20:22:13,025 - main - INFO - [main.py:135] - ==================================================
+2026-01-24 20:22:13,025 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-24 20:22:13,025 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-24 20:22:13,106 - app.core.model_manager - ERROR - [model_manager.py:72] - Error cargando modelo: Can't get attribute '_RemainderColsList' on <module 'sklearn.compose._column_transformer' from '/media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/ai_service/venv/lib/python3.12/site-packages/sklearn/compose/_column_transformer.py'>
+2026-01-24 20:22:13,106 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-24 20:23:46,680 - main - INFO - [main.py:170] - ==================================================
+2026-01-24 20:23:46,680 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-24 20:23:46,680 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-24 20:23:46,680 - main - INFO - [main.py:182] - ==================================================
+2026-01-24 20:23:48,897 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-24 20:23:48,897 - config.settings - INFO - [settings.py:100] - Environment: development
+2026-01-24 20:23:48,897 - config.settings - INFO - [settings.py:101] - Debug mode: True
+2026-01-24 20:23:48,905 - main - INFO - [main.py:129] - ==================================================
+2026-01-24 20:23:48,905 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-24 20:23:48,905 - main - INFO - [main.py:131] - Environment: development
+2026-01-24 20:23:48,906 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-24 20:23:48,906 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-24 20:23:48,906 - main - INFO - [main.py:134] - Debug: True
+2026-01-24 20:23:48,906 - main - INFO - [main.py:135] - ==================================================
+2026-01-24 20:23:48,906 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-24 20:23:48,906 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-24 20:23:48,975 - app.core.model_manager - ERROR - [model_manager.py:88] - Error cargando modelo: No module named 'lightgbm'
+2026-01-24 20:23:48,975 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-24 20:23:51,283 - main - INFO - [main.py:170] - ==================================================
+2026-01-24 20:23:51,284 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-24 20:23:51,284 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-24 20:23:51,285 - main - INFO - [main.py:182] - ==================================================
+2026-01-24 20:23:54,467 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-24 20:23:54,468 - config.settings - INFO - [settings.py:100] - Environment: development
+2026-01-24 20:23:54,468 - config.settings - INFO - [settings.py:101] - Debug mode: True
+2026-01-24 20:23:54,476 - main - INFO - [main.py:129] - ==================================================
+2026-01-24 20:23:54,476 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-24 20:23:54,476 - main - INFO - [main.py:131] - Environment: development
+2026-01-24 20:23:54,476 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-24 20:23:54,476 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-24 20:23:54,476 - main - INFO - [main.py:134] - Debug: True
+2026-01-24 20:23:54,477 - main - INFO - [main.py:135] - ==================================================
+2026-01-24 20:23:54,477 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-24 20:23:54,477 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-24 20:23:54,550 - app.core.model_manager - ERROR - [model_manager.py:88] - Error cargando modelo: No module named 'lightgbm'
+2026-01-24 20:23:54,550 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-24 20:25:10,437 - main - INFO - [main.py:170] - ==================================================
+2026-01-24 20:25:10,437 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-24 20:25:10,437 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-24 20:25:10,437 - main - INFO - [main.py:182] - ==================================================
+2026-01-24 20:25:12,610 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-24 20:25:12,610 - config.settings - INFO - [settings.py:100] - Environment: development
+2026-01-24 20:25:12,610 - config.settings - INFO - [settings.py:101] - Debug mode: True
+2026-01-24 20:25:12,623 - main - INFO - [main.py:129] - ==================================================
+2026-01-24 20:25:12,623 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-24 20:25:12,623 - main - INFO - [main.py:131] - Environment: development
+2026-01-24 20:25:12,623 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-24 20:25:12,623 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-24 20:25:12,624 - main - INFO - [main.py:134] - Debug: True
+2026-01-24 20:25:12,624 - main - INFO - [main.py:135] - ==================================================
+2026-01-24 20:25:12,624 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-24 20:25:12,624 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-24 20:25:12,711 - app.core.model_manager - ERROR - [model_manager.py:95] - Error cargando modelo: No module named 'lightgbm'
+2026-01-24 20:25:12,711 - main - INFO - [main.py:159] - ✅ Model loaded: MockModel (status: mock)
+2026-01-24 20:25:21,742 - main - INFO - [main.py:170] - ==================================================
+2026-01-24 20:25:21,742 - main - INFO - [main.py:171] - 🛑 Apagando aplicación
+2026-01-24 20:25:21,743 - main - INFO - [main.py:178] - ✅ Oracle connection closed
+2026-01-24 20:25:21,743 - main - INFO - [main.py:182] - ==================================================
+2026-01-24 20:26:02,069 - config.settings - INFO - [settings.py:99] - ChurnInsight AI Service v1.0.0
+2026-01-24 20:26:02,069 - config.settings - INFO - [settings.py:100] - Environment: development
+2026-01-24 20:26:02,070 - config.settings - INFO - [settings.py:101] - Debug mode: True
+2026-01-24 20:26:02,078 - main - INFO - [main.py:129] - ==================================================
+2026-01-24 20:26:02,078 - main - INFO - [main.py:130] - 🚀 Iniciando ChurnInsight AI Service v1.0.0
+2026-01-24 20:26:02,078 - main - INFO - [main.py:131] - Environment: development
+2026-01-24 20:26:02,078 - main - INFO - [main.py:132] - Host: 0.0.0.0:8000
+2026-01-24 20:26:02,078 - main - INFO - [main.py:133] - API Prefix: /api/v1
+2026-01-24 20:26:02,078 - main - INFO - [main.py:134] - Debug: True
+2026-01-24 20:26:02,078 - main - INFO - [main.py:135] - ==================================================
+2026-01-24 20:26:02,078 - main - INFO - [main.py:150] - ℹ️ Development mode: Oracle connection deferred (lazy loading)
+2026-01-24 20:26:02,078 - main - INFO - [main.py:153] - Loading ML model...
+2026-01-24 20:26:02,159 - app.core.model_manager - INFO - [model_manager.py:83] - ✅ Modelo cargado: ./models/pymer_churn_pipeline.pkl
+2026-01-24 20:26:02,169 - app.core.model_manager - INFO - [model_manager.py:87] - ✅ Scaler cargado: /media/ronaldorv/82A28F13A28F0B3D/Github Projects/ChurnInsight/ai_service/models/scaler.pkl
+2026-01-24 20:26:02,169 - main - INFO - [main.py:159] - ✅ Model loaded: dict (status: loaded)
+2026-01-24 20:26:28,254 - main - INFO - [main.py:44] - [fae5a22a] OPTIONS /api/v1/predictions/predict_churn
+2026-01-24 20:26:28,255 - main - INFO - [main.py:48] - [fae5a22a] Response: 200
+2026-01-24 20:26:28,265 - main - INFO - [main.py:44] - [aa4e0005] POST /api/v1/predictions/predict_churn
+2026-01-24 20:26:28,271 - app.routes.predictions - INFO - [predictions.py:60] - [6a203f70] Predicción churn para CUIT: 30037981216 (Empresa Servicios 1 S.A.)
+2026-01-24 20:26:28,272 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 5 detectadas
+2026-01-24 20:26:28,273 - app.core.model_manager - INFO - [model_manager.py:281] - === PREDICT START ===
+2026-01-24 20:26:28,273 - app.core.model_manager - INFO - [model_manager.py:298] - Features críticos disponibles: 5/5
+2026-01-24 20:26:28,273 - app.core.model_manager - INFO - [model_manager.py:299] - Model available: True
+2026-01-24 20:26:28,282 - app.core.model_manager - ERROR - [model_manager.py:310] - Error en inferencia modelo: 'dict' object has no attribute 'predict_proba'
+2026-01-24 20:26:28,283 - app.core.model_manager - WARNING - [model_manager.py:311] - Falling back to mock prediction
+2026-01-24 20:26:28,283 - app.core.model_manager - INFO - [model_manager.py:328] - Predicción: prob=0.5940, riesgo=medio
+2026-01-24 20:26:28,284 - app.core.model_manager - INFO - [model_manager.py:329] - === PREDICT END ===
+
+2026-01-24 20:26:28,284 - app.routes.predictions - INFO - [predictions.py:92] - [6a203f70] Predicción: prob=0.5940, prediction=1, flags=5, threshold=0.500
+2026-01-24 20:26:28,285 - app.routes.predictions - INFO - [predictions.py:127] - [6a203f70] ✅ Predicción completada exitosamente
+2026-01-24 20:26:28,286 - main - INFO - [main.py:48] - [aa4e0005] Response: 200
+2026-01-24 20:26:47,278 - main - INFO - [main.py:44] - [f2de55b3] POST /api/v1/predictions/predict_churn
+2026-01-24 20:26:47,281 - app.routes.predictions - INFO - [predictions.py:60] - [7ccca47c] Predicción churn para CUIT: 30066255265 (Empresa Industria 5 S.A.)
+2026-01-24 20:26:47,281 - app.core.red_flags - INFO - [red_flags.py:196] - Red flags calculadas: 3 detectadas
+2026-01-24 20:26:47,282 - app.core.model_manager - INFO - [model_manager.py:281] - === PREDICT START ===
+2026-01-24 20:26:47,282 - app.core.model_manager - INFO - [model_manager.py:298] - Features críticos disponibles: 5/5
+2026-01-24 20:26:47,282 - app.core.model_manager - INFO - [model_manager.py:299] - Model available: True
+2026-01-24 20:26:47,285 - app.core.model_manager - ERROR - [model_manager.py:310] - Error en inferencia modelo: 'dict' object has no attribute 'predict_proba'
+2026-01-24 20:26:47,285 - app.core.model_manager - WARNING - [model_manager.py:311] - Falling back to mock prediction
+2026-01-24 20:26:47,286 - app.core.model_manager - INFO - [model_manager.py:328] - Predicción: prob=0.3915, riesgo=bajo
+2026-01-24 20:26:47,286 - app.core.model_manager - INFO - [model_manager.py:329] - === PREDICT END ===
+
+2026-01-24 20:26:47,286 - app.routes.predictions - INFO - [predictions.py:92] - [7ccca47c] Predicción: prob=0.3915, prediction=0, flags=3, threshold=0.500
+2026-01-24 20:26:47,287 - app.routes.predictions - INFO - [predictions.py:127] - [7ccca47c] ✅ Predicción completada exitosamente
+2026-01-24 20:26:47,288 - main - INFO - [main.py:48] - [f2de55b3] Response: 200

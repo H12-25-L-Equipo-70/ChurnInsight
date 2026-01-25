@@ -33,9 +33,9 @@ ChurnInsight se compone de tres servicios principales interconectados, respaldad
 
 ```mermaid
 graph LR
-    A[Frontend (Angular)] -->|HTTP/REST| B(Backend: Spring Boot);
-    B -->|SQL| C(Oracle DB);
-    B -->|HTTP/REST| D(AI Service: FastAPI);
+    A[Frontend (Angular)] -->|HTTP/REST| B["Backend: Spring Boot"];
+    B -->|SQL| C["Oracle DB"];
+    B -->|HTTP/REST| D["AI Service: FastAPI"];
     D -->|DB Access (Optional)| C;
 ```
 
@@ -45,7 +45,7 @@ graph LR
 *   **Oracle Database:** Almacena los datos de las empresas, métricas financieras, predicciones y otra información relevante.
 
 **Para una comprensión detallada de la arquitectura, consulte:**
-[docs/01_Project_Overview.md](docs/01_Project_Overview.md) y [docs/06_Backend_Architecture.md](docs/06_Backend_Architecture.md)
+[docs/01_Project_Overview.md](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/01_Project_Overview.md) y [docs/06_Backend_Architecture.md](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/06_Backend_Architecture.md)
 
 ---
 
@@ -59,7 +59,7 @@ El cerebro analítico de ChurnInsight. Se encarga de:
 *   **API de Predicción:** Expone endpoints REST para recibir datos de empresas y devolver predicciones, probabilidades y alertas.
 
 *   **Tecnologías:** Python, FastAPI, Pydantic, Scikit-learn, Pandas.
-*   **Documentación Detallada:** [docs/02_AI_Service_Quick_Start.md](docs/02_AI_Service_Quick_Start.md) y [docs/04_AI_Service_API.md](docs/04_AI_Service_API.md)
+*   **Documentación Detallada:** [AI Service Quick Start](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/02_AI_Service_Quick_Start.md) y [docs/04_AI_Service_API.md](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/04_AI_Service_API.md)
 
 ### ⚙️ Backend Service (Spring Boot)
 El orquestador de ChurnInsight. Sus funciones incluyen:
@@ -69,7 +69,7 @@ El orquestador de ChurnInsight. Sus funciones incluyen:
 *   **Gestión de Seguridad:** Implementa mecanismos de seguridad robustos, incluyendo el uso de Oracle Wallet para credenciales.
 
 *   **Tecnologías:** Java, Spring Boot 3.x, JPA, Oracle Database.
-*   **Documentación Detallada:** [docs/03_Backend_Quick_Start.md](docs/03_Backend_Quick_Start.md) y [docs/06_Backend_Architecture.md](docs/06_Backend_Architecture.md)
+*   **Documentación Detallada:** [Backend Quick Start](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/03_Backend_Quick_Start.md) y [docs/06_Backend_Architecture.md](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/06_Backend_Architecture.md)
 
 ### 🖥️ Frontend (Angular)
 La interfaz de usuario que permite la interacción:
@@ -79,7 +79,7 @@ La interfaz de usuario que permite la interacción:
 *   **Integración con Backend:** Consume los endpoints del Backend para obtener y enviar datos.
 
 *   **Tecnologías:** Angular 21, Tailwind CSS, jsPDF.
-*   **Documentación Detallada:** [docs/09_Frontend_Integration_Guide.md](docs/09_Frontend_Integration_Guide.md)
+*   **Documentación Detallada:** [docs/09_Frontend_Integration_Guide.md](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/09_Frontend_Integration_Guide.md)
 
 ---
 
@@ -94,7 +94,7 @@ ChurnInsight se basa en un modelo analítico que evalúa una combinación de fac
 Estos indicadores se procesan para calcular una **puntuación de riesgo** y generar alertas específicas, indicando no solo la probabilidad de abandono, sino también las razones subyacentes.
 
 **Para detalles técnicos sobre el modelo y las variables de entrada, consulte:**
-[docs/01_Project_Overview.md](docs/01_Project_Overview.md) y [docs/04_AI_Service_API.md](docs/04_AI_Service_API.md)
+[docs/01_Project_Overview.md](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/01_Project_Overview.md) y [docs/04_AI_Service_API.md](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/04_AI_Service_API.md)
 
 ---
 
@@ -104,14 +104,14 @@ Estos indicadores se procesan para calcular una **puntuación de riesgo** y gene
 El objetivo final es desplegar ChurnInsight en una instancia de Oracle Cloud Infrastructure, utilizando Docker para la contenerización y orquestación de los servicios. Esto garantizará escalabilidad, robustez y un entorno de producción seguro.
 
 La documentación detallada para el despliegue en OCI se encuentra en:
-[docs/05_Deployment_and_Commands.md](docs/05_Deployment_and_Commands.md)
+[docs/05_Deployment_and_Commands.md](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/05_Deployment_and_Commands.md)
 
 ---
 
 ## ⚡ Inicio Rápido (Desarrollo Local)
 
 Para configurar y ejecutar ChurnInsight localmente, consulte la guía detallada:
-[docs/00_Quick_Start.md](docs/00_Quick_Start.md)
+[docs/00_Quick_Start.md](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/00_Quick_Start.md)
 
 Esta guía cubre los requisitos previos, configuración del entorno y las diferentes opciones para iniciar los servicios (Docker Compose o ejecución nativa).
 
@@ -123,17 +123,17 @@ Acceda a la documentación completa de ChurnInsight a través de los siguientes 
 
 | Documento                                    | Descripción                                                                                                |
 | :------------------------------------------- | :--------------------------------------------------------------------------------------------------------- |
-| [01_Project_Overview.md](docs/01_Project_Overview.md) | Visión general del proyecto, sus objetivos y la arquitectura general.                                        |
-| [02_AI_Service_Quick_Start.md](docs/02_AI_Service_Quick_Start.md) | Guía rápida para configurar y ejecutar el servicio de IA.                                                  |
-| [03_Backend_Quick_Start.md](docs/03_Backend_Quick_Start.md)   | Guía rápida para configurar y ejecutar el servicio de Backend.                                             |
-| [04_AI_Service_API.md](docs/04_AI_Service_API.md)     | Documentación detallada de los endpoints del AI Service, incluyendo esquemas de solicitud y respuesta.      |
-| [05_Deployment_and_Commands.md](docs/05_Deployment_and_Commands.md) | Instrucciones para el despliegue en OCI y comandos de gestión.                                              |
-| [06_Backend_Architecture.md](docs/06_Backend_Architecture.md) | Descripción detallada de la arquitectura del Backend, patrones de diseño y tecnologías empleadas.         |
-| [07_Integration_NewNotebook.md](docs/07_Integration_NewNotebook.md) | Guía específica sobre la integración de nuevos modelos o notebooks de Data Science en el AI Service.        |
-| [08_Testing_Local_Complete.md](docs/08_Testing_Local_Complete.md) | Guía exhaustiva para la ejecución de pruebas unitarias, de integración y de extremo a extremo localmente. |
-| [09_Frontend_Integration_Guide.md](docs/09_Frontend_Integration_Guide.md) | Explica la integración del Frontend Angular con el Backend y el AI Service.                               |
-| [DOCKER_GUIDE.md](docs/DOCKER_GUIDE.md)             | Guía detallada sobre el uso de Docker y Docker Compose para gestionar los servicios de ChurnInsight.        |
-| [00_Quick_Start.md](docs/00_Quick_Start.md)       | Guía rápida para configurar y ejecutar ChurnInsight localmente (Docker y nativo).                           |
+| [Project Overview](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/01_Project_Overview.md) | Visión general del proyecto, sus objetivos y la arquitectura general.                                        |
+| [AI Service Quick Start](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/02_AI_Service_Quick_Start.md) | Guía rápida para configurar y ejecutar el servicio de IA.                                                  |
+| [Backend Quick Start](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/03_Backend_Quick_Start.md)   | Guía rápida para configurar y ejecutar el servicio de Backend.                                             |
+| [AI Service API Reference](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/04_AI_Service_API.md)     | Documentación detallada de los endpoints del AI Service, incluyendo esquemas de solicitud y respuesta.      |
+| [Deployment and Commands Guide](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/05_Deployment_and_Commands.md) | Instrucciones para el despliegue en OCI y comandos de gestión.                                              |
+| [Backend Architecture](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/06_Backend_Architecture.md) | Descripción detallada de la arquitectura del Backend, patrones de diseño y tecnologías empleadas.         |
+| [New Notebook Integration](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/07_Integration_NewNotebook.md) | Guía específica sobre la integración de nuevos modelos o notebooks de Data Science en el AI Service.        |
+| [Comprehensive Local Testing](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/08_Testing_Local_Complete.md) | Guía exhaustiva para la ejecución de pruebas unitarias, de integración y de extremo a extremo localmente. |
+| [Frontend Integration Guide](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/09_Frontend_Integration_Guide.md) | Explica la integración del Frontend Angular con el Backend y el AI Service.                               |
+| [Docker Guide](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/DOCKER_GUIDE.md)             | Guía detallada sobre el uso de Docker y Docker Compose para gestionar los servicios de ChurnInsight.        |
+| [Quick Start Guide](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/00_Quick_Start.md)       | Guía rápida para configurar y ejecutar ChurnInsight localmente (Docker y nativo).                           |
 
 ---
 

@@ -16,12 +16,12 @@ echo -e "${BLUE}========================================${NC}\n"
 
 # Test 1: Health Check
 echo -e "${YELLOW}[TEST 1] Health Check${NC}"
-curl -s "$BASE_URL/health/check" | python -m json.tool
+curl -s "$BASE_URL/health/check" | python3 -m json.tool
 echo -e "\n"
 
 # Test 2: Model Info
 echo -e "${YELLOW}[TEST 2] Model Info${NC}"
-curl -s "$BASE_URL/health/model-info" | python -m json.tool
+curl -s "$BASE_URL/health/model-info" | python3 -m json.tool
 echo -e "\n"
 
 # Test 3: Predicción Individual
@@ -42,7 +42,7 @@ curl -s -X POST "$BASE_URL/predictions/predict" \
     "transferencias_trimestre": 45,
     "pagos_trimestre": 30,
     "creditos_trimestre": 15
-  }' | python -m json.tool
+  }' | python3 -m json.tool
 echo -e "\n"
 
 # Test 4: Predicción Batch
@@ -82,17 +82,17 @@ curl -s -X POST "$BASE_URL/predictions/batch" \
         "creditos_trimestre": 1
       }
     ]
-  }' | python -m json.tool
+  }' | python3 -m json.tool
 echo -e "\n"
 
 # Test 5: Readiness Check (Kubernetes)
 echo -e "${YELLOW}[TEST 5] Readiness Check (Kubernetes)${NC}"
-curl -s "$BASE_URL/health/ready" | python -m json.tool
+curl -s "$BASE_URL/health/ready" | python3 -m json.tool
 echo -e "\n"
 
 # Test 6: Liveness Check (Kubernetes)
 echo -e "${YELLOW}[TEST 6] Liveness Check (Kubernetes)${NC}"
-curl -s "$BASE_URL/health/live" | python -m json.tool
+curl -s "$BASE_URL/health/live" | python3 -m json.tool
 echo -e "\n"
 
 echo -e "${GREEN}========================================${NC}"
