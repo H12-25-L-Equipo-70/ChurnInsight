@@ -1,0 +1,12 @@
+pymerdb_high = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-vinhedo-1.oraclecloud.com))(connect_data=(service_name=ga734925bd65346_pymerdb_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+pymerdb_medium = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-vinhedo-1.oraclecloud.com))(connect_data=(service_name=ga734925bd65346_pymerdb_medium.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+pymerdb_low = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-vinhedo-1.oraclecloud.com))(connect_data=(service_name=ga734925bd65346_pymerdb_low.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+pymerdb_tp = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-vinhedo-1.oraclecloud.com))(connect_data=(service_name=ga734925bd65346_pymerdb_tp.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+pymerdb_tpurgent = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-vinhedo-1.oraclecloud.com))(connect_data=(service_name=ga734925bd65346_pymerdb_tpurgent.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+
+

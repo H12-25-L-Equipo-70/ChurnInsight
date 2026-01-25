@@ -1,0 +1,90 @@
+services:
+  # FastAPI AI Service
+  churninsight-ai:
+    build:
+      context: ./ai_service
+      dockerfile: Dockerfile
+    container_name: churninsight-ai
+    ports:
+      - "8000:8000"
+    environment:
+      ENVIRONMENT: docker
+      DEBUG: "false"
+      LOG_LEVEL: INFO
+      # Configuración del nuevo modelo Pipeline
+      MODEL_PATH: /app/models/pymer_churn_pipeline.pkl
+      SCALER_PATH: ""
+    volumes:
+      - ./ai_service/logs:/app/logs
+      - ./ai_service/models:/app/models
+    networks:
+      - churninsight-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health/check"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Spring Boot Backend
+  churninsight-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: churninsight-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      TNS_ADMIN: /app/wallet_pymer
+      ORACLE_NET_TNS_ADMIN: /app/wallet_pymer
+      ORACLE_WALLET_WALLET_PATH: /app/wallet_pymer
+      ORACLE_WALLET_TNS_ADMIN_PATH: /app/wallet_pymer
+      ORACLE_WALLET_DATABASE_NAME: pymerdb_high
+      FEIGN_CLIENT_CONFIG_AISERVICE_URL: http://churninsight-ai:8000
+    volumes:
+      - ./backend/wallet_pymer:/app/wallet_pymer:ro
+    depends_on:
+      churninsight-ai:
+        condition: service_healthy
+    networks:
+      - churninsight-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/api/v1/companies/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Frontend Service (Angular/Nginx)
+  churninsight-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: churninsight-frontend
+    ports:
+      - "80:80" # Nginx expone el puerto 80
+    networks:
+      - churninsight-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  churninsight-network:
+    driver: bridge

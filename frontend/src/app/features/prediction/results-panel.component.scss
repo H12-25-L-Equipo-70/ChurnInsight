@@ -1,0 +1,121 @@
+// Estilos del Panel de Resultados
+
+:host {
+  display: block;
+}
+
+// Animación de entrada
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+div {
+  animation: slideInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Estilos de botones
+button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  svg {
+    transition: transform 0.3s;
+  }
+
+  &:hover svg {
+    transform: scale(1.1);
+  }
+}
+
+// Estilos de lista de recomendaciones
+ul {
+  li {
+    transition: all 0.3s;
+
+    &:hover {
+      transform: translateX(4px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    span:first-child {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+// Estado de exportación
+div[class*="bg-emerald"] {
+  animation: slideInDown 0.3s ease-out;
+}
+
+div[class*="bg-red"] {
+  animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Barra de progreso
+.h-3 {
+  div {
+    animation: fillProgress 1s ease-out;
+  }
+}
+
+@keyframes fillProgress {
+  from {
+    width: 0 !important;
+  }
+}
+
+// Responsive
+@media (max-width: 640px) {
+  button {
+    min-height: 44px;
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  div {
+    &[class*="bg-slate-50"] {
+      background-color: #1e293b;
+    }
+
+    &[class*="border-slate"] {
+      border-color: #334155;
+    }
+  }
+}

@@ -1,0 +1,32 @@
+<div class="flex h-full flex-col bg-gray-900 text-white">
+  <!-- Header -->
+  <div class="flex items-center justify-center border-b border-gray-700 p-4">
+    <svg class="h-8 w-8 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    </svg>
+    <h1 class="ml-3 text-2xl font-bold tracking-wider">ChurnInsight</h1>
+  </div>
+
+  <!-- Navigation Links -->
+  <nav class="flex-1 space-y-2 p-4">
+    <a *ngFor="let item of navItems"
+       [routerLink]="item.path"
+       routerLinkActive="bg-emerald-600"
+       [routerLinkActiveOptions]="{exact: true}"
+       class="flex items-center rounded-lg px-4 py-3 text-lg font-medium text-gray-300 transition-colors hover:bg-gray-700">
+      <span class="mr-4 text-2xl">{{ item.icon }}</span>
+      <span>{{ item.label }}</span>
+    </a>
+  </nav>
+
+  <!-- Footer -->
+  <div class="border-t border-gray-700 p-4">
+    <div class="flex items-center">
+      <img class="h-10 w-10 rounded-full" src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User Avatar">
+      <div class="ml-3">
+        <p class="font-semibold">Admin User</p>
+        <span class="text-sm text-gray-400">Online</span>
+      </div>
+    </div>
+  </div>
+</div>
