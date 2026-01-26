@@ -393,7 +393,7 @@ Layer 4: Data Layer Security
 
 ---
 
-## Deployment Architecture (Future)
+## Deployment Architecture
 
 ```
 ┌─────────────────────────────────────────────────┐

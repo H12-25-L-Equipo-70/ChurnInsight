@@ -1,27 +1,28 @@
-# 🐳 ChurnInsight Docker Guide
+# 🐳 Guía Docker de ChurnInsight
 
-This guide provides detailed instructions and commands for managing ChurnInsight services using Docker and Docker Compose.
+Esta guía proporciona instrucciones y comandos detallados para gestionar los servicios de ChurnInsight utilizando Docker y Docker Compose.
 
 ---
 
-## 🚀 Local Development with Docker Compose
+## 🚀 Desarrollo Local con Docker Compose
 
-Docker Compose is the recommended method for running the entire ChurnInsight application stack locally. It simplifies the setup and management of multiple services.
+Docker Compose es el método recomendado para ejecutar toda la pila de la aplicación ChurnInsight de forma local. Simplifica la configuración y la gestión de múltiples servicios.
 
-### Prerequisites
+### Prerrequisitos
 
-*   Docker Desktop installed and running.
+*   Docker Desktop instalado y en ejecución.
 *   Git.
 
-### 1. Clone the Repository
-If you haven't already, clone the project repository:
+### 1. Clonar el Repositorio
+Si aún no lo hiciste, clona el repositorio del proyecto:
 ```bash
 git clone <repository-url>
 cd ChurnInsight
+
 ```
 
-### 2. Configure Environment Variables
-Before starting the services, configure the necessary environment variables. Create `.env` files in the respective service directories (e.g., `ai_service/.env`, `backend/.env`) based on the provided `.env.example` files or directly in the terminal for quick setup:
+### 2. Configurar Variables de Entorno
+Antes de iniciar los servicios, configura las variables de entorno necesarias. Crea archivos `.env` en los directorios correspondientes de cada servicio (por ejemplo, `ai_service/.env`, `backend/.env`) basándote en los archivos `.env.example` provistos o directamente desde la terminal para una configuración rápida:
 
 ```bash
 # For AI Service (example)
@@ -31,91 +32,100 @@ echo "ENVIRONMENT=development" > ai_service/.env
 echo "ORACLE_DB_PASSWORD=your_local_db_password" > backend/.env
 echo "ORACLE_WALLET_PATH=./wallet_pymer" >> backend/.env
 ```
-Ensure you set up the Oracle Wallet files as described in the OCI deployment section if needed for local Oracle DB connections.
+Asegúrate de configurar los archivos de **Oracle Wallet** como se describe en la sección de despliegue en **OCI** si es necesario para las conexiones locales a la base de datos Oracle.
 
-### 3. Build Docker Images
-Build the Docker images for all services defined in `docker-compose.yml`:
+### 3. Construir Imágenes Docker
+Construye las imágenes Docker para todos los servicios definidos en `docker-compose.yml`:
+
 ```bash
 docker-compose build
 ```
-This command compiles your application code and creates portable Docker images. Use `--no-cache` if you encounter issues with stale image layers:
+Este comando compila el código de la aplicación y crea imágenes Docker portables. Usa la opción `--no-cache` si encuentras problemas con capas de imágenes obsoletas:
+
 ```bash
 docker-compose build --no-cache
 ```
 
-### 4. Start Services
-Start all services (AI Service, Backend, and potentially a database if not using external) in detached mode (running in the background):
+### 4. Iniciar Servicios
+Inicia todos los servicios (Servicio de IA, Backend y, potencialmente, una base de datos si no se utiliza una externa) en modo desacoplado (ejecutándose en segundo plano):
+
 ```bash
 docker-compose up -d
 ```
+### 5. Verificar el Estado de los Servicios
+Comprueba el estado de los contenedores que se están ejecutando:
 
-### 5. Verify Service Status
-Check the status of your running containers:
 ```bash
 docker-compose ps
 ```
-You should see output indicating that services like `backend` and `ai_service` are running (`Up` or `healthy`).
+Deberías ver una salida que indique que servicios como `backend` y `ai_service` están en ejecución (`Up` o `healthy`).
 
-### 6. View Logs
-Monitor the real-time output and logs from all running services:
+### 6. Ver Logs
+Monitorea la salida en tiempo real y los logs de todos los servicios en ejecución:
+
 ```bash
 docker-compose logs -f
 ```
-To view logs for a specific service (e.g., AI Service), use:
+Para ver los logs de un servicio específico (por ejemplo, el Servicio de IA), utiliza:
+
 ```bash
 docker-compose logs ai_service
 ```
 
-### 7. Stop Services
-When you are finished, stop and remove the containers, networks, and volumes created by Docker Compose:
+### 7. Detener Servicios
+Cuando hayas terminado, detén y elimina los contenedores, redes y volúmenes creados por Docker Compose:
+
 ```bash
 docker-compose down
 ```
 
 ---
 
-## 🛠️ Docker Management Commands
+## 🛠️ Comandos de Gestión de Docker
 
-These commands are useful for managing running Docker containers and their resources.
+Estos comandos son útiles para administrar los contenedores Docker en ejecución y sus recursos.
 
-### View Container Status
+### Ver el Estado de los Contenedores
+
 ```bash
 # View the status of all services defined in docker-compose.yml
 docker-compose ps
 ```
 
-### Access Container Shell
-Enter a running container to execute commands inside it or for debugging purposes:
+### Acceder a la Shell del Contenedor
+Ingresa a un contenedor en ejecución para ejecutar comandos dentro de él o con fines de depuración:
+
 ```bash
 # Example: Enter the ai_service container
 docker exec -it churninsight-ai bash
 ```
-*(Replace `churninsight-ai` with the actual container name if it differs)*
+*(Reemplaza `churninsight-ai` por el nombre real del contenedor si es diferente)*
 
-### View Resource Usage
-Monitor the CPU and memory usage of your Docker containers:
+### Ver Uso de Recursos
+Monitorea el uso de CPU y memoria de tus contenedores Docker:
+
 ```bash
 docker stats
 ```
 
 ---
 
-## 🔧 Docker Troubleshooting
+## 🔧 Solución de Problemas con Docker
 
-*   **Port Conflicts:** If you encounter an error indicating that a port (e.g., 8000, 8080) is already in use when starting services:
-    *   Identify the process using the port (e.g., using `sudo lsof -i :8000`).
-    *   Stop the conflicting process or change the port mapping in the `docker-compose.yml` file for the service.
-*   **Image Build Failures:** If `docker-compose build` fails, try rebuilding without using the cache:
+*   **Conflictos de Puertos:** Si encuentras un error que indica que un puerto (por ejemplo, 8000, 8080) ya está en uso al iniciar los servicios:
+    *   Identifica el proceso que está usando el puerto (por ejemplo, usando `sudo lsof -i :8000`).
+    *   Detén el proceso en conflicto o cambia el mapeo de puertos en el archivo `docker-compose.yml` del servicio.
+*   **Fallas al Construir Imágenes:** Si `docker-compose build` falla, intenta reconstruir sin usar la caché:
     ```bash
     docker-compose build --no-cache
     ```
-    Examine the build output for specific error messages during dependency installation or compilation.
-*   **Service Not Starting:** Check the logs for the specific service using `docker-compose logs <service_name>` to identify the root cause of the failure.
+    Examina la salida de la construcción para identificar mensajes de error específicos durante la instalación de dependencias o la compilación.
+*   **Servicio No Inicia:** Revisa los logs del servicio específico usando `docker-compose logs <service_name>` para identificar la causa raíz del fallo.
 
 ---
-## 📞 Support
+## 📞 Soporte
 
-For detailed documentation and further assistance, please refer to:
-*   [README.md](README.md) - Project overview and high-level information.
-*   [docs/05_Deployment_and_Commands.md](docs/05_Deployment_and_Commands.md) - OCI deployment and general command reference.
-*   [docs/00_Quick_Start.md](docs/00_Quick_Start.md) - Step-by-step guide for local setup.
+Para documentación detallada y asistencia adicional, consulta:
+*   [README.md](../README.md) – Descripción general del proyecto e información de alto nivel.
+*   [05_Deployment.md](05_Deployment.md) – Despliegue en OCI y referencia general de comandos.
+*   [00_Quick_Start.md](00_Quick_Start.md) – Guía paso a paso para la configuración local.

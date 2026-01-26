@@ -1,14 +1,14 @@
-# ⚡ Quick Start - ChurnInsight Backend
+# ⚡ Inicio Rápido - Backend de ChurnInsight
 
-This guide provides the essential steps to get the Backend service running locally. For detailed setup and deployment instructions, refer to the main documentation.
+Esta guía proporciona los pasos esenciales para ejecutar el servicio Backend localmente. Para instrucciones detalladas de configuración y despliegue, consulta la documentación principal.
 
 ---
 
-## 🚀 Local Setup
+## 🚀 Configuración Local
 
-### 1. Set Environment Variables
+### 1. Configurar Variables de Entorno
 
-Configure necessary environment variables. For local development, you can set them directly in your terminal or use a `.env` file.
+Configura las variables de entorno necesarias. Para el desarrollo local, puedes configurarlas directamente en tu terminal o usar un archivo `.env`.
 
 *   **Linux/Mac:**
     ```bash
@@ -23,52 +23,54 @@ Configure necessary environment variables. For local development, you can set th
     $env:ORACLE_WALLET_PATH = "C:\path\to\your\project\backend\wallet_pymer"
     $env:ORACLE_NET_TNS_ADMIN = "C:\path\to\your\project\backend\wallet_pymer"
     ```
-    *(Ensure the `ORACLE_WALLET_PATH` correctly points to your wallet directory.)*
+    *(Asegúrate de que `ORACLE_WALLET_PATH` apunte correctamente al directorio de tu wallet.)*
 
-### 2. Copy Environment File
+### 2. Copiar Archivo de Entorno
 
-Copy the example environment file and edit it with your specific configurations.
+Copia el archivo de entorno de ejemplo y edítalo con tus configuraciones específicas.
 ```bash
 cp backend/.env.example backend/.env
-# Edit backend/.env with your values
+# Edita backend/.env con tus valores
 ```
 
-### 3. Compile the Backend
+### 3. Compilar el Backend
 
-Navigate to the backend directory and compile the project.
+Navega al directorio del backend y compila el proyecto.
 ```bash
 cd backend/
 mvn clean install
+
 ```
+### 4. Ejecutar el Servicio Backend
 
-### 4. Run the Backend Service
-
-Start the Spring Boot application. Using the `dev` profile is recommended for local development.
+Inicia la aplicación Spring Boot. Se recomienda utilizar el perfil `dev` para el desarrollo local.
 ```bash
 mvn spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=dev"
+
 ```
-The backend service will typically be available at `http://localhost:8080`.
+El servicio backend normalmente estará disponible en `http://localhost:8080`.
 
 ---
 
-## 🧪 Quick Testing
+## 🧪 Pruebas Rápidas
 
-### Health Check
+### Verificación de Salud (Health Check)
 
 ```bash
 curl http://localhost:8080/api/v1/companies/health
+
 ```
-*Expected Output: A JSON response indicating the service is healthy.*
+*Salida esperada: una respuesta JSON que indique que el servicio está funcionando correctamente.*
 
 ---
 
-## 📚 Related Documentation
+## 📚 Documentación Relacionada
 
-*   **[Backend Architecture](06_Backend_Architecture.md):** Detailed explanation of the backend's design and components.
-*   **[Deployment and Commands Guide](05_Deployment_and_Commands.md):** Instructions for OCI deployment and general commands.
-*   **[Project Overview](01_Project_Overview.md):** General project information.
-*   **[Quick Start Guide](00_Quick_Start.md):** Comprehensive local setup guide for the entire project.
+* **[Arquitectura del Backend](06_Backend_Architecture.md):** Explicación detallada del diseño y los componentes del backend.
+* **[Guía de Despliegue](05_Deployment.md):** Instrucciones para el despliegue en OCI.
+* **[Descripción General del Proyecto](01_Project_Overview.md):** Información general del proyecto.
+* **[Guía de Inicio Rápido](00_Quick_Start.md):** Guía completa de configuración local para todo el proyecto.
 
 ---
 
-**Note:** For production deployment and advanced configurations, please consult the main deployment documentation.
+**Nota:** Para despliegues en producción y configuraciones avanzadas, consulta la documentación principal de despliegue.

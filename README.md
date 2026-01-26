@@ -83,7 +83,7 @@ La interfaz de usuario que permite la interacción:
 *   **Integración con Backend:** Consume los endpoints del Backend para obtener y enviar datos.
 
 *   **Tecnologías:** Angular 21, Tailwind CSS, jsPDF.
-*   **Documentación Detallada:** [docs/09_Frontend_Integration_Guide.md](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/09_Frontend_Integration_Guide.md)
+*   **Documentación Detallada:** [docs/09_Frontend_Integration_Guide.md](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/09_Frontend_Guide.md)
 
 ---
 
@@ -172,14 +172,18 @@ El pipeline está listo para producción e integrado en ChurnInsight.
 
 ---
 
-## 🚀 Despliegue y Operaciones
+## 🌐 Despliegue y Acceso
 
-### Objetivo de Despliegue: Oracle Cloud Infrastructure (OCI)
-El objetivo final es desplegar ChurnInsight en una instancia de Oracle Cloud Infrastructure, utilizando Docker para la contenerización y orquestación de los servicios. Esto garantizará escalabilidad, robustez y un entorno de producción seguro.
+### Entorno de Producción: Oracle Cloud Infrastructure (OCI)
+ChurnInsight se encuentra desplegado y operativo en una instancia de **Oracle Cloud Infrastructure (OCI)**, garantizando alta disponibilidad, escalabilidad y un entorno de producción seguro. La aplicación está completamente contenerizada utilizando Docker y orquestada a través de Docker Compose.
 
-La documentación detallada para el despliegue en OCI se encuentra en:
-[docs/05_Deployment_and_Commands.md](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/05_Deployment_and_Commands.md)
+### Acceso a la Aplicación
+La plataforma es accesible públicamente a través de las siguientes URLs:
 
+*   **Aplicación Web (Dashboard):** [**http://152.67.34.202/dashboard**](http://152.67.34.202/dashboard)
+*   **Documentación de la API (Swagger):** [**http://152.67.34.202:8000/api/v1/docs**](http://152.67.34.202:8000/api/v1/docs)
+
+Para detalles técnicos sobre el proceso de despliegue y la gestión de los servicios, consulte la [Guía de Despliegue](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/05_Deployment.md).
 ---
 
 ## ⚡ Inicio Rápido (Desarrollo Local)
@@ -201,11 +205,11 @@ Acceda a la documentación completa de ChurnInsight a través de los siguientes 
 | [AI Service Quick Start](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/02_AI_Service_Quick_Start.md) | Guía rápida para configurar y ejecutar el servicio de IA.                                                  |
 | [Backend Quick Start](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/03_Backend_Quick_Start.md)   | Guía rápida para configurar y ejecutar el servicio de Backend.                                             |
 | [AI Service API Reference](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/04_AI_Service_API.md)     | Documentación detallada de los endpoints del AI Service, incluyendo esquemas de solicitud y respuesta.      |
-| [Deployment and Commands Guide](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/05_Deployment_and_Commands.md) | Instrucciones para el despliegue en OCI y comandos de gestión.                                              |
+| [Guía de Despliegue](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/05_Deployment.md) | Instrucciones para el despliegue en OCI y comandos de gestión.                                              |
 | [Backend Architecture](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/06_Backend_Architecture.md) | Descripción detallada de la arquitectura del Backend, patrones de diseño y tecnologías empleadas.         |
-| [New Notebook Integration](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/07_Integration_NewNotebook.md) | Guía específica sobre la integración de nuevos modelos o notebooks de Data Science en el AI Service.        |
-| [Comprehensive Local Testing](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/08_Testing_Local_Complete.md) | Guía exhaustiva para la ejecución de pruebas unitarias, de integración y de extremo a extremo localmente. |
-| [Frontend Integration Guide](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/09_Frontend_Integration_Guide.md) | Explica la integración del Frontend Angular con el Backend y el AI Service.                               |
+| [New Notebook Integration](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/07_AI_Service_Details.md) | Guía específica sobre la integración de nuevos modelos o notebooks de Data Science en el AI Service.        |
+| [Comprehensive Local Testing](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/08_Testing_Guide.md) | Guía exhaustiva para la ejecución de pruebas unitarias, de integración y de extremo a extremo localmente. |
+| [Frontend Integration Guide](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/09_Frontend_Guide.md) | Explica la integración del Frontend Angular con el Backend y el AI Service.                               |
 | [Docker Guide](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/DOCKER_GUIDE.md)             | Guía detallada sobre el uso de Docker y Docker Compose para gestionar los servicios de ChurnInsight.        |
 | [Quick Start Guide](https://github.com/H12-25-L-Equipo-70/ChurnInsight/blob/main/docs/00_Quick_Start.md)       | Guía rápida para configurar y ejecutar ChurnInsight localmente (Docker y nativo).                           |
 
@@ -249,15 +253,15 @@ Para obtener ayuda o discutir el proyecto:
 
 ---
 
-## 🎯 Roadmap de Desarrollo
+## 🗺️ Historial de Versiones
 
-*   ✅ **v1.0.0:** Core functionality, AI Service & Backend Integration, Local Docker Setup.
-*   ✅ **v1.1.0:** Frontend Angular Dashboard & Reporting Integration.
-*   ✅ **v1.2.0:** Deployment Strategy for Oracle Cloud Infrastructure (OCI).
-*   🔲 **v1.3.0:** Advanced Monitoring & Logging setup.
-*   🔲 **v2.0.0:** CI/CD pipeline automation.
+*   ✅ **v1.0.0:** Funcionalidad principal, integración de AI Service y Backend, y configuración local con Docker.
+*   ✅ **v1.1.0:** Integración del Dashboard de Frontend (Angular) y generación de reportes.
+*   ✅ **v1.2.0:** Estrategia de despliegue y puesta en producción en Oracle Cloud Infrastructure (OCI).
+*   ✅ **v1.3.0:** Configuración de monitoreo y logging avanzado.
+*   ✅ **v2.0.0:** Automatización del pipeline CI/CD y lanzamiento de la versión estable.
 
 ---
 
-**Última Actualización:** 24 de Enero, 2026
-**Versión:** 1.1.0 - Frontend Integrado ✅ | Backend Integrado ✅ | AI Service Operacional ✅
+**Última Actualización:** 26 de Enero, 2026
+**Versión:** 2.0.0 - Estable (En Producción) ✅

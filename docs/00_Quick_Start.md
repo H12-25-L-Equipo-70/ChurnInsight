@@ -1,132 +1,132 @@
-# 🚀 Quick Start Guide for Local Development
+# 🚀 Guía de inicio rápido para el desarrollo local
 
-This guide provides step-by-step instructions to set up and run ChurnInsight locally, covering both Docker-based and native execution methods.
-
----
-
-## 🎯 Project Goal
-
-This guide aims to get you up and running with ChurnInsight as quickly as possible, allowing you to develop, test, and explore the application on your local machine.
+Esta guía proporciona instrucciones paso a paso para configurar y ejecutar ChurnInsight localmente, y cubre métodos de ejecución nativos y basados en Docker.
 
 ---
 
-## 📋 Prerequisites
+## 🎯 Objetivo del proyecto
 
-Before you begin, ensure you have the following installed on your system:
-
-*   **Docker Desktop:** Required for running services using Docker Compose. (Download from [docker.com](https://www.docker.com/products/docker-desktop/))
-*   **Git:** For cloning the repository. (Download from [git-scm.com](https://git-scm.com/downloads))
-*   **Python 3.12+:** Required for the AI Service.
-*   **Java Development Kit (JDK) 17+:** Required for the Backend service.
-*   **Maven:** A build automation tool for Java projects.
-*   **Node.js LTS:** Required for the Frontend development server.
+Esta guía tiene como objetivo ponerlo en funcionamiento con ChurnInsight lo más rápido posible, permitiéndole desarrollar, probar y explorar la aplicación en su máquina local.
 
 ---
 
-## 📂 Project Setup
+## 📋 Requisitos previos
 
-1.  **Clone the Repository:**
-    ```bash
-    git clone <repository-url>
+Antes de comenzar, asegúrese de tener lo siguiente instalado en su sistema:
+
+* **Docker Desktop:** Requerido para ejecutar servicios usando Docker Compose. (Descargar desde [docker.com](https://www.docker.com/products/docker-desktop/))
+* **Git:** Para clonar el repositorio. (Descargar desde [git-scm.com](https://git-scm.com/downloads))
+* **Python 3.12+:** Requerido para el Servicio de IA.
+* **Java Development Kit (JDK) 17+:** Requerido para el servicio Backend.
+* **Maven:** Una herramienta de automatización de compilación para proyectos Java.
+* **Node.js LTS:** Requerido para el servidor de desarrollo Frontend.
+
+---
+
+## 📂 Configuración del proyecto
+
+1. **Clonar el repositorio:**
+    ```golpecito
+    git clone <repositorio-url>
     cd ChurnInsight
     ```
 
-2.  **Configure Environment Variables:**
-    Set up necessary environment variables. For local development, you can create `.env` files in the respective service directories or set them directly in your terminal. Refer to the `README.md` and specific service documentation for required variables.
+2. **Configurar variables de entorno:**
+    Configure las variables de entorno necesarias. Para el desarrollo local, puede crear archivos `.env` en los directorios de servicios respectivos o configurarlos directamente en su terminal. Consulte `README.md` y la documentación de servicio específica para conocer las variables requeridas.
 
-    *   **Example for AI Service:**
-        ```bash
-        echo "ENVIRONMENT=development" > ai_service/.env
+    * **Ejemplo de servicio de IA:**
+        ```golpecito
+        echo "MEDIOAMBIENTE=desarrollo" > ai_service/.env
         ```
-    *   **Example for Backend:**
-        ```bash
-        echo "ORACLE_DB_PASSWORD=your_local_db_password" > backend/.env
+    * **Ejemplo de backend:**
+        ```golpecito
+        echo "ORACLE_DB_PASSWORD=su_contraseña_db_local" > backend/.env
         echo "ORACLE_WALLET_PATH=./wallet_pymer" >> backend/.env
         ```
-    *   *(Note: For sensitive credentials like database passwords, consider using more secure methods than plain text files, especially in shared environments.)*
+    * *(Nota: para credenciales confidenciales, como contraseñas de bases de datos, considere utilizar métodos más seguros que los archivos de texto sin formato, especialmente en entornos compartidos).*
 
 ---
 
-## ▶️ Starting the Application
+## ▶️ Iniciando la aplicación
 
-You have two primary options for starting ChurnInsight locally:
+Tiene dos opciones principales para iniciar ChurnInsight localmente:
 
-### Option 1: Using Docker Compose (Recommended)
+### Opción 1: usar Docker Compose (recomendado)
 
-This method uses Docker to containerize and orchestrate all services, ensuring a consistent and isolated environment. For detailed instructions on building and running services with Docker Compose, please refer to the:
-*   **[Docker Guide](DOCKER_GUIDE.md)**
+Este método utiliza Docker para contenerizar y orquestar todos los servicios, garantizando un entorno coherente y aislado. Para obtener instrucciones detalladas sobre cómo crear y ejecutar servicios con Docker Compose, consulte:
+* **[Guía de Docker](DOCKER_GUIDE.md)**
 
-### Option 2: Native Local Execution (Without Docker)
+### Opción 2: Ejecución local nativa (sin Docker)
 
-This option involves running each service directly on your local machine using their respective runtimes.
+Esta opción implica ejecutar cada servicio directamente en su máquina local utilizando sus respectivos tiempos de ejecución.
 
-#### Backend Service (Java/Spring Boot)
+#### Servicio backend (Java/Spring Boot)
 
-1.  Navigate to the backend directory:
-    ```bash
-    cd backend
+1. Navegue hasta el directorio de backend:
+    ```golpecito
+    parte trasera del cd
     ```
-2.  Compile the application and package it:
-    ```bash
-    mvn clean package -DskipTests
+2. Compile la aplicación y empaquetela:
+    ```golpecito
+    Paquete limpio mvn -DskipTests
     ```
-3.  Run the application:
-    ```bash
-    java -jar target/churninsight-*.jar
+3. Ejecute la aplicación:
+    ```golpecito
+    java -jar objetivo/churninsight-*.jar
     ```
-    Alternatively, you can run it directly with Maven:
-    ```bash
-    mvn spring-boot:run
+    Alternativamente, puedes ejecutarlo directamente con Maven:
+    ```golpecito
+    mvn arranque de primavera: ejecutar
     ```
-    *   **Access:** The Backend API will typically be available at `http://localhost:8080`. Refer to `docs/03_Backend_Quick_Start.md` for specifics.
+    * **Acceso:** La API de backend normalmente estará disponible en `http://localhost:8080`. Consulte `docs/03_Backend_Quick_Start.md` para obtener detalles.
 
-#### AI Service (Python/FastAPI)
+#### Servicio de IA (Python/FastAPI)
 
-1.  Navigate to the AI service directory:
-    ```bash
-    cd ai_service
+1. Navegue hasta el directorio de servicios de AI:
+    ```golpecito
+    cd ai_servicio
     ```
-2.  Create a Python virtual environment (recommended, do this only once):
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scripts\activate
+2. Cree un entorno virtual Python (recomendado, haga esto solo una vez):
+    ```golpecito
+    pitón -m venv venv
+    fuente venv/bin/activate # En Windows: venv\Scripts\activate
     ```
-3.  Install required dependencies:
-    ```bash
-    pip install -r requirements.txt
+3. Instale las dependencias requeridas:
+    ```golpecito
+    instalación de pip -r requisitos.txt
     ```
-4.  Train the machine learning model (required before the first run):
-    ```bash
-    python train_model.py
+4. Entrene el modelo de aprendizaje automático (requerido antes de la primera ejecución):
+    ```golpecito
+    Python train_model.py
     ```
-5.  Start the FastAPI server:
-    ```bash
-    python -m uvicorn main:app --reload --port 8000
+5. Inicie el servidor FastAPI:
+    ```golpecito
+    python -m uvicorn principal: aplicación --reload --port 8000
     ```
-    *   **Access:** The AI Service API documentation (Swagger UI) will be available at `http://localhost:8000/docs`. Refer to `docs/02_AI_Service_Quick_Start.md` for specifics.
+    * **Acceso:** La documentación de la API del servicio AI (Swagger UI) estará disponible en `http://localhost:8000/docs`. Consulte `docs/02_AI_Service_Quick_Start.md` para obtener detalles.
 
-#### Frontend (Angular)
+#### Interfaz (angular)
 
-1.  Navigate to the frontend directory:
-    ```bash
-    cd frontend
+1. Navegue hasta el directorio de interfaz:
+    ```golpecito
+    interfaz de CD
     ```
-2.  Install frontend dependencies:
-    ```bash
-    npm install
+2. Instale las dependencias del frontend:
+    ```golpecito
+    instalación npm
     ```
-3.  Start the Angular development server:
-    ```bash
-    ng serve
+3. Inicie el servidor de desarrollo Angular:
+    ```golpecito
+    servir
     ```
-    *   **Access:** The application will be available at `http://localhost:4200`. Refer to `docs/09_Frontend_Integration_Guide.md` for specifics.
+    * **Acceso:** La aplicación estará disponible en `http://localhost:4200`. Consulte `09_Frontend_Guide.md` para obtener detalles.
 
 ---
 
-## 🔗 Related Documentation
+## 🔗 Documentación relacionada
 
-*   **[Docker Guide](DOCKER_GUIDE.md):** Detailed instructions on using Docker and Docker Compose.
-*   **[Deployment and Commands Guide](05_Deployment_and_Commands.md):** Information on deploying to OCI and general management commands.
-*   **[AI Service Quick Start](docs/02_AI_Service_Quick_Start.md):** Setup for the AI Service.
-*   **[Backend Quick Start](docs/03_Backend_Quick_Start.md):** Setup for the Backend Service.
-*   **[Frontend Integration Guide](docs/09_Frontend_Integration_Guide.md):** Details on Frontend setup and integration.
+* **[Guía de Docker](DOCKER_GUIDE.md):** Instrucciones detalladas sobre el uso de Docker y Docker Compose.
+* **[Guía de implementación](05_Deployment.md):** Información sobre la implementación en OCI.
+* **[Inicio rápido del servicio AI](02_AI_Service_Quick_Start.md):** Configuración del servicio AI.
+* **[Inicio rápido de backend](03_Backend_Quick_Start.md):** Configuración del servicio backend.
+* **[Guía de Frontend](09_Frontend_Guide.md):** Detalles sobre la configuración e integración de Frontend.

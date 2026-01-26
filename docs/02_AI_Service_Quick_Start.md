@@ -1,62 +1,55 @@
 # ⚡ Quick Start - FastAPI AI Service
 
-This guide provides essential steps to get the AI service running locally. For detailed setup and deployment, refer to the main documentation.
+Esta guía proporciona pasos esenciales para que el servicio de IA se ejecute localmente. Para obtener información detallada sobre la configuración e implementación, consulte la documentación principal.
 
 ---
+## 🚀 Configuración local
 
-## 🚀 Local Setup
-
-### 1. Navigate and Install Dependencies
-
-```bash
-# Navigate to the AI service directory
-cd ai_service/
-
-# Create and activate a Python virtual environment (recommended)
+### 1. Navegar e instalar dependencias
+# Crear y activar un entorno virtual Python (recomendado)
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Install project dependencies
+# Instalar dependencias del proyecto
 pip install -r requirements.txt
 ```
 
-### 2. Configure Environment Variables
+### 2. Configurar variables de entorno
 
-Copy the example environment file and edit it with your specific configurations.
+Copie el archivo de entorno de ejemplo y edítelo con sus configuraciones específicas.
 ```bash
 cp .env.example .env
-# Edit the .env file, e.g., with your Oracle DB password
+# Edite el archivo .env, por ejemplo, con su contraseña de base de datos de Oracle
 # nano .env
 ```
 
-### 3. Train the Model
+### 3. Entrenar el modelo
 
-Before running the service, ensure the ML model is trained and saved.
+Antes de ejecutar el servicio, asegúrese de que el modelo de ML esté entrenado y guardado.
 ```bash
 python train_model.py
 ```
-This command trains the model and saves it to the `./models/` directory.
+Este comando entrena el modelo y lo guarda en el directorio `./models/`.
 
-### 4. Start the AI Service
+### 4. Inicie el servicio de IA
 
-Run the FastAPI application using Uvicorn.
+Ejecute la aplicación FastAPI usando Uvicorn.
 ```bash
 python -m uvicorn main:app --reload --port 8000
 ```
-The service will be accessible at `http://localhost:8000`.
+Se podrá acceder al servicio en `http://localhost:8000`.
 
 ---
+## 🧪 Prueba rápida
 
-## 🧪 Quick Testing
-
-### Health Check
+### Control de salud
 
 ```bash
 curl http://localhost:8000/api/v1/health/check
 ```
-*Expected Output: A JSON response indicating the service is "healthy".*
+*Resultado esperado: una respuesta JSON que indica que el servicio está "en buen estado".*
 
-### Single Prediction
+### Predicción única
 
 ```bash
 curl -X POST http://localhost:8000/api/v1/predictions/predict \
@@ -78,17 +71,17 @@ curl -X POST http://localhost:8000/api/v1/predictions/predict \
     "creditos_trimestre": 15
   }
 ```
-*Expected Output: A JSON response with prediction details.*
+*Resultado esperado: una respuesta JSON con detalles de predicción.*
 
 ---
 
-## 📚 Related Documentation
+## 📚 Documentación relacionada
 
-*   **[AI Service API Reference](04_AI_Service_API.md):** Detailed information on all API endpoints.
-*   **[Project Overview](01_Project_Overview.md):** General project information and architecture.
-*   **[Docker Guide](DOCKER_GUIDE.md):** Instructions for running the AI service with Docker.
-*   **[Quick Start Guide](00_Quick_Start.md):** Comprehensive local setup guide for the entire project.
+* **[Referencia de API de servicio AI](04_AI_Service_API.md):** Información detallada sobre todos los puntos finales de API.
+* **[Descripción general del proyecto](01_Project_Overview.md):** Información general y arquitectura del proyecto.
+* **[Guía de Docker](DOCKER_GUIDE.md):** Instrucciones para ejecutar el servicio de IA con Docker.
+* **[Guía de inicio rápido](00_Quick_Start.md):** Guía de configuración local completa para todo el proyecto.
 
 ---
 
-**Note:** For production deployment and advanced configurations, please consult the main deployment documentation.
+**Nota:** Para implementación de producción y configuraciones avanzadas, consulte la documentación principal de implementación.
